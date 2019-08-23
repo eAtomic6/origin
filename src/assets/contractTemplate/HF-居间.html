@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- <link rel="stylesheet" href="./datepicker.css"/> -->
+    <link rel="stylesheet" href="/datepicker.css"/>
+    <title>居间合同</title>
+    <style>
+        body {
+            font-family: SimHei;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        p, ul, h1, h2, h3, h4 {
+            margin: 0px;
+            padding: 0px;
+        }
+        ul {
+            list-style: none;
+        }
+        .center {
+            text-align: center;
+        }
+        .BODERRED{
+            border-color: red !important;
+        }
+        .fontsmall{
+            font-size: 12px;
+        }
+        input {
+            border: 0;
+            border-bottom: 1px solid grey;
+            outline: none;
+            font-family: SimHei;
+        }
+        input[type="checkbox"]{
+            border:0px;
+        }
+        /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+        input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+            -webkit-appearance: none !important;
+        }
+        input[type="number"]{-moz-appearance:textfield;}
+
+        .bold {
+            font-weight: 700;
+        }
+        .no-border {
+            border: none;
+        }
+        .container {
+            width: 840px;
+            padding: 0 40px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        h2 {
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+        p.title {
+            font-weight: bold;
+            text-align: right;
+        }
+        .agreements {
+            margin-top: 10px;
+        }
+        .text-indent {
+            text-indent: 30px;
+        }
+        .sign {
+            margin-top: 50px;
+            margin-bottom: 40px;
+        }
+        .sign > div {
+            overflow: hidden;
+        }
+        .sign > div > p {
+            min-width: 50%;
+            float: left;
+        }
+        .sign > div > p input {
+            width: 200px;
+        }
+        .sign > div p span {
+            display: inline-block;
+            min-width: 130px;
+            text-align: right;
+        }
+        span[tag='input-auto']{
+            border-bottom: 1px solid gray;
+            padding: 2px 10px;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+        span[tag='input-auto'].input-before:before{
+            content:'请输入';
+            text-align: center;
+            color: #a1a1a1;
+        }
+        span[tag='input-auto'].input-before.input-select:before{
+            content:'请选择';
+            text-align: center;
+            color: #a1a1a1;
+        }
+        span[tag='input-readonly'].input-before:before{
+            content:'';
+            text-align: center;
+            color: #a1a1a1;
+        }
+        .alert-viwer{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            padding: 10px;
+            border-radius: 4px;
+            background: #fff;
+            z-index: 999;
+            box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+        .alert-viwer>textarea{
+            background: #fff;
+            border: 1px solid #dcdfe6;
+        }
+        .alert-viwer>p{
+            text-align: right;
+            margin: 6px 0 0;
+            padding: 0;
+            line-height: normal;
+        }
+        .alert-viwer>p>span{
+            display: inline-block;
+            background: #409eff;
+            padding: 6px 12px;
+            color: #FFFFFF;
+            border-radius: 4px;
+        }
+        .alert-viwer>p>span:last-of-type{
+            background: #fff;
+            color: #606266;
+            border: 1px solid #dcdfe6;
+        }
+        .color-grey {
+            font-weight: normal;
+            font-size: 14px;
+        }
+        @page {
+            size: 955px 1350px;
+        }
+    </style>
+</head>
+<body>
+    <span id="submit" style="position: absolute;top: -1000px;z-index: 0;">click</span>
+    <div class="container">
+        <div class="alert-viwer" style="display: none;">
+            <textarea id="inputArea" cols="30" rows="4"></textarea>
+            <p class="control-btn">
+                <span>保存</span>
+                <span>取消</span>
+            </p>
+        </div>
+        <h2 class="center">居间服务合同</h2>
+        <p class="title">合同编号：<input systemParam="code" type="text" tag="input" class="no-border" readonly="readonly" value="" /></p>
+        <div>
+            <div class="sign-title">
+                <p class="bold">甲方（出卖方）：<span systemParam="ownerName" tag="input-auto" class="color-grey"></span></p>
+                <p class="bold">乙方（买受方）：<span systemParam="guestName" tag="input-auto" class="color-grey"></span></p>
+                <p style="position:relative;"><img class="SignatureLocation" style="position:absolute;left:130px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /><span class="bold">丙方（居间人）：</span><span tag="input-auto" class="input-before input-select text-limit dropdown-item" systemparam="true" extendParam="val3"></span></p>
+            </div>
+            <div class="text-indent">
+                甲、乙双方在丙方的居间服务下就坐落于合肥市<span systemParam="propertyAddr" extendParam="val4" class="text-limit" tag="input-auto"></span>的房屋，于<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val5"/>签订了《存量房买卖合同》（以下简称“《买卖合同》”）。甲、乙、丙三方在友好协商的基础上，订立本居间服务合同，以兹共同遵守。
+            </div>
+            <div class="agreements">
+                <h4>第一条 居间服务</h4>
+                <ul class="text-indent">
+                    <li>
+                        1、甲、乙双方同意，共同委托丙方作为交易居间方，丙方提供的居间服务包括：（1）提供房屋买卖市场行情咨询；（2）寻找、提供并发布房源、客源信息；（3）引领买受人实地看房；（4）协助交易双方协商房屋买卖合同的相关条款内容；（5）促成交易双方签署买卖合同。
+                    </li>
+                    <li>2、甲、乙签订《买卖合同》时，丙方居间服务完成，甲、乙双方应向丙方支付本合同约定的居间服务费。</li>
+                </ul>
+            </div>
+            <div class="agreements">
+                <h4>第二条 居间服务费</h4>
+                <div class="text-indent">
+                    鉴于丙方已促成甲乙双方签署《买卖合同》，经友好协商：
+                </div>
+                <div class="text-indent">
+                    甲方于《买卖合同》签署当日向丙方支付居间服务费人民币(小写)<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val6"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val6_add"></span>圆)整。
+                </div>
+                <div class="text-indent">
+                    乙方于《买卖合同》签署当日向丙方支付居间服务费人民币(小写)<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val8"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val8_add"></span>圆)整。
+                </div>
+            </div>
+            <div class="agreements">
+                <h4>第三条 权利义务</h4>
+                <ul class="text-indent">
+                    <li>1、甲方应积极配合丙方的居间活动，甲方应于签署《买卖合同》当日将房屋买卖所需的房屋所有权证、土地使用权证、不动产权证书、购房合同、权属证明等房产交易相关证书、证件及材料原件交于丙方保管。甲乙双方同意在合同履行过程中，在房屋买卖合同解除前或法院判决解除前丙方有权不予退还保管的房屋所有权证及相关证件。
+                    </li>
+                    <li>2、丙方应遵守相关法律规定，尽职提供居间服务；丙方不得在交易中提供虚假信息或故意隐瞒真实情况。
+                    </li>
+                    <li>3、甲、乙双方应相互配合到相关部门办理[房地产转让]相关手续。
+                    </li>
+                </ul>
+            </div>
+            <div class="agreements">
+                <h4>第四条 违约责任</h4>
+                <ul class="text-indent">
+                    <li>1、甲、乙双方利用丙方所提供信息、条件、机会等，私自或者另行通过其他居间方签署《买卖合同》，甲、乙双方应当向丙方承担违约责任；丙方有权要求双方支付本合同约定的全部居间服务费。</li>
+                    <li>2、甲、乙双方或一方延迟向丙方支付本协议第二条约定的居间服务费，除应向丙方支付居间服务费外，还应就其未支付的部分，按照每日1%的标准支付违约金。</li>
+                    <li>3、在居间服务中，丙方因工作疏漏，遗失甲、乙双方相关文件及资料，丙方承担补办手续费并给予相应的经济补偿。丙方违反本合同第三条约定的，丙方应承担相应的违约责任。</li>
+                    <li>4、甲、乙双方中任何一方拖延或拒绝配合办理交易中各项手续，造成另一方损失，由拖延或拒绝配合一方承担赔偿责任；除本合同另有约定的外，各方不得擅自单方解除或变更本协议。</li>
+                    <li>5、若因甲乙双方的原因使买卖合同无法继续履行，由违约方承担全部居间服务费，甲、乙双方自行协商解除合同的，由双方平均负担全部居间服务费。</li>
+                    <li>6、单方解除本合同，由违约方支付违约金<span tag="input-auto" listen="chinese" max="12" class="text-limit input-before" extendParam="val10"></span>圆整。</li>
+                </ul>
+            </div>
+            <div class="agreements">
+                <h4>第五条 争议解决</h4>
+                <p class="text-indent">与本合同相关的任何争议，三方应协商解决；协商不成的，任何一方均可向丙方所在地的人民法院提起诉讼。</p>
+            </div>
+            <div class="agreements">
+                <h4>第六条 其他</h4>
+                <p class="text-indent">本协议书一式三份，三方各执一份，自各方签署盖章之日起生效。各方同意，未经本人签字或加盖公章的任何书面承诺、口头承诺、条款的变更等行为均不产生法律约束力。</p>
+            </div>
+            <div class="sign bold">
+                <div>
+                    <p><span>甲方（签章）：</span><input type="text" tag="input" noline="true" readonly="readonly"/></p>
+                    <p><span>乙方（签章）：</span><input type="text" tag="input" noline="true" readonly="readonly"/></p>
+                </div>
+                <div>
+                    <p><span>代理人（签章）：</span><input type="text" tag="input" noline="true" readonly="readonly"/></p>
+                    <p><span>代理人（签章）：</span><input type="text" tag="input" noline="true" readonly="readonly"/></p>
+                </div>
+                <div>
+                    <p style="position:relative;"><img class="SignatureLocation" style="position:absolute;left:130px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /><span>丙方（盖章）：</span><input type="text" tag="input" noline="true" readonly="readonly"/></p>
+                    <p><span>经办人（签字）：</span><input type="text" tag="input" noline="true" readonly="readonly"/></p>
+                </div>
+            </div>
+            <div class="sign-date center">本合同签署日期：<input type="number" tag="input" noline="true" readonly="readonly"/>年<input type="number" tag="input" noline="true" readonly="readonly"/>月<input type="number" tag="input" noline="true" readonly="readonly"/>日</div>
+        </div>
+    </div>
+</body>
+<!--<script type="text/javascript" src="./datepicker.js"></script>
+<script type="text/javascript" src="./dropdown.js"></script>
+<script type="module" src="./HF-JJ.js"></script>-->
+
+  <script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+<script type="text/javascript" src="/js/bundle_jj_hf20190711.js"></script>
+</html>

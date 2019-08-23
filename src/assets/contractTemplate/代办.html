@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="/datepicker.css"/>
+    <title>代办合同</title>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+
+       body{
+          font-family: SimHei;
+       }
+       .model{
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%,-50%);
+          padding: 10px;
+          border-radius: 4px;
+          background: #fff;
+          z-index: 999;
+          box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+        .model>textarea{
+          background: #fff;
+          border: 1px solid #dcdfe6;
+        }
+        .model>p{
+          text-align: right;
+          margin: 6px 0 0;
+          padding: 0;
+          line-height: normal;
+        }
+        .model>p>span{
+          display: inline-block;
+          background: #409eff;
+          padding: 6px 12px;
+          color: #FFFFFF;
+          border-radius: 4px;
+        }
+        .model>p>span:last-of-type{
+          background: #fff;
+          color: #606266;
+          border: 1px solid #dcdfe6;
+        }
+       /* .model{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            padding: 10px;
+            border-radius: 4px;
+            background: #e3e3e3;
+        }
+        .model>textarea{
+            background: #f5f5f5;
+        }
+        .model>p{
+            text-align: right;
+            margin: 0;
+            padding: 0;
+        }
+        .model>p>span{
+            background: #6d95bd;
+            line-height: 2;
+            padding: 4px 10px;
+            color: #FFFFFF;
+        } */
+        span[tag='input-auto']{
+            border-bottom: 1px solid gray;
+            padding: 2px 10px;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+        span[tag='input-auto'].input-before:before{
+            content:'请输入';
+            text-align: center;
+            color: #a1a1a1;
+        }
+        span[tag='input-auto'].input-title:before{
+            content:'请输入';
+            text-align: left;
+            color: #a1a1a1;
+            display: inline-block;
+            width: 665px;
+        }
+        .container{
+            width: 840px;
+            padding:40px;
+            margin:0 auto;
+            box-sizing:border-box;
+        }
+        .BODERRED{
+            border-color: red !important;
+        }
+        .WARNING{
+            color:red;
+        }
+        .fontsmall{
+            font-size: 12px;
+        }
+        .bold{
+            font-weight: bold;
+        }
+        .title-p{
+            text-align: center;
+            font-size:20px;
+            font-weight:bold;
+        }
+        p{
+            line-height:1.8;
+            font-size:16px;
+        }
+        input{
+            border:0;
+            outline:none;
+            border-bottom:1px solid gray;
+            font-family: SimHei;
+        }
+        input[type="checkbox"]{
+            border:0px;
+        }
+		.sign>span{
+		       width:32%;
+		       display:inline-block;
+		}
+        .info-checkbox{
+            display: inline;
+            cursor: pointer;
+        }
+        .info-checkbox>p[type="check"]{
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border: 1px solid;
+            position: relative;
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+        }
+        .info-checkbox>p[type="check"][checked='true']:before{
+            content:'';
+            position: absolute;
+            display: inline-block;
+            width: 100%;
+            height: 10px;
+            background-size: contain;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVQ4T72TsUvDQBjF33cYUhfFP0GIVO7S1cXJxU3sIqiLuHSyOIg4Cro4OBW3jJ10EhcRdHcw2901f0BWh04OmvskpZVYqjYEvPl9v3v3vneEiocqzuP/AY1GY9k5F2VZ1kyS5LWUAynlihDigZnnmblprb2bGhCG4TqAWwCzzNwyxkR5fgNAEARzvu8fGWPOAXyMB6uU2iaiLoAZ51zbWns10gwAUsotIcQNM9/XarXNOI7fRwIp5QERdYiInHOn1tqz4gVfTwjDsAOgzcxP/X5/I03TN6XUBRGdDAcutdbH4+6KGQil1CMRrQF4BtADsJ8PMHNkjGlN6sy3EIdZvBDRUkHc1Vrv5Zw/AbmgXq8vep4XA1gAcK213gXgfmrsxDUqpVaJ6FBrvQMg+63uU/eglIMyH6yyg0+YpmgRBNEBzgAAAABJRU5ErkJggg==");
+        }
+        .info-checkbox>p[type="check"][checked='false']:after{
+            content:'';
+            position: absolute;
+            display: inline-block;
+            width: 100%;
+            height: 10px;
+            background-size: contain;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABdklEQVQ4T42TvUrEQBSFz1kt1BewU8QnSJ5gu0mrsGDjRAt/UVBBWRtdsdgVBBdcFBHFZK0U+8TKwkIsEt/Ffq9M9se4GzVTDZM5X865dy5tpd8EeIlDv4z8i7ajGwCmaSt3D8QJBPUo9LZzMIzmBsQiIKs0AsuZLxOFah6IrdxbI5YW1uNn7zIBmGU7ugLwUCC1OPD3s5xYyr0gsdYVmzs9QNuJrhIsA1KJAv8oDemKIa3tKGzWu99+ABInyj0DsSVo7cdBs5Y+6xcPOOjF6UCMAChMGmCW+FdAEqeT1+zTbvprMxChe8FS+pzkRgIQOY5D/yCrsFkA2kpfgVwyf6YUxpMIkNMo8Hf/c0BLuXckdFYRRaQRh/5mGvLtoFQasj7H7gnM/d1GuY5Cf/lnG0ulIftz9BHgTJ6HBEkgK6Y8RLE4bI9MPPwnTrW4/ZQFfhx6C7SUfiI5m2cOOpDvYRK5puW47wK8fgTeTo5J7EW3lPZITH0B+X227Y6+aJ4AAAAASUVORK5CYII=");
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        input[type="number"]{
+            -moz-appearance: textfield;
+        }
+        .page1 {
+          break-before: page;
+          page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!--startprint1-->
+
+        <p class="title-p">个人二手住房过户委托合同</p>
+        <p style="text-align:right;">合同编号:<input  systemParam="code" extendParam="val1" readonly="readonly" type="text" class="text-limit" value="" tag="input" style="width:150px;margin-right:50px;margin-top:20px;margin-bottom:20px;"/></p>
+        <p>甲方（卖方）：<span systemParam="ownerName" extendParam="val2" class="input-before" tag="input-auto"></span></p>
+        <p>证件号码：<span systemParam="ownerID" extendParam="val3" class="input-before" tag="input-auto"></span></p>
+        <p>地  址：<span systemParam="propertyAddr" class="input-before" tag="input-auto"></span></p>
+        <p>电  话：<span systemParam="ownerTel" extendParam="val5" class="input-before" tag="input-auto"></span></p>
+
+        <p style="margin-top:20px">乙方（买方）：<span systemParam="guestName" extendParam="val6" class="input-before" tag="input-auto"></span></p>
+        <p>证件号码：<span systemParam="guestID" extendParam="val7" class="input-before" tag="input-auto"></span></p>
+        <p>地  址：<span tag="input-auto" extendParam="val8" class="input-before"></span></p>
+        <p>电  话：<span systemParam="guestTel" extendParam="val9" class="input-before" tag="input-auto"></span></p>
+
+        <p style="margin-top:20px;position:relative;"><img class="SignatureLocation" style="position:absolute;left:130px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" />丙方（中介方）：<input type="text" maxlength="25" extendParam="val10" class="text-limit dropdown-item" value="" tag="input" style="width:615px;"/></p>
+        <p>地  址：<span extendParam="val11" tag="input-auto" class="input-title"></span></p>
+        <p>电  话：<span extendParam="val12" listen="number" max="11" class="input-title" tag="input-auto"></span></p>
+
+        <p style="text-indent:32px;margin-top:10px">
+            乙方因购买甲方位于 <span systemParam="propertyAddr" tag="input-auto" class="input-before"></span>的房屋（房屋所有权证号：<span extendParam="val14" type="text" tag="input-auto" class="input-before"></span> ，土地使用权证号 <span extendParam="val15" type="text" tag="input-auto" class="input-before"></span> ）双方自行成交需办理房产过户手续，现委托丙方协助办理过户事宜，协议如下：
+        </p>
+        <p>
+          第一条、《房屋买卖合同》、涉及产权、房款及付款、房屋交接等房屋交易事项及可能产生的风险，均与丙方无关。
+        </p>
+        <p>
+          三方明确：丙方对《房屋买卖合同》所产生的风险不负任何责任。
+        </p>
+
+        <p>
+         第二条、甲、乙双方应按丙方要求及时提供过户所需的真实完整的证件与资料并积极配合丙方的工作。具体时间为：甲乙双方在本合同签订之日起 <span extendParam="val16" type="text" listen="number" tag="input-auto" class="input-before"></span> 日内提供过户所需资料（资料清单附后）给丙方，丙方在双方资料提供完整后<span extendParam="val17" type="text" listen="number" tag="input-auto" class="input-before"></span> 日内陪同双方到房屋所在地的交易市局办理过户手续。
+        </p>
+
+        <p>
+            第三条、如因甲、乙方双方原因导致过户不能完成，丙方对此不负任何责任，且对受委托的事项已发生的费用不予退还。
+        </p>
+
+        <div>
+            第四条、在签订本协议时，
+          <div class="info-checkbox" name="part"><p type="check"></p><span class="bold">甲</span></div><div class="info-checkbox" name="part"><p type="check"></p><span class="bold">乙</span></div>方支付服务费人民币<span extendParam="val20" type="text" listen="number" max="12" tag="input-auto" class="input-before"></span> 元整。
+        </div>
+
+        <p>
+            第五条、本合同一式三份，甲、乙、丙三方各执一份，各份均具同等法律效力。
+        </p>
+
+        <p style="margin-top:20px;position:relative" class="sign">
+            <img class="SignatureLocation" style="position:absolute;left:550px;top:-20px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" />
+            <span><span style="margin-right:32px;">甲</span>方：</span>
+            <span><span style="margin-right:32px;">乙</span>方：</span>
+             <span><span style="margin-right:32px;">丙</span>方：</span>
+        </p>
+
+        <p class="sign">
+            <span>证件号码：</span>
+            <span>证件号码：</span>
+            <span>经 纪 人：</span>
+        </p>
+
+
+        <!-- 第二页 -->
+
+        <p class="page1">附件：资料清单</p>
+
+        <p style="text-indent:20px;">甲方需提供资料：</p>
+
+         <div style="padding:5px 0 5px 20px;"><div class="info-checkbox" name="owner" more="true"><p type="check"></p> 夫妻双方户身份证复印件</div>  <span style="float:right;margin-right:300px;">（<input extendParam="val22" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+         <div style="padding:5px 0 5px 20px;"><div class="info-checkbox" name="owner" more="true"><p type="check"></p> 夫妻双方户口本复印件</div>  <span style="float:right;margin-right:300px;">（<input extendParam="val24" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+         <div style="padding:5px 0 5px 20px;"><div class="info-checkbox" name="owner" more="true"><p type="check"></p> 结婚证复印件</div>  <span style="float:right;margin-right:300px;">（<input extendParam="val26" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+         <div style="padding:5px 0 5px 20px;"><div class="info-checkbox" name="owner" more="true"><p type="check"></p> 配偶或产权共有人同意转让证明</div>  <span style="float:right;margin-right:300px;">（<input extendParam="val28" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+         <div style="padding:5px 0 5px 20px;"><div class="info-checkbox" name="owner" more="true"><p type="check"></p> 房屋产权证</div>   <span style="float:right;margin-right:300px;">（<input extendParam="val30" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+         <div style="padding:5px 0 5px 20px;"><div class="info-checkbox" name="owner" more="true"><p type="check"></p> 国有土地使用证</div>   <span style="float:right;margin-right:300px;">（<input extendParam="val32" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+         <div style="padding:5px 0 5px 20px;"><div class="info-checkbox" name="owner" more="true"><p type="check"></p> 承租人同意转让证明</div>  <span style="float:right;margin-right:300px;">（<input extendParam="val34" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+         <div style="padding:5px 0 5px 20px;"><div class="info-checkbox" name="owner" more="true"><p type="check"></p> 离婚复印件或婚姻状况证明</div>  <span style="float:right;margin-right:300px;">（<input extendParam="val36" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+         <div style="padding:5px 0 5px 20px;"><div class="info-checkbox" name="owner" more="true"><p type="check"></p> 其他</div>   <input extendParam="val38" type="text" class="text-limit" value="" tag="input" style="width:400px;"/>  </div>
+
+
+        <p style="text-indent:20px;">乙方需提供资料：</p>
+
+        <div style="padding:5px 0 5px 20px;">  <div class="info-checkbox" name="guest" more="true"><p type="check"></p> 身份证复印件</div>   <span style="float:right;margin-right:300px;">（<input extendParam="val40" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+        <div style="padding:5px 0 5px 20px;">  <div class="info-checkbox" name="guest" more="true"><p type="check"></p> 户口本复印件</div>   <span style="float:right;margin-right:300px;">（<input extendParam="val42" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+        <div style="padding:5px 0 5px 20px;">  <div class="info-checkbox" name="guest" more="true"><p type="check"></p> 经济收入证明</div>   <span style="float:right;margin-right:300px;">（<input extendParam="val44" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+        <div style="padding:5px 0 5px 20px;">  <div class="info-checkbox" name="guest" more="true"><p type="check"></p> 流动人口婚姻证明复印件</div>    <span style="float:right;margin-right:300px;">（<input extendParam="val46" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+        <div style="padding:5px 0 5px 20px;">  <div class="info-checkbox" name="guest" more="true"><p type="check"></p> 计划生育许可证复印件</div>   <span style="float:right;margin-right:300px;">（<input extendParam="val48" type="text" class="text-limit" value="" tag="input" style="width:20px;border-bottom:0;text-align:center"/> 份）</span></div>
+
+        <div style="padding:5px 0 5px 20px;">  <div class="info-checkbox" name="guest" more="true"><p type="check"></p> 其他</div>  <input extendParam="val50" type="text" class="text-limit" value="" tag="input" style="width:400px;"/>  </div>
+        <!--endprint1-->
+        <span id="submit" style="display:none">click</span>
+        <div class="model" style="display: none;">
+                <textarea id="inputArea" cols="30" rows="4"></textarea>
+                <p class="control-btn">
+                    <span>保存</span>
+                    <span>取消</span>
+                </p>
+        </div>
+     </div>
+    <script type="text/javascript" src="/browser-polyfill.min.js"></script>
+    <script type="text/javascript" src="/browser.min.js"></script>
+    <script type="text/javascript" src="/datepicker.js"></script>
+    <script type="text/javascript" src="/dropdown.js"></script>
+    <script type="text/javascript" src="/js/bundle_db20190409.js"></script>
+     <!-- <script>
+         (function () {
+            var scriptList = document.getElementsByTagName("script")
+            console.log(scriptList)
+            if(!scriptList[0].src){
+                var host='https://sign2.jjw.com'
+                var host_other="http://sign2.jjw.com:28879"
+                var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_db20190402.js","datepicker.css"]
+                for (let i = 0; i < addrList.length; i++) {
+                if(window.location.host==='localhost:8080'){
+                    if(addrList[i].indexOf('bundle')>-1){
+                    addrList[i]=host_other+'/'+addrList[i]
+                    }else{
+                    addrList[i]=host_other+'/'+addrList[i]
+                    }
+                }else{
+                    addrList[i]='/'+addrList[i]
+                }
+                if(addrList[i].indexOf('.css')>-1){
+                    var hm = document.createElement("link");
+                    hm.rel="stylesheet"
+                    hm.href = addrList[i];
+                    var s = document.getElementsByTagName("link")[0];
+                    s.parentNode.insertBefore(hm,s);
+                }else{
+                    var hm = document.createElement("script");
+                    hm.src = addrList[i];
+                    var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+                    s.parentNode.insertBefore(hm,s);
+                }
+            }
+        }
+        })();
+    </script> -->
+</body>
+</html>

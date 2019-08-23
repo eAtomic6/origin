@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- <link rel="stylesheet" href="./datepicker.css"/> -->
+     <link rel="stylesheet" href="/datepicker.css"/>
+	<title>租赁</title>
+    <style>
+        h1{
+            color: red;
+        }
+        #input{
+            position: relative;
+
+        }
+        .test:before{
+            content:'请输入';
+            display: inline-block;
+            width: 80px;
+            text-align: center;
+        }
+        span[tag='input-auto']{
+            border-bottom: 1px solid gray;
+            padding: 2px 10px;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+        span[tag='input-auto'].input-before:before{
+            content:'请输入';
+            text-align: center;
+            color: #a1a1a1;
+        }
+        body {
+            font-family: SimHei;
+            font-size: 16px;
+            line-height: 1.8;
+            height: 5400px;
+            margin: 0px;
+        }
+        p, ul, h1, h2, h3, h4 {
+            margin: 0px;
+            padding: 0px;
+        }
+        ul{
+            list-style: none;
+        }
+        .text-indent {
+            text-indent: 30px;
+        }
+        input {
+            border: 0px;
+            border-bottom: 1px solid gray;
+            outline: none;
+            font-family: SimHei;
+        }
+        input[type="checkbox"]{
+            border:0px;
+        }
+        .BODERRED{
+            border-color: red !important;
+        }
+        .container {
+            width: 840px;
+            margin: 0 auto;
+            padding: 0 40px;
+            box-sizing: border-box;
+        }
+        p.title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .hetong-no {
+          margin: 5px 0 5px 450px;
+        }
+        .p_message{
+          overflow: hidden;
+        }
+        .p_message li{
+          float: left;
+        }
+        .zulin-body {
+          padding-top: 10px;
+        }
+        p.p-title{
+          font-weight: bold;
+        }
+        .noIndent p{
+          text-indent: 0;
+        }
+        .ulbox{
+          overflow: hidden;
+        }
+        .ulbox li{
+          float: left;
+          width: 50%;
+          margin-bottom: 5px;
+        }
+        .signDate{
+          box-sizing: border-box;
+          padding-left: 80px;
+        }
+        .signDate span{
+          display: inline-block;
+          width: 40px;
+        }
+        .accessory{
+          text-align: center;
+        }
+        .accessory .tagName{
+          float: left;
+        }
+        .table1 {
+          text-align: center;
+        }
+        .table1 tr td{
+          height: 35px;
+        }
+        .model{
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%,-50%);
+          padding: 10px;
+          border-radius: 4px;
+          background: #fff;
+          z-index: 999;
+          box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+        span[tag='input-auto'].input-title:before{
+          content:'请输入';
+          text-align: left;
+          color: #a1a1a1;
+          display: inline-block;
+          width: 640px;
+        }
+        span[tag='input-auto'].input-before.input-select:before{
+            content:'请选择';
+            text-align: center;
+            color: #a1a1a1;
+        }
+        .alert-viwer{
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%,-50%);
+          padding: 10px;
+          border-radius: 4px;
+          background: #fff;
+          z-index: 999;
+          box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+        .alert-viwer>textarea{
+          background: #fff;
+          border: 1px solid #dcdfe6;
+        }
+        .alert-viwer>p{
+          text-align: right;
+          margin: 6px 0 0;
+          padding: 0;
+          line-height: normal;
+        }
+        .alert-viwer>p>span{
+          display: inline-block;
+          background: #409eff;
+          padding: 6px 12px;
+          color: #FFFFFF;
+          border-radius: 4px;
+        }
+        .alert-viwer>p>span:last-of-type{
+          background: #fff;
+          color: #606266;
+          border: 1px solid #dcdfe6;
+        }
+        table {
+          border-collapse:collapse;
+          width: 100%;
+        }
+        .info-checkbox{
+          display: inline;
+          cursor: pointer;
+        }
+        .info-checkbox>span{
+          font-weight: bold;
+        }
+        .info-checkbox>p[type="check"]{
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          border: 1px solid;
+          position: relative;
+          -webkit-box-sizing: content-box;
+          -moz-box-sizing: content-box;
+          box-sizing: content-box;
+        }
+        .info-checkbox>p[type="check"][checked='true']:before{
+          content:'';
+          position: absolute;
+          display: inline-block;
+          width: 100%;
+          height: 10px;
+          background-size: contain;
+          background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVQ4T72TsUvDQBjF33cYUhfFP0GIVO7S1cXJxU3sIqiLuHSyOIg4Cro4OBW3jJ10EhcRdHcw2901f0BWh04OmvskpZVYqjYEvPl9v3v3vneEiocqzuP/AY1GY9k5F2VZ1kyS5LWUAynlihDigZnnmblprb2bGhCG4TqAWwCzzNwyxkR5fgNAEARzvu8fGWPOAXyMB6uU2iaiLoAZ51zbWns10gwAUsotIcQNM9/XarXNOI7fRwIp5QERdYiInHOn1tqz4gVfTwjDsAOgzcxP/X5/I03TN6XUBRGdDAcutdbH4+6KGQil1CMRrQF4BtADsJ8PMHNkjGlN6sy3EIdZvBDRUkHc1Vrv5Zw/AbmgXq8vep4XA1gAcK213gXgfmrsxDUqpVaJ6FBrvQMg+63uU/eglIMyH6yyg0+YpmgRBNEBzgAAAABJRU5ErkJggg==");
+        }
+        .info-checkbox>p[type="check"][checked='false']:after{
+          content:'';
+          position: absolute;
+          display: inline-block;
+          width: 100%;
+          height: 10px;
+          background-size: contain;
+          background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABdklEQVQ4T42TvUrEQBSFz1kt1BewU8QnSJ5gu0mrsGDjRAt/UVBBWRtdsdgVBBdcFBHFZK0U+8TKwkIsEt/Ffq9M9se4GzVTDZM5X865dy5tpd8EeIlDv4z8i7ajGwCmaSt3D8QJBPUo9LZzMIzmBsQiIKs0AsuZLxOFah6IrdxbI5YW1uNn7zIBmGU7ugLwUCC1OPD3s5xYyr0gsdYVmzs9QNuJrhIsA1KJAv8oDemKIa3tKGzWu99+ABInyj0DsSVo7cdBs5Y+6xcPOOjF6UCMAChMGmCW+FdAEqeT1+zTbvprMxChe8FS+pzkRgIQOY5D/yCrsFkA2kpfgVwyf6YUxpMIkNMo8Hf/c0BLuXckdFYRRaQRh/5mGvLtoFQasj7H7gnM/d1GuY5Cf/lnG0ulIftz9BHgTJ6HBEkgK6Y8RLE4bI9MPPwnTrW4/ZQFfhx6C7SUfiI5m2cOOpDvYRK5puW47wK8fgTeTo5J7EW3lPZITH0B+X227Y6+aJ4AAAAASUVORK5CYII=");
+        }
+        /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+        input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+          -webkit-appearance: none !important;
+        }
+        input[type="number"]{
+          -moz-appearance:textfield;
+        }
+        .page1 {
+          break-before: page;
+          page-break-before: always;
+        }
+        @page {
+          size: 955px 1350px;
+        }
+    </style>
+</head>
+<body>
+  <div class="zulin container">
+    <p class="title">合肥市房屋租赁合同</p>
+    <p class="hetong-no">合同编号：<input systemParam="code"  extendParam="val1"  class="text-limit" type="text" unselectable="on" readonly="readonly" tag="input" value="" style="width:150px;padding-left: 10px;" /></p>
+    <ul class="p_message">
+      <li style="min-width:250px;">出租人（甲方）：<span systemParam="ownerName" extendParam="val2" class="input-before" tag="input-auto"></span></li>
+      <li style="min-width:200px;">证件类型：<span systemParam="ownerCardType" extendParam="val100" class="input-before" tag="input-auto" ></span></li>
+      <li style="min-width:100px;">编号：<span systemParam="ownerID" extendParam="val3" class="input-before" tag="input-auto" ></span></li>
+    </ul>
+    <ul class="p_message">
+      <li style="min-width:250px;">承租人（乙方）：<span systemParam="guestName" extendParam="val4" class="input-before" tag="input-auto"></span></li>
+      <li style="min-width:200px;">证件类型：<span systemParam="guestCardType" extendParam="val101" class="input-before" tag="input-auto" ></span></li>
+      <li style="min-width:100px;">编号：<span systemParam="guestID" extendParam="val5" class="input-before" tag="input-auto" ></span></li>
+    </ul>
+    <ul>
+      <li style="position:relative"><img class="SignatureLocation" style="position:absolute;left:170px;top:-30px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" />居间人（丙方）：<span extendParam="val6" tag="input-auto" class="input-before input-select text-limit dropdown-item" systemparam="true"></span></li>
+    </ul>
+    <div class="zulin-body">
+      <div class="text-indent">
+        依据《中华人民共和国合同法》及有关法律、法规的规定，甲方与乙方在丙方的居间撮合下，在平等、自愿的基础上，就房屋租赁的有关事宜达成协议如下：
+      </div>
+    </div>
+    <div>
+      <p class="p-title text-indent">第一条  房屋基本情况</p>
+      <ul>
+        <li class="text-indent">（一）房屋坐落于合肥市<span systemparam="propertyAddr" extendParam="val7" tag="input-auto" class="input-before"></span>,建筑面积<span systemParam="square" extendParam="val8" class="input-before" tag="input-auto"></span>平方米。</li>
+        <li class="text-indent noIndent">（二）房屋权属状况：甲方持有（<div class="info-checkbox" name="proveType"><p type="check"></p><span>房屋所有权证</span></div>/<div class="info-checkbox" name="proveType"><p type="check"></p><span>公有住房租赁合同</span></div>/<div class="info-checkbox" name="proveType"><p type="check"></p><span>房屋买卖合同</span></div>/<div class="info-checkbox" name="proveType"><p type="check"></p><span>其他房屋</span></div><span style="font-weight:bold">来源证明文件</span>），房屋所有权证书编号：<span extendParam="val9" tag="input-auto" class="input-before"></span>或房屋来源证明名称：<span extendParam="val10" tag="input-auto" class="input-before"></span>，房屋所有权人（公有住房承租人、购房人）姓名或名称：<span extendParam="val11" tag="input-auto" class="input-before"></span>，房屋（<div class="info-checkbox" name="isPledge"><p type="check"></p><span>是</span></div>/<div class="info-checkbox" name="isPledge"><p type="check"></p><span>否</span></div>） 已设定了抵押。</li>
+      </ul>
+    </div>
+    <div>
+      <p class="p-title text-indent">第二条  房屋租赁情况</p>
+      <p class="text-indent">租赁用途：<span extendParam="val12" tag="input-auto" class="input-before"></span>；如租赁用途为居住的，租住人数为：<span extendParam="val13" listen="number" tag="input-auto" class="input-before"></span>，最多不超过<span extendParam="val14" listen="number" tag="input-auto" class="input-before"></span>人。</p>
+    </div>
+    <div>
+      <p class="p-title text-indent">第三条  租赁期限</p>
+      <ul>
+        <li class="text-indent">（一）房屋租赁期自<input extendParam="val15" style="padding-left: 10px;width:100px;" type="text" readonly="readonly" class="text-limit calendar-item" />至<input extendParam="val16" style="padding-left: 10px;width:100px;" type="text" readonly="readonly" class="text-limit calendar-item" />。甲方应于<input extendParam="val17" style="padding-left: 10px;width:100px;" type="text" readonly="readonly" class="text-limit calendar-item" />前将房屋按约定条件交付给乙方。《房屋交割清单》（见附件一）经甲乙双方交验签字盖章并移交房门钥匙及<span extendParam="val18" tag="input-auto" class="input-before"></span>后视为交付完成。</li>
+        <li class="text-indent noIndent">（二）租赁期满或合同解除后，甲方有权收回房屋，乙方应按照原状返还房屋及其附属物品、设备设施。甲乙双方应对房屋和附属物品、设备设施及水电使用等情况进行验收，结清各自应当承担的费用。乙方继续承租的，应提前<span extendParam="val19" listen="number" tag="input-auto" class="input-before"></span>日向甲方提出（<div class="info-checkbox" name="methodType"><p type="check"></p><span>书面</span></div>/<div class="info-checkbox" name="methodType"><p type="check"></p><span>口头</span></div>）续租要求，协商一致后双方重新签订房屋租赁合同。</li>
+      </ul>
+    </div>
+    <div>
+      <p class="p-title text-indent">第四条  租金及押金</p>
+      <ul>
+        <li class="text-indent noIndent">（一）租金标准及支付方式：人民币<span systemParam="dealPrice" extendParam="val20" max="12" class="input-before" tag="input-auto"></span>元整（大写：<span systemParam="dealPriceUpper" extendParam="val21" tag="input-auto"></span>圆）（<div class="info-checkbox" systemParam="timeUnit" value="月" name="timeType" readonly="readonly"><p type="check"></p><span>月</span></div>/<div class="info-checkbox" systemParam="timeUnit" value="季度" name="timeType" readonly="readonly"><p type="check"></p><span>季</span></div>/<div class="info-checkbox" systemParam="timeUnit" value="半年" name="timeType" readonly="readonly"><p type="check"></p><span>半年</span></div>/<div class="info-checkbox" systemParam="timeUnit" value="年" name="timeType" readonly="readonly"><p type="check"></p><span>年</span></div>），每期所支付租金总计：人民币<span extendParam="val22" listen="number" brother="name1" max="12" listen="number" tag="input-auto" class="input-before"></span>元整（大写：<span systemParam="true" extendParam="val22_add" brother="name1" type="text" unselectable="on" readonly="readonly" class="text-limit" tag="input-auto"></span>圆）。支付方式：（<div class="info-checkbox" name="payType"><p type="check"></p><span>现金</span></div>/<div class="info-checkbox" name="payType"><p type="check"></p><span>转账支票</span></div>/<div class="info-checkbox" name="payType"><p type="check"></p><span>银行汇款</span></div>），押<span extendParam="val23" tag="input-auto" class="input-before"></span>付<span extendParam="val24" tag="input-auto" class="input-before"></span>。</li>
+        <li class="text-indent">（二）押金：人民币<span extendParam="val25" listen="number" brother="name2" max="12" listen="number" tag="input-auto" class="input-before"></span>元整（大写：<span systemParam="true" extendParam="val25_add" brother="name2" type="text" unselectable="on" readonly="readonly" class="text-limit" tag="input-auto"></span>圆），租赁期满或合同解除后，房屋租赁押金除抵扣应由乙方承担的费用、租金，以及乙方应当承担的违约赔偿责任外，剩余部分应如数返还给乙方。</li>
+      </ul>
+    </div>
+    <div>
+      <p class="p-title text-indent">第五条  其他相关费用的承担方式</p>
+      <ul>
+        <li class="text-indent">租赁期内的下列费用中，<span extendParam="val26" tag="input-auto" class="input-before"></span>由甲方承担，<span extendParam="val27" tag="input-auto" class="input-before"></span>由乙方承担：（1）水费（2）电费（3）电话费（4）电视收视费（5）供暖费（6）燃气费（7）物业管理费（8）房屋租赁税费（9）卫生费（10）上网费（11）车位费（12）室内设施维修费（13）<span extendParam="val28" tag="input-auto" class="input-before"></span>费用。</li>
+        <li class="text-indent">本合同中未列明的与房屋有关的其他费用均由甲方承担。如乙方垫付了应由甲方支付的费用，甲方应根据乙方出示的相关缴费凭据向乙方返还相应费用。</li>
+      </ul>
+    </div>
+    <div>
+      <p class="p-title text-indent">第六条  居间服务</p>
+      <ul>
+        <li class="text-indent">（一）丙方应当认真负责地为甲乙双方订立房屋租赁合同提供机会或媒介服务，如实报告有关订立房屋租赁合同的事项，并协助甲乙双方办理物业交验。</li>
+        <li class="text-indent noIndent">（二）本合同签订后，甲方应及时向丙方支付月租金的<span extendParam="val29" tag="input-auto" class="input-before"></span>%即人民币<span extendParam="val30" listen="number" brother="name3" max="12" listen="number" tag="input-auto" class="input-before"></span>元整（大写：<span systemParam="true" extendParam="val30_add" brother="name3" type="text" unselectable="on" readonly="readonly" class="text-limit" tag="input-auto"></span>圆）作为佣金，支付方式：<div class="info-checkbox" name="payType1"><p type="check"></p><span>现金</span></div>/<div class="info-checkbox" name="payType1"><p type="check"></p><span>转账支票</span></div>/<div class="info-checkbox" name="payType1"><p type="check"></p><span>银行汇款</span></div>：乙方应及时向丙方支付月租金的<span extendParam="val31" tag="input-auto" class="input-before"></span>%即人民币<span extendParam="val32" listen="number" brother="name4" max="12" listen="number" tag="input-auto" class="input-before"></span>元整（大写：<span systemParam="true" extendParam="val32_add" brother="name4" type="text" unselectable="on" readonly="readonly" class="text-limit" tag="input-auto"></span>圆）作为佣金，支付方式：<div class="info-checkbox" name="payType2"><p type="check"></p><span>现金</span></div>/<div class="info-checkbox" name="payType2"><p type="check"></p><span>转账支票</span></div>/<div class="info-checkbox" name="payType2"><p type="check"></p><span>银行汇款</span></div>。甲乙双方支付佣金总和应不超过月租金标准。</li>
+        <li class="text-indent">（三）本合同签订后，如租赁双方解除、终止或变更租赁关系的，租赁双方仍应向丙方支付所约定的佣金。</li>
+      </ul>
+    </div>
+    <div>
+      <p class="p-title text-indent">第七条  房屋维护及维修</p>
+      <ul>
+        <li class="text-indent">（一）甲方应保证出租房屋的建筑结构和设备设施符合建筑、消防、治安、卫生等方面的安全条件，不得危及人身安全；乙方保证遵守国家、合肥市的法律法规规定以及房屋所在小区的物业管理规约。</li>
+        <li class="text-indent">
+          <p>（二）租赁期内，甲乙双方应共同保障该房屋及附属物品、设备设施处于适用和安全的状态：</p>
+          <p>1、对于该房屋及其附属物品、设备设施因自然属性或合理使用而导致的损耗，乙方应及时通知甲方修复。甲方应在接到乙方通知后的<span extendParam="val33" tag="input-auto" class="input-before"></span>日内进行维修。逾期不维修的，乙方可代为维修，费用由甲方承担。因维修房屋影响乙方使用的，应相应减少租金或延长租赁期限。</p>
+          <p>2、因乙方保管不当或不合理使用，致使该房屋及其附属物品、设备设施发生损坏或故障的，乙方应负责维修或承担赔偿责任。</p>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <p class="p-title text-indent">第八条  转租</p>
+      <p class="text-indent">除甲乙双方另有约定以外，乙方需事先应征得甲方书面同意，方可在租赁期内将房屋部分或全部转租给他人，并就受转租人的行为向甲方承担责任。</p>
+    </div>
+    <div>
+      <p class="p-title text-indent">第九条  合同解除</p>
+      <ul>
+        <li class="text-indent">（一）经甲乙双方协商一致，可以解除本合同。</li>
+        <li class="text-indent">（二）因不可抗力导致本合同无法继续履行的，本合同自行解除。</li>
+        <li class="text-indent">
+          <p class="text-indent">（三）甲方有下列情形之一的，乙方有权单方解除合同：</p>
+          <p class="text-indent">1、迟延交付房屋达15日的。</p>
+          <p class="text-indent">2、交付的房屋严重不符合合同约定或影响乙方安全、健康的。</p>
+          <p class="text-indent">3、不承担约定的维修义务，致使乙方无法正常使用房屋的。</p>
+          <p class="text-indent">4、<span extendParam="val34" tag="input-auto" class="input-before"></span></p>
+        </li>
+        <li>
+          <p class="text-indent">（四）乙方有下列情形之一的，甲方有权单方解除合同，收回房屋：</p>
+          <p class="text-indent">1、不按照约定支付租金达15日的。</p>
+          <p class="text-indent">2、欠缴各项费用达1000元的。</p>
+          <p class="text-indent">3、擅自改变房屋用途的。</p>
+          <p class="text-indent">4、擅自拆改变动或损坏房屋主体结构的。</p>
+          <p class="text-indent">5、保管不当或不合理使用导致附属物品、设备设施损坏并拒不赔偿的。</p>
+          <p class="text-indent">6、利用房屋从事违法活动、损害公共利益或者妨碍他人正常工作、生活的。</p>
+          <p class="text-indent">7、擅自将房屋转租给第三人的。</p>
+          <p class="text-indent">8、<span extendParam="val35" tag="input-auto" class="input-before"></span></p>
+        </li>
+        <li class="text-indent">（五）其他法定的合同解除情形。</li>
+      </ul>
+    </div>
+    <div>
+      <p class="p-title text-indent">第十条  违约责任</p>
+      <ul>
+        <li class="text-indent">（一）甲方有第九条第三款约定的情形之一的，应按月租金的<span extendParam="val36" tag="input-auto" class="input-before"></span>%向乙方支付违约金；乙方有第九条第四款约定的情形之一的，应按月租金的<span extendParam="val37" tag="input-auto" class="input-before"></span>%向甲方支付违约金，甲方并可要求乙方将房屋恢复原状或赔偿相应损失。</li>
+        <li class="text-indent">（二）租赁期内，甲方需提前收回该房屋的，或乙方需要前退租的，应提前<span extendParam="val38" tag="input-auto" class="input-before"></span>日通知对方，并按月租金的<span extendParam="val39" tag="input-auto" class="input-before"></span>%支付违约金，甲方还应退还相应的租金。</li>
+        <li class="text-indent">（三）因甲方未按约定履行维修义务造成乙方人身、财产损失的，甲方应承担赔偿责任。</li>
+        <li class="text-indent">（四）甲方未按约定时间交付该房屋或者乙方不按约定支付租金但未达到解除合同条件的，以及乙方未按约定时间返还房屋的，应该<span extendParam="val40" tag="input-auto" class="input-before"></span>标准支付违约金。</li>
+        <li class="text-indent">（五）丙方提供虚假信息、隐瞒重要事实或有恶意串通行为的，除退还已收取的佣金外。还应赔偿由此给甲方或乙方造成的损失。</li>
+        <li class="text-indent">（六）<span extendParam="val41" tag="input-auto" class="input-before"></span></li>
+      </ul>
+    </div>
+    <div>
+      <p class="p-title text-indent">第十一条  合同争议的解决办法</p>
+      <p class="text-indent">本合同项下发生的争议，由三方当事人协商解决；协商不成的，依法向有管辖权的人民法院起诉，或按照另行达成的仲裁条款或仲裁协议申请仲裁。</p>
+    </div>
+    <div>
+      <p class="p-title text-indent">第十二条  其他约定事项</p>
+      <p class="text-indent"><span extendParam="val42" tag="input-auto" class="input-before"></span></p>
+    </div>
+    <div>
+      本合同经三方签字盖章后生效。本合同（及附件）一式叁份，其中甲方执壹份，乙方执壹份，丙方执壹份。本合同生效后，各方对合同内容的变更或补充应采取书面形式，作为本合同的附件，附件与本合同具有同等的法律效力。
+    </div>
+    <div class="ulbox" style="margin-top:50px">
+      <ul><li>出租人（甲方）签章：</li><li>承租人（乙方）签章：</li></ul>
+      <ul><li>委托代理人: </li><li>委托代理人：</li></ul>
+      <ul><li>联系方式：</li><li>联系方式：</li></ul>
+      <ul><li class="signDate">年<span></span>月<span></span>日</li><li class="signDate">年<span></span>月<span></span>日</li></ul>
+    </div>
+    <div style="margin-top:30px;margin-bottom:30px;">
+      <p style="position:relative;"><img class="SignatureLocation" style="position:absolute;left:170px;top:-30px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" />居间人（丙方）签章：</p>
+      <p>联系方式：</p>
+      <p class="signDate">年<span></span>月<span></span>日</p>
+    </div>
+    <div class="page1 accessory">
+      <span class="tagName">附件一：</span>
+      <span style="font-weight: bold;">房屋交割清单</span>
+    </div>
+    <div class="accessory">
+      <p>房屋附属家具、电器、装修及其他设备设施状况及损赔</p>
+    </div>
+    <div>
+      <table border="1" class="table1">
+        <tr>
+          <th>名称</th>
+          <th>品牌</th>
+          <th>单位</th>
+          <th>数量</th>
+          <th>单价</th>
+          <th>损赔额</th>
+          <th>名称</th>
+          <th>品牌</th>
+          <th>单位</th>
+          <th>数量</th>
+          <th>单价</th>
+          <th>损赔额</th>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+    <div class="page1 accessory">
+      <p>其他相关费用</p>
+    </div>
+    <div>
+      <table border="1" class="table1">
+        <tr>
+          <th>项  目</th>
+          <th>单 位</th>
+          <th>单 价</th>
+          <th>起计时间</th>
+          <th>起计底数</th>
+          <th>项  目</th>
+          <th>单 位</th>
+          <th>单 价</th>
+          <th>起计时间</th>
+          <th>起计底数</th>
+        </tr>
+        <tr>
+          <td>水  费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>上网费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>电  费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>车位费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>电话费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>租赁税费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>收视费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>供暖费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>燃气费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>物业费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>卫生费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+      <table border="1" style="position:relative;margin-top:30px;">
+        <tr>
+          <td rowspan="3" style="text-align: center;width: 30px">交房确认</td>
+          <td colspan="2">对上述情况，乙方经验收，认为符合房屋交验条件，并且双方已对水、电、燃气等费用结算完结，同意接收。</td>
+        </tr>
+        <tr>
+          <td colspan="2">交房日期：<input style="width:100px;" extendParam="val152" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>年<input style="width:50px;" extendParam="val153" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>月<input style="width:50px;" extendParam="val154" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>日</td>
+        </tr>
+        <tr>
+          <td>甲方（出租人）签章： <input type="text" class="no-border" noline="true" readonly="readonly"></td>
+          <td>乙方（承租人）签章：<input type="text" class="no-border" noline="true" readonly="readonly"></td>
+        </tr>
+        <tr>
+          <td rowspan="3" style="text-align: center">退房确认</td>
+          <td colspan="2">甲乙双方已对房屋和附属物品、设备设施及水电使用等情况进行了验收，并办理了退房手续。有关费用的承担的房屋及其附属物品、设备设施的返还
+            <div class="info-checkbox" name="zhizhao17"><p type="check" nocheck="true"></p><span>无纠纷</span></div>/
+            <div class="info-checkbox" name="zhizhao17"><p type="check" nocheck="true"></p><span>附以下说明：</span></div>
+            <span extendParam="val157" type="text" tag="input-auto" class="input-before" noline="true"></span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">退房日期：<input style="width:100px;" extendParam="val159" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>年<input style="width:50px;" extendParam="val160" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>月<input style="width:50px;" extendParam="val161" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>日</td>
+        </tr>
+        <tr>
+          <td>甲方（出租人）签章：<input type="text" class="no-border" noline="true" readonly="readonly"> </td>
+          <td>乙方（承租人）签章：<input type="text" class="no-border" noline="true" readonly="readonly"></td>
+        </tr>
+    </table>
+    </div>
+  </div>
+  <span id="submit" style="display: none;">click</span>
+  <div class="alert-viwer" style="display: none;">
+    <textarea id="inputArea" cols="30" rows="4"></textarea>
+    <p class="control-btn">
+        <span>保存</span>
+        <span>取消</span>
+    </p>
+  </div>
+</body>
+<!-- <script type="text/javascript" src="./datepicker.js"></script>
+<script type="text/javascript" src="./dropdown.js"></script>
+<script type="module" src="./HF-ZL.js"></script> -->
+<script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+<script type="text/javascript" src="/js/bundle_zl_hf20190610.js"></script>
+<!-- <script>
+     (function () {
+      var scriptList = document.getElementsByTagName("script")
+      console.log(scriptList)
+      if(!scriptList[0].src){
+        var host='https://sign2.jjw.com'
+        var host_other="http://sign2.jjw.com:28879"
+        var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_zl20190402.js","datepicker.css"]
+        for (let i = 0; i < addrList.length; i++) {
+          if(window.location.host==='localhost:8080'){
+            if(addrList[i].indexOf('bundle')>-1){
+              addrList[i]=host_other+'/'+addrList[i]
+            }else{
+              addrList[i]=host_other+'/'+addrList[i]
+            }
+          }else{
+            addrList[i]='/'+addrList[i]
+          }
+          if(addrList[i].indexOf('.css')>-1){
+            var hm = document.createElement("link");
+            hm.rel="stylesheet"
+            hm.href = addrList[i];
+            var s = document.getElementsByTagName("link")[0];
+            s.parentNode.insertBefore(hm,s);
+          }else{
+            var hm = document.createElement("script");
+            hm.src = addrList[i];
+            var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+            s.parentNode.insertBefore(hm,s);
+          }
+        }
+      }
+    })();
+</script> -->
+
+</html>

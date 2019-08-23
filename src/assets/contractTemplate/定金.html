@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="/datepicker.css"/>
+    <title>定金</title>
+    <style>
+        body {
+            font-family: SimHei;
+            font-size: 16px;
+            line-height: 1.8;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        p, ul, h1, h2, h3, h4 {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        input {
+            border: 0px;
+            border-bottom: 1px solid gray;
+            max-width: 100px;
+            outline: none;
+            font-size: 16px;
+            font-family: SimHei;
+        }
+        input[type="checkbox"]{
+            border:0px;
+        }
+        .BODERRED{
+            border-color: red !important;
+        }
+        /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+        input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+            -webkit-appearance: none !important;
+        }
+        input[type="number"]{-moz-appearance:textfield;}
+
+        input.text-long {
+            max-width: none;
+            width: 0px;
+            box-sizing: border-box;
+        }
+        input.text-read{
+            border: 0px;
+            width: 600px;
+        }
+        .max70{
+            max-width: 70px;
+        }
+        .max80{
+            max-width: 80px;
+        }
+
+        label[for*="radio-"] {
+            font-weight: bold;
+        }
+
+        .container {
+            width: 840px;
+            margin: 0 auto;
+            padding: 0 40px;
+            box-sizing: border-box;
+        }
+
+        p.title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        ul.signature > li > p {
+            display: inline-block;
+        }
+
+        ul.signature > li:last-of-type > p {
+            display: block;
+        }
+
+        ul.signature > li > p:first-of-type {
+            min-width: 300px;
+        }
+
+        i.blank {
+            display: inline-block;
+            width: 40px;
+        }
+
+        ul.signature[name="footer"] {
+            margin: 10px 0px;
+        }
+
+        ul.signature[name="footer"] > li {
+            /*margin-bottom: 10px;*/
+            overflow: auto;
+        }
+
+        ul.signature[name="footer"] > li > p {
+            min-width: 50%;
+            float: left;
+        }
+
+        ul.signature[name="footer"] > li:last-of-type > p {
+            float: none;
+        }
+
+        .paragraph[name='text-indent'] {
+            text-indent: 32px;
+        }
+        .code{
+            padding-left:500px;
+            box-sizing: border-box;
+            margin: 10px 0;
+        }
+        .code>p{
+            float: right;
+        }
+        .info-checkbox{
+            display: inline;
+            cursor: pointer;
+        }
+        .info-checkbox>span{
+            font-weight: bold;
+        }
+        .info-checkbox>p[type="check"]{
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border: 1px solid;
+            position: relative;
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+        }
+        .info-checkbox>p[type="check"][checked='true']:before{
+            content:'';
+            position: absolute;
+            display: inline-block;
+            width: 100%;
+            height: 10px;
+            background-size: contain;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVQ4T72TsUvDQBjF33cYUhfFP0GIVO7S1cXJxU3sIqiLuHSyOIg4Cro4OBW3jJ10EhcRdHcw2901f0BWh04OmvskpZVYqjYEvPl9v3v3vneEiocqzuP/AY1GY9k5F2VZ1kyS5LWUAynlihDigZnnmblprb2bGhCG4TqAWwCzzNwyxkR5fgNAEARzvu8fGWPOAXyMB6uU2iaiLoAZ51zbWns10gwAUsotIcQNM9/XarXNOI7fRwIp5QERdYiInHOn1tqz4gVfTwjDsAOgzcxP/X5/I03TN6XUBRGdDAcutdbH4+6KGQil1CMRrQF4BtADsJ8PMHNkjGlN6sy3EIdZvBDRUkHc1Vrv5Zw/AbmgXq8vep4XA1gAcK213gXgfmrsxDUqpVaJ6FBrvQMg+63uU/eglIMyH6yyg0+YpmgRBNEBzgAAAABJRU5ErkJggg==");
+        }
+        .info-checkbox>p[type="check"][checked='false']:after{
+            content:'';
+            position: absolute;
+            display: inline-block;
+            width: 100%;
+            height: 10px;
+            background-size: contain;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABdklEQVQ4T42TvUrEQBSFz1kt1BewU8QnSJ5gu0mrsGDjRAt/UVBBWRtdsdgVBBdcFBHFZK0U+8TKwkIsEt/Ffq9M9se4GzVTDZM5X865dy5tpd8EeIlDv4z8i7ajGwCmaSt3D8QJBPUo9LZzMIzmBsQiIKs0AsuZLxOFah6IrdxbI5YW1uNn7zIBmGU7ugLwUCC1OPD3s5xYyr0gsdYVmzs9QNuJrhIsA1KJAv8oDemKIa3tKGzWu99+ABInyj0DsSVo7cdBs5Y+6xcPOOjF6UCMAChMGmCW+FdAEqeT1+zTbvprMxChe8FS+pzkRgIQOY5D/yCrsFkA2kpfgVwyf6YUxpMIkNMo8Hf/c0BLuXckdFYRRaQRh/5mGvLtoFQasj7H7gnM/d1GuY5Cf/lnG0ulIftz9BHgTJ6HBEkgK6Y8RLE4bI9MPPwnTrW4/ZQFfhx6C7SUfiI5m2cOOpDvYRK5puW47wK8fgTeTo5J7EW3lPZITH0B+X227Y6+aJ4AAAAASUVORK5CYII=");
+        }
+        span[tag='input-auto']{
+            border-bottom: 1px solid gray;
+            padding: 2px 10px;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+        span[tag='input-auto'].input-before:before{
+            content:'请输入';
+            text-align: center;
+            color: #a1a1a1;
+        }
+        .model{
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%,-50%);
+          padding: 10px;
+          border-radius: 4px;
+          background: #fff;
+          z-index: 999;
+          box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+        .model>textarea{
+          background: #fff;
+          border: 1px solid #dcdfe6;
+        }
+        .model>p{
+          text-align: right;
+          margin: 6px 0 0;
+          padding: 0;
+          line-height: normal;
+        }
+        .model>p>span{
+          display: inline-block;
+          background: #409eff;
+          padding: 6px 12px;
+          color: #FFFFFF;
+          border-radius: 4px;
+        }
+        .model>p>span:last-of-type{
+          background: #fff;
+          color: #606266;
+          border: 1px solid #dcdfe6;
+        }
+    </style>
+</head>
+<body>
+<span id="submit" style="position: absolute;top: -1000px;z-index: 0;">click</span>
+<div class="container">
+    <div class="model" style="display: none;">
+        <textarea id="inputArea" cols="30" rows="4"></textarea>
+        <p class="control-btn">
+            <span>保存</span>
+            <span>取消</span>
+        </p>
+    </div>
+    <p class="title">定约定金协议</p>
+    <div class="code">
+        <span>合同编号：<input systemParam="code" type="text" class="text-limit" tag="input" readonly="readonly" style="width:160px;border:0px;max-width:none" value=""/></span>
+    </div>
+    <ul class="signature">
+        <li>
+            <p><span>甲方（卖方）：</span><input systemParam="ownerName" type="text" class="text-limit text-read" extendParam="val1" tag="input" readonly="readonly" style="max-width:none" value=""/></p>
+        </li>
+        <li>
+            <p><span>证件号码：</span><input systemParam="ownerID" type="text" class="text-limit" extendParam="val2" tag="input" readonly="readonly" style="width:600px;border:0px;max-width:none" value=""/></p>
+        </li>
+        <li>
+            <p><span>乙方（买方）：</span><input systemParam="guestName" type="text" class="text-limit text-read" extendParam="val3" tag="input" readonly="readonly" style="max-width:none" value=""/></p>
+        </li>
+        <li>
+            <p><span>证件号码：</span><input systemParam="guestID" type="text" class="text-limit" extendParam="val4" tag="input" readonly="readonly" style="width:600px;border:0px;max-width:none" value=""/></p>
+        </li>
+        <li>
+            <p style="position:relative;"><img class="SignatureLocation" style="position:absolute;left:150px;top:-30px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /><span>丙方（见证人）：</span><input type="text" maxlength="25" class="text-limit dropdown-item" extendParam="val5" tag="input" required="required" style="width:600px;max-width:none" value=""/></p>
+        </li>
+    </ul>
+    <div class="paragraph" name="text-indent">
+        经丙方所在公司（武汉吉家房地产经纪服务有限公司）居间，甲方代表全体所有人出卖位于<span class="input-before" extendParam="val7" tag="input-auto"></span>的房屋给乙方。乙方对房屋位置、面积、户型、配套设施等现状均已了解清楚且无异议。为保证能顺利订立《武汉市存量房居间(买卖)合同》（双方已知晓样本合同的内容），经甲、乙双方协商，丙方见证，特约定本协议。
+    </div>
+    <div class="paragraph">
+        一、乙方在本协议签订之日,向甲方交付定金人民币<span class="input-before" systemParam="dealPrice" max="10" extendParam="val13" tag="input-auto" ></span>万元整，该定金由甲方
+        <div class="info-checkbox" name="manage"><p type="check"></p><span>自行保管</span></div>
+        <div class="info-checkbox" name="manage"><p type="check"></p><span>委托丙方所在公司代为保管</span></div>
+        ，甲乙双方完全明确定金的法律意义。甲方在签署本协议时将两证（或购房合同、权属证明等全部权利凭证）交予丙方所在公司保管，直至交易完毕。
+    </div>
+    <div class="paragraph">
+        二、乙方交付定金后，甲、乙双方应于<input type="text" listen="number" tag="input" extendParam="val16" readonly="readonly" class="text-limit calendar-item" style="display: inline-block;max-width: none;text-align: center;" value=""/> <span listen="number" max="2" tag="input-auto" extendParam="val17" class="input-before" ></span>时之前，至丙方所在公司签约点（地址为<span tag="input-auto" extendParam="val20" class="input-before"></span>）与丙方所在公司签订正式的《武汉市存量房居间（买卖）合同》。乙方逾期未签的，甲方有权没收定金；甲方逾期未签的，定金双倍赔付。
+    </div>
+    <div class="paragraph" name="text-indent">
+        甲方系全体所有人代表，保证已获得所有共有人一致同意并到期签署《武汉市存量房居间（买卖）合同》，如有任一房屋共有人手续不全不能签署或房屋有碍出售情形的（如查封、债权人占有等），由甲方承担定金赔付责任。
+    </div>
+    <div class="paragraph">
+        三、依照本协议第二条，甲、乙双方一致同意，签订正式的《武汉市存量房买卖(居间)合同》中的房屋价款（甲方净得价）为人民币（大写）<span tag="input-auto" extendParam="val25" max="12" class="input-before" listen="chinese"></span>圆整； 双方约定采取
+        <div class="info-checkbox" name="pay"><p type="check"></p><span>过户时一次性付款</span></div>
+        <div class="info-checkbox" name="pay"><p type="check"></p><span>首付款加贷款的方式支付房款</span></div>
+        ；其他：<span class="input-before" tag="input-auto" extendParam="val35"></span>如违反本条第一款，导致协议未能如期签署的，按定金罚则处理。
+    </div>
+    <div class="paragraph">
+        四、丙方所在公司经纪代理费<span tag="input-auto" extendParam="val37" max="12" class="input-before" listen="chinese"></span>圆整在订立《武汉市存量房居间(买卖)合同》时向
+        <div class="info-checkbox" name="person"><p type="check"></p><span>甲方</span></div>
+        <div class="info-checkbox" name="person"><p type="check"></p><span>乙方</span></div>
+        收取，如因一方违约，未能签署《武汉市存量房居间(买卖)合同》的，守约方同意将定金收益的50%作为丙方所在公司的居间损失。
+    </div>
+    <div class="paragraph">
+        五、本合同自签字之日起生效。丙方见证签署。本协议如有纠纷，由房屋所在地人民法院管辖。
+    </div>
+    <ul class="signature" name="footer">
+        <li>
+            <p><span>甲方（签字）:</span></p>
+            <p><span>乙方（签字）:</span></p>
+        </li>
+        <li>
+            <p><span>签署日期:<i class="blank"></i>年<i class="blank"></i>月<i class="blank"></i>日</span></p>
+            <p><span>签署日期:<i class="blank"></i>年<i class="blank"></i>月<i class="blank"></i>日</span></p>
+        </li>
+        <li>
+            <p style="position:relative;"><img class="SignatureLocation" style="position:absolute;left:130px;top:-10px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /><span>丙方（签字）:</span></p>
+            <p><span>签署日期:<i class="blank"></i>年<i class="blank"></i>月<i class="blank"></i>日</span></p>
+        </li>
+    </ul>
+      <!-- <span onclick="submit();">click</span> -->
+</div>
+</body>
+<script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+<script type="text/javascript" src="/js/bundle_dj20190409.js"></script>
+<!-- <script>
+     (function () {
+      var scriptList = document.getElementsByTagName("script")
+      console.log(scriptList)
+      if(!scriptList[0].src){
+        var host='https://sign2.jjw.com'
+        var host_other="http://sign2.jjw.com:28879"
+        var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_dj20190402.js","datepicker.css"]
+        for (let i = 0; i < addrList.length; i++) {
+          if(window.location.host==='localhost:8080'){
+            if(addrList[i].indexOf('bundle')>-1){
+              addrList[i]=host_other+'/'+addrList[i]
+            //   addrList[i]='./DJ.js'
+            }else{
+              addrList[i]=host_other+'/'+addrList[i]
+            // addrList[i]='./DJ.js'
+            }
+          }else{
+            addrList[i]='/'+addrList[i]
+          }
+          if(addrList[i].indexOf('.css')>-1){
+            var hm = document.createElement("link");
+            hm.rel="stylesheet"
+            hm.href = addrList[i];
+            var s = document.getElementsByTagName("link")[0];
+            s.parentNode.insertBefore(hm,s);
+          }else{
+            var hm = document.createElement("script");
+            hm.src = addrList[i];
+            var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+            s.parentNode.insertBefore(hm,s);
+          }
+        }
+      }
+    })();
+</script> -->
+</html>

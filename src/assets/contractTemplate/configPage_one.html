@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .cw_content {
+      position: relative;
+      font-size: 16px;
+      width: 840px;
+      box-sizing: border-box;
+      padding: 0 40px;
+      margin: 0 auto;
+    }
+
+    .config-content h4 {
+      /*margin: 0 auto;*/
+      text-align: center;
+    }
+    .config-content p{
+      margin: 4px 0;
+    }
+    .config-content ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .config-content ul.signature>li{
+      display: inline-block;
+      padding: 20px 0 0;
+      position: relative;
+    }
+    ul.signature>li .signature-date{
+      position: absolute;
+      white-space: nowrap;
+    }
+    .config-content ul.signature>li:first-of-type{
+      min-width: 44%;
+    }
+    .config-content .font-strong{
+      font-weight: bold;
+    }
+    .config-content .font-underline{
+      text-decoration: underline;
+    }
+    .config-content .page-two .remarks{
+      overflow: hidden;
+      font-size: 14px;
+    }
+    .config-content .page-two .remarks>.remarks-list{
+      overflow: hidden;
+    }
+
+    /*确认表样式*/
+    .config-content .table-check{
+      width: 100%;
+    }
+    .config-content .table-check ul.input-list>li{
+      text-align: right;
+      white-space: nowrap;
+    }
+    .config-content .table-check ul.input-list>li:after{
+      content:'';
+      display: inline-block;
+      margin-left: 4px;
+      width: 80px;
+      border-bottom: 1px solid #000000;
+    }
+
+    /*勾选框*/
+    .info-checkbox{
+      display: inline;
+      cursor: pointer;
+      text-indent: 0px;
+      line-height: 1;
+    }
+    .info-checkbox>p[type="check"]{
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 1px solid gray;
+      position: relative;
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+      margin: 0;
+    }
+    /*输入框伪类*/
+    .input-after:after{
+      content:'';
+      display: inline-block;
+      margin-left: 4px;
+      width: 80px;
+      border-bottom: 1px solid #000000;
+    }
+    i.white-space{
+      display: inline-block;
+      width: 40px;
+    }
+    p.dot-line{
+      border-bottom: 1px dashed;
+      padding-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="config-content cw_content">
+  <div class="page-one">
+    <h4>签约提示</h4>
+    <div class="section-one">
+      <p>
+        1、本合同需要签署一式四份，交易双方各持一份，居间方持两份；各方所持合同的内容（包括手工填写的部分）应完全一致。请您确认，在签署合同前，您已仔细阅读过合同条款并予以理解和接受，同时我公司经办人员已向您告知与交易房屋及合同签署有关的信息。</p>
+      <p>
+        2、双方当事人应当按照自愿、公平及诚实信用的原则订立合同，本合同非格式合同，任何一方不得将自己的意志强加给另一方。为体现双方自愿的原则，交易双方可在补充协议中自行约定或补充约定。另外，在您签署的合同中，除需手工填写的地方以外，其他部分均不得随意进行手写补充和修改；如您确实需要对合同中条款进行补充或修改的，请您及其他签署方在补充或修改处签字或盖章后，方为生效。
+      </p>
+      <p>
+        3、在填写相关合同文本时，应当仔细阅读合同条款，特别是其中具有选择性、补充性、填充性的内容。如遇 “□”等需要选择的内容，<span class="font-strong font-underline">请务必做出明确的勾选</span>，以划 “√
+        ”方式选定您选择的事项；对于实际情况未发生、或双方当事人不作约定、或该条不适用时，应当划“×” ，以示删除。
+      </p>
+      <p>
+        4、您已了解武汉住房限购政策、贷款政策及当事人的信用等情况，不会因上述政策原因导致您不能顺利完成房产交易。
+      </p>
+      <p>
+        5、在您向我司支付居间必要费用或居间服务佣金时，<span class="font-strong font-underline">请向我司经办人员索取由我司加盖财务印章的专用收据</span>；如该经办人员不能提供上述专用收据的，<span class="font-strong font-underline">请您务必谨慎付款</span>。
+      </p>
+    </div>
+    <div class="section-two">
+      <span style="float:left;">6、</span>
+      <div style="overflow: hidden;">
+        <span>为了保障您的资金安全，请您在向我司支付居间必要费用或居间服务佣金时，优先选择如下方式：</span>
+        <ul class="pay-list">
+          <li><span class="font-strong font-underline">POS机刷卡</span>——您可以使用本人或亲朋的银行储蓄卡或信用卡刷卡（本地卡、异地卡均可），刷卡后请持卡人在POS小票上亲笔签名</li>
+          <li><span class="font-strong font-underline">银行转账</span>——通过银行柜台以现金（或转账）的形式将居间必要费用或居间服务佣金直接汇入我公司如下<span class="font-strong">对公账户</span>内</li>
+          <li><span class="font-strong font-underline">网银汇款</span>——通过网上银行汇款的方式将居间必要费用或居间服务佣金直接汇入</li>
+        </ul>
+        <p>我公司的如下<span class="font-strong">对公账户</span></p>
+        <table class="font-strong" frame="border" rules="all" cellpadding="6px" style="width: 100%;border: 4px;">
+          <tr>
+            <td colspan="2">收款方名称： 武汉吉家房地产经纪服务有限公司</td>
+          </tr>
+          <tr>
+            <td>收款方开户行：工商银行泰合支行</td>
+            <td>收款账户：3202011909200075846</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="section-three">
+      <p>7、因特殊原因您需要以现金方式缴纳居间必要费用或居间服务佣金时，则只能将现金直接交给我司负责人，同时请务必向工作人员索取加盖“财务专用章”的收款凭证。</p>
+      <p>8、交易双方保证签署合同所填报的自身情况及提供的材料（包括原件、复印件）都是真实无误的。如有虚假，产生的一切责任和法律纠纷由交易双方自行承担。</p>
+    </div>
+    <ul class="signature font-strong">
+      <li>出卖人签字：</li>
+      <li>买受人签字：</li>
+    </ul>
+  </div>
+  <div class="page-two">
+    <h4>出卖人情况确认表</h4>
+    <div class="remarks">
+      <span style="float: left;">说明：</span>
+      <ul class="remarks-list">
+        <li>1、本确认表反映出卖人的真实情况，由出卖人本人在签署《武汉市存量房买卖合同》前如实填写，出卖人委托代理人出卖的，填写本表时应该出具委托书或法定证明。</li>
+        <li>2、本确认表应真实、全面，不得隐瞒，因虚假不实信息而导致的交易延迟或交易不成，后果自负。</li>
+        <li>3、本确认表相关情况事关均与房产交易相关，我司对个人隐私将予以保密。</li>
+      </ul>
+    </div>
+    <table class="table-check" frame="border" rules="all" cellpadding="6px">
+      <tr>
+        <td>出卖人姓名/名称</td>
+        <td>
+          <ul class="input-list">
+            <li>1.</li>
+            <li>2.</li>
+          </ul>
+        </td>
+        <td>身份证/执照号码</td>
+        <td>
+          <ul class="input-list">
+            <li>1.</li>
+            <li>2.</li>
+          </ul>
+        </td>
+        <td>联系电话</td>
+        <td>
+          <ul class="input-list">
+            <li>E-mail：</li>
+            <li>Tel：</li>
+            <li>紧急电话：</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>现住所(实际住址)</td>
+        <td colspan="3"></td>
+        <td colspan="2">
+          <span>接受付款方式</span>
+          <div class="info-checkbox">
+            <p type="check"></p>一次性
+          </div>
+          <div class="info-checkbox">
+            <p type="check"></p>贷款
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>是否需要提前还款</td>
+        <td colspan="5">
+          <ul class="checkbox-list">
+            <li>
+              <div class="info-checkbox">
+                <p type="check"></p>需要
+                <span>（<div class="info-checkbox"><p type="check"></p>出卖人自还</div><div class="info-checkbox"><p type="check"></p>出卖人无力自还</div>，需要买受人还款并同意委托公证给
+              居间方办理，列入合同）</span>
+              </div>
+            </li>
+            <li>
+              <div class="info-checkbox">
+                <p type="check"></p>不需要，房产现无抵押
+              </div>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>房屋权属资料情况（出卖人签合同须提供原件）</td>
+        <td colspan="5">
+          <ul class="checkbox-list">
+            <li>
+              <div class="info-checkbox">
+                <p type="check"></p>合同房
+                <span>（<div class="info-checkbox"><p type="check"></p>权属证明  </div><div class="info-checkbox"><p type="check"></p>购房发票  </div><div class="info-checkbox"><p type="check"></p>土地分割证明  </div><div class="info-checkbox"><p type="check"></p>购房合同  </div><div class="info-checkbox"><p type="check"></p>宗地图  </div><div class="info-checkbox"><p type="check"></p>房屋转移登记申请表</div>）</span>
+              </div>
+            </li>
+            <li>
+              <div class="info-checkbox">
+                <p type="check"></p>两证房
+                <span>（<div class="info-checkbox"><p type="check"></p>房改房 </div><div class="info-checkbox"><p type="check"></p>需经教育、行政等机关同意方能出售的房屋  </div><div class="info-checkbox"><p type="check"></p>商品房  </div><div class="info-checkbox"><p type="check"></p>办证满五年的经济适用房</div>）</span>
+              </div>
+            </li>
+            <li>
+              <div class="info-checkbox input-after"><p type="check"></p>其他</div>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>出卖人婚姻记录</td>
+        <td colspan="5">
+          <ul class="checkbox-list">
+            <li>
+              <div class="info-checkbox">
+                <p type="check"></p>未婚
+              </div>
+              <div class="info-checkbox">
+                <p type="check"></p>初婚
+              </div>
+              <div class="info-checkbox">
+                <p type="check"></p>离婚（<span class="input-after"></span>次）
+              </div>
+            </li>
+            <li>
+              <div class="info-checkbox">
+                <p type="check"></p>再婚（<span class="input-after"></span>次）
+              </div>
+              <div class="info-checkbox">
+                <p type="check"></p>丧偶
+              </div>
+            </li>
+            <li>
+              <div class="info-checkbox"><p type="check"></p>其他（如配偶在外地或国外、人身自由或行为能力受限等）</div>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>房产权利说明</td>
+        <td colspan="5">
+          <ul class="checkbox-list">
+            <li>
+              <span>1、正常类：</span>
+              <div class="info-checkbox">
+                <p type="check"></p>独占所有
+              </div>
+              <div class="info-checkbox">
+                <p type="check"></p>共有
+              </div>
+            </li>
+            <li>
+              <span>2、特殊类：</span>
+              <div class="info-checkbox">
+                <p type="check"></p>法定代理人代监护人处置
+              </div>
+              <div class="info-checkbox">
+                <p type="check"></p>离婚财产，权利分割<span class="input-after"></span>办理
+              </div>
+              <div class="info-checkbox">
+                <p type="check"></p>赠与，<span class="input-after"></span>办理房屋赠与手续
+              </div>
+              <div class="info-checkbox">
+                <p type="check"></p>继承或部分继承，继承公证<span class="input-after"></span>办
+              </div>
+              <div class="info-checkbox">
+                <p type="check"></p>其他（如房产经司法机关判决、裁定确定为其他权利人，非亲友公证）
+              </div>
+              <!--歧义-->
+            </li>
+            <li class="font-strong">
+              <span>权利记载事项：</span>
+              <div class="info-checkbox input-after" style="margin-right: 20px;">
+                <p type="check"></p>抵押 抵押权人为：
+              </div>
+              <div class="info-checkbox">
+                <p type="check"></p>查封
+              </div>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td class="font-strong">经纪机构已告知情况确认</td>
+        <td colspan="5">
+          <ul class="checkbox-list">
+            <li>
+              <div class="info-checkbox">
+                <p type="check"></p>交易流程
+              </div>
+            </li>
+            <li>
+              <div class="info-checkbox">
+                <p type="check"></p>资料（含签约、贷款、过户）
+              </div>
+            </li>
+            <li>
+              <div class="info-checkbox">
+                <p type="check"></p>收费（含中介费、应缴纳税费）
+              </div>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td class="font-strong">与合同相关的重要情况说明</td>
+        <td colspan="5">
+          <ul class="checkbox-list">
+            <li class="input-after">1.房屋瑕疵说明：</li>
+            <li class="input-after">2.出卖人确认房屋上手（取得）价为：</li>
+            <li class="input-after">3.户口迁出保证金：</li>
+            <li class="input-after">4.租赁（居住权）解决方案：</li>
+            <li class="input-after">5.有可能影响房屋正常出售的债务及诉讼情况说明：</li>
+            <li class="input-after">6.物业交接问题（未结费用、物品等）：</li>
+            <li class="input-after">其他：</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td class="font-strong">个性化服务要求</td>
+        <td colspan="5"></td>
+      </tr>
+    </table>
+    <div class="section-one font-strong">
+      <p>注意：过户评估及过户税费金额认定为房地、税务部门的权力，我司不提供精确数据。</p>
+      <p class="dot-line">咨询意见仅供参考。</p>
+      <ul class="signature">
+        <li>出卖人签章：</li>
+        <li>业务员签章：<p class="signature-date">年<i class="white-space"></i>月<i class="white-space"></i>日</p></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

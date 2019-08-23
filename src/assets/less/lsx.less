@@ -1,0 +1,907 @@
+@import '../common.less';
+//公共部分
+.paper-table-box {
+    //margin-top: 10px;
+    padding: 5px 10px 0px;
+    background-color: @bg-white;
+}
+
+.blue {
+    color: @color-blue;
+}
+
+.red {
+    color: #FF3E3E;
+}
+
+.cl-1 {
+    color: #6C7986;
+}
+
+.cl-2 {
+    color: #233241;
+}
+.cl-3{
+    color: #d6d6d6;
+}
+
+.font-cl1 {
+    color: #55657A;
+}
+
+.tc {
+    text-align: center;
+}
+
+.in-block {
+    display: inline-block;
+}
+.fl{
+    float: left;
+}
+.norwap{
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+
+
+// margin
+.mt-20 {
+    margin-top: 10px;
+}
+
+.mt-50 {
+    margin-top: 50px;
+}
+
+.mr-5 {
+    margin-right: 5px;
+}
+.mb-10{
+    margin-bottom: 10px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.mr-30 {
+    margin-right: 30px;
+}
+
+.mr-40 {
+    margin-right: 40px;
+}
+.pl-9{
+    padding-left: 9px;
+}
+.pr{
+    position: relative;
+}
+.no-data{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.no-data-table{
+    height: 200px;
+    text-align: center;
+    line-height: 200px;
+    .cl-1;
+}
+
+// 宽度
+.w100 {
+    width: 100px;
+}
+
+.w110 {
+    width: 110px;
+}
+
+.w120 {
+    width: 120px;
+}
+
+.w134 {
+    width: 134px;
+}
+
+.w160 {
+    width: 160px;
+}
+
+.w180 {
+    width: 180px;
+}
+
+.w185 {
+    width: 185px;
+}
+
+.w200 {
+    width: 200px;
+}
+
+.w262 {
+    width: 262px;
+}
+
+.w270 {
+    width: 270px;
+}
+
+.w284 {
+    width: 284px;
+}
+
+.w300 {
+    width: 300px;
+}
+
+.w312 {
+    width: 312px;
+}
+
+.w322 {
+    width: 322px;
+}
+
+.w330 {
+    width: 330px;
+}
+
+.w460 {
+    width: 460px;
+}
+
+// 按钮
+.paper-btn {
+    width: 100px;
+    text-align: center;
+}
+
+.management-btn {
+    width: 122px;
+    text-align: center;
+}
+
+.contract-btn {
+    width: 72px;
+    text-align: center;
+}
+
+.paper-btn-blue {
+    background-color: #409EFF;
+    border-color: #409EFF;
+    &:hover{
+        background-color: #66b1ff;
+        border-color: #66b1ff;
+    }
+}
+
+.paper-btn-green {
+    background-color: #54D384;
+    border-color: #54D384;
+}
+.plain-btn-blue {
+    border-color: @color-blue;
+    color: @color-blue;
+    &:hover{
+        color: #fff;
+        background-color: @color-blue;
+    }
+}
+
+.paper-btn-red {
+    background-color: #F56C6C;
+    border-color: #F56C6C;
+}
+.plain-btn-red{
+    border-color: #F56C6C;
+    color: #F56C6C;
+    &:hover{
+        color: #fff;
+        background-color: #F56C6C;
+    }
+}
+
+.contract-gray {
+    background-color: #EAEFF5;
+    border-color: #EAEFF5;
+    color: #233241;
+}
+
+// 头部
+.paper-set-tit {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    // display: none;
+    .paper-tit-fl {
+        font-size: 14px;
+        line-height: 32px;
+        color: #233241;
+    }
+}
+
+// 列表
+.paper-table {
+    // width: 100%;
+    /deep/.el-table__header-wrapper,
+    /deep/.el-table__fixed-header-wrapper {
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    /deep/.el-table__header th {
+        background-color: #EEF2FB;
+        line-height: 30px;
+        color: #6C7986;
+    }
+    /deep/&.el-table td {
+        padding: 25px 0;
+    }
+    /deep/&.el-table td:last-child>.cell {
+        padding-right: 0;
+    }
+    .line {
+        background-color: #e5e4ea;
+        display: inline-block;
+        height: 14px;
+        width: 1px;
+        margin: 0 6px;
+        position: relative;
+        top: 3px;
+    }
+}
+
+// 筛选条件
+.prop-form {
+    // padding-top: 10px;
+    /deep/.el-form-item__label {
+        color: #6C7986;
+        padding-right: 8px;
+    }
+    /deep/.el-form-item {
+        margin-right: 20px;
+    }
+    /deep/.el-select,.el-input{
+        display: block;
+    }
+    .mr {
+        margin-right: 0;
+    }
+}
+
+// 弹层
+.layer-paper {
+    /deep/.el-dialog__header {
+        text-align: left;
+    }
+    // /deep/.el-dialog__footer {
+    //     padding-bottom: 30px;
+    // }
+    /deep/.el-dialog__body {
+        padding: 0;
+    }
+    /deep/.el-dialog__title {
+        font-size: 20px;
+    }
+    /deep/.el-dialog__header {
+        padding: 20px;
+        border-bottom: 1px solid #EDECF0;
+    }
+    /deep/.el-dialog__headerbtn{
+        font-size: 26px;
+    }
+    .txt {
+        height: 140px;
+        padding: 0 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        color: #233241;
+    }
+}
+
+// 作废弹层
+/deep/.layer-invalid {
+    padding: 30px 0 30px 20px;
+    .ul {
+        display: flex;
+    }
+    .input-box {
+        display: flex;
+        margin-top: 25px;
+        .input {
+            width: 586px;
+            position: relative;
+            background-color: #FAFAFB;
+            /deep/.el-textarea__inner {
+                background-color: transparent;
+                border-color: #ECEFF2;
+                height: 140px;
+            }
+            .text-absloute {
+                position: absolute;
+                right: 12px;
+                bottom: 12px;
+            }
+        }
+    }
+}
+
+.layer-refused {
+    .input-box {
+        margin-top: 0;
+        .input /deep/.el-textarea__inner {
+            height: 200px;
+        }
+    }
+}
+
+/deep/.layer-receive-tab {
+    padding: 10px 20px;
+    .el-tabs__nav-wrap::after {
+        height: 0;
+    }
+    .el-tabs__header {
+        margin-bottom: 0;
+    }
+    .paper-table.el-table td {
+        padding: 5px 0;
+    }
+    .receive-label {
+        display: flex;
+        padding-top: 30px;
+        .receive-txt {
+            width: 770px;
+            color: #233241;
+            word-break: break-all;
+        }
+    }
+}
+
+// 合同资料库
+.contract-box {
+    padding: 20px 20px 0;
+    border:1px solid #E8EAF6;
+    // .contract-top {
+    //     height: 36px;
+    //     display: flex;
+    //     align-items: center;
+    //     position: absolute;
+    //     right: 0;
+    //     top: -24px; // background-color: red;
+    // } // 相册
+    // .contract-photo {
+    //     border: 1px solid #E8EAF6;
+    //     padding: 0 20px 20px;
+    //     .tit {
+    //         color: #32485F;
+    //         font-size: 14px;
+    //     }
+    //     .contract-main {
+    //         padding: 0 10px;
+    //     }
+    //     .contract-tit {
+    //         margin-top: 14px;
+    //         color: #6C7986;
+    //         font-size: 14px;
+    //     }
+    //     .contract-ul {
+    //         overflow: hidden;
+    //         >li {
+    //             float: left;
+    //             margin-top: 12px;
+    //             margin-right: 20px;
+    //             width: 140px;
+    //             height: 140px;
+    //             border: 1px solid #DEDDE2;
+    //             box-sizing: border-box;
+    //             border-radius: 2px;
+    //             overflow: hidden;
+    //             position: relative;
+    //             >img {
+    //                 display: block;
+    //                 width: 100%;
+    //                 height: 100%;
+    //             }
+    //             &:last-child {
+    //                 margin-right: 0;
+    //             }
+    //             .el-checkbox {
+    //                 position: absolute;
+    //                 right: 7px;
+    //                 top: 7px;
+    //                 /deep/.is-checked {
+    //                     .el-checkbox__inner {
+    //                         background-color: #54D384;
+    //                     }
+    //                 }
+    //                 /deep/.el-checkbox__inner {
+    //                     width: 35px;
+    //                     height: 35px;
+    //                     background-color: rgba(0, 0, 0, 0.5);
+    //                     border: 0;
+    //                     border-radius: 50%;
+    //                     &::after {
+    //                         transform: rotate(45deg) scaleY(1);
+    //                         width: 8px;
+    //                         height: 16px;
+    //                         left: 13px;
+    //                         top: 5px;
+    //                     }
+    //                 }
+    //                 /deep/.el-checkbox__label {
+    //                     font-size: 0;
+    //                     padding-left: 0;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    // 标题
+    .contract-tit{
+        color: #32485F;
+        margin-bottom: 12px;
+    }
+    .contract-main{
+        padding:0 10px;
+        .spna{
+            float: left;
+            width: 6px;
+            display: block;
+            height: 19px;
+            margin-right: 6px;
+            .red;
+        }
+        .steps-img>li{
+            margin-top: 0;
+            margin-bottom: 20px;
+            >.img{
+                top:20px;
+            }
+        }
+    }
+}
+
+// 图片放大
+.fixed-zoom-box {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.5);
+    .fixed-zoom {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+    .zoom-div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        >img {
+            display: block;
+            max-height: 80%;
+            max-width: 80%;
+        }
+    }
+    .fixed-zoom-close {
+        position: absolute;
+        z-index: 9;
+        right: 0;
+        top: 0;
+        color: #fff;
+        width: 80px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        cursor: pointer;
+    }
+}
+
+.contract-tab {
+    /deep/.el-tabs__content {
+        overflow: initial;
+    }
+}
+
+// 后期进度弹层
+.layer-progress {
+    padding: 10px 20px 20px;
+    line-height: 36px;
+    .ul {
+        display: flex;
+    }
+    .ul-line {
+        line-height: 36px;
+    }
+    /deep/.paper-table.el-table td {
+        padding: 15px 0;
+    }
+}
+
+// 更换交易流程
+.replace-box {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 20px 10px;
+    >div {
+        width: 340px;
+        border: 1px solid #E8EAF6;
+        border-radius: 4px;
+        box-sizing: border-box;
+        >.tit {
+            line-height: 54px;
+            background-color: #F2F3F8;
+            border-bottom: 1px solid #E8EAF6;
+            text-align: center;
+            color: #6C7986;
+        }
+        >.ul {
+            height: 230px;
+            overflow-y: auto;
+            >li {
+                padding: 0 20px;
+                line-height: 46px;
+                border-bottom: 1px solid #E8EAF6;
+                cursor: pointer;
+            }
+            >.on {
+                background-color: #f1f5ff;
+            }
+        }
+        >.ul-box {
+            height: 230px;
+            overflow-y: auto;
+            >li {
+                padding: 0 20px;
+                line-height: 36px;
+            }
+        }
+    }
+}
+
+.steps-from {
+    // padding: 0 20px 20px;
+    padding:20px 20px 0 0;
+    // .steps-li {
+    //     padding-top: 20px;
+    //     overflow: hidden;
+    // }
+    // .steps-li-fl {
+    //     line-height: 32px;
+    //     float: left;
+    //     width: 140px;
+    //     >.steps-fl{
+    //         max-width: 126px;
+    //         text-align: right;
+    //         float: right;
+    //     }
+    // }
+    // .steps-fr{
+    //     float: right;
+    //     width: 550px;
+    // }
+    // .steps-mandatory {
+    //     float: right;
+    //     width: 14px;
+    //     color: #FF3E3E;
+    //     height: 32px;
+    // }
+    // .steps-see {
+    //     line-height: 32px;
+    //     word-break: break-all;
+    // }
+    /deep/ .el-form-item__label{
+        padding-left: 20px;
+    }
+    // .arrow {
+    //     width: 20px;
+    //     position: absolute;
+    //     top: 100px;
+    //     transform: translateY(-50%);
+    //     left: 6px;
+    //     > span{
+    //         border: 1px solid #dcdfe6;
+    //         position: relative;
+    //         width: 20px;
+    //         height: 20px;
+    //         border-radius: 50%;
+    //         display: inline-block;
+    //         cursor: pointer;
+    //         i {
+    //             position: absolute;
+    //             left: 50%;
+    //             top: 50%;
+    //             transform: translate(-50%,-50%);
+    //         }
+    //         &:hover{
+    //             background-color: #ecf5ff;
+    //         }
+    //     }
+    // }
+    // .to-step-report {
+    //     position: absolute;
+    //     right: 60px;
+    //     top: 21px;
+    // }
+    .select-title{
+        position: absolute;
+        left: 10px;
+        top: 0;
+        font-size: 20px;
+        font-family: "MicrosoftYaHei";
+        color: #303133;
+        .select-option {
+            display: flex;
+            >li {
+                height: 62px;
+                margin-left: 30px;
+                display: flex;
+                align-items: center;
+                &.active{
+                    color: @color-blue;
+                    border-bottom: 3px solid @color-blue;
+                }
+            }
+        }
+        .stepsData-tit{
+            margin: 18px 0 0 12px;
+        }  
+    }
+    
+    .view-title {
+        font-weight: bold;
+        padding-left: 40px;
+    }
+    .steps-input{
+        .text-absloute{
+            bottom: 0;
+        }
+    }
+    .handle-choose {
+        margin-bottom: 10px;
+        > span {
+            display: inline-block;
+            width: 136px;
+            text-align: right;
+            margin-right: 10px;
+        }
+    }
+    .step-report-table {
+        padding-left: 40px;
+        margin-bottom: 50px;
+        .title {
+            font-weight: bold;
+        }
+    }
+    .step-report-log {
+        position: relative;
+        .text-absloute {
+            position: absolute;
+            right: 12px;
+            bottom: 0;
+        }
+    }
+}
+/deep/.handle-dialog {
+    .el-dialog__header{
+        padding: 32px!important;
+    }
+    .el-dialog__title {
+        display: none;
+    }
+    .el-dialog__headerbtn {
+        top: 16px;
+    }
+}
+
+.steps-input {
+    position: relative;
+    background-color: #FAFAFB;
+    /deep/.el-textarea__inner {
+        background-color: transparent;
+        border-color: #ECEFF2;
+        height: 140px;
+    }
+    .text-absloute {
+        position: absolute;
+        right: 12px;
+        bottom: 12px;
+    }
+}
+
+.steps-img{
+    overflow: hidden;
+    >li{
+        float: left;
+        margin-left: 12px;
+        margin-top: 10px;
+        width: 120px;
+        height: 120px;
+        position: relative;
+        border-radius: 4px;
+        &:first-child{
+            margin-left: 0;
+        }
+        .icon-tubiao-6{
+            display: none;
+            position: absolute;
+            right: 3px;
+            top: -5px;
+            font-size: 22px;
+            color: #F56C6C;
+            cursor: pointer;
+            &::before{
+                position: relative;
+                z-index: 1;
+            }
+            &::after{
+                content: '';
+                position: absolute;
+                left: 6px;
+                right: 6px;
+                top: 10px;
+                bottom: 10px;
+                background-color: #fff;
+                border-radius: 50%;
+            }
+        }
+        >.img{
+            position: relative;
+            top: 35px;
+            left: 30px;
+        }
+        >.p{
+            position: absolute;
+            bottom: 6px;
+            line-height: 20px;
+            left: 0;
+            right: 0;
+            height: 20px;
+            overflow: hidden;
+            text-align: center;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        &:hover{
+            background-color: #F2F3F8;
+            .icon-tubiao-6{
+                display: block;
+            }
+        }
+    }
+    // .steps-img-li{
+    //     position: relative;
+    //     border:1px solid #EBEBEB;
+    //     box-sizing: border-box;
+    //     border-radius: 4px;
+    //     width: 130px;
+    //     height: 130px;
+    //     >img{
+    //         display: block;
+    //         width: 100%;
+    //         height: 100%;
+    //     }
+
+    // }
+    // .steps-mp4-li{
+    //     line-height: 20px;
+    //     overflow: hidden;
+    //     .icon-tubiao-7{
+    //         font-size: 20px;
+    //         float: left;
+    //         margin-left: 10px;
+    //         cursor: pointer;
+    //     }
+    //     .icon-steps{
+    //         width: 16px;
+    //         margin-right: 8px;
+    //         float: left;
+    //     }
+    // }
+}
+
+// 调整步骤弹层
+.layer-chekbox-box{
+    padding: 20px 20px 10px;
+    /deep/.el-table{
+        .cell{
+            padding: 0;
+        }
+        .el-checkbox{
+            display: block;
+        }
+        td{
+            padding: 0;
+        }
+    }
+    .layer-checkbox-p>p{
+        padding: 16px 0 16px 40px ;
+        border-bottom: 1px solid #E8EAF6;
+        text-align: left;
+        &:last-child{
+            border-bottom: 0;
+        }
+    }
+    .check-all{
+        padding:16px 0 16px 70px;
+        text-align: left;
+    }
+}
+
+// 分页
+.pagination{
+    text-align: right;
+    // padding-top: 15px;
+    margin-right: 10px;
+}
+.fileUp{
+    display: inline-block;
+}
+
+// 自适应高度
+.layer-scroll-auto{
+    /deep/.el-dialog{
+     margin-top: 80px !important;
+    }
+}
+
+.el-table .cell>.blue{
+    cursor: pointer;
+}
+// 输入框换行
+.check-break{
+    white-space:normal;
+    padding-left: 14px;
+    /deep/.el-checkbox__input{
+        position: absolute;
+        left: 0;
+        top: 4px;
+    }
+}
+.steps-postion-a{
+    position: absolute;
+    left: -14px;
+}
+.steps-postion-b{
+    padding-left: 12px;
+}
+.steps-p{
+    position: relative;
+    padding-left: 60px;
+    height: 40px;
+    .steps-span{
+        position: absolute;
+        left: 0;
+        top:0;
+        line-height: 40px;
+    }
+    .steps-line{
+        display: flex;
+        height: 40px;
+        align-items: center;
+    }
+    /deep/.el-button--text{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 100%;
+    }
+}
