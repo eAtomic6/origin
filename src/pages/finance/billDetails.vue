@@ -9,7 +9,9 @@
         </li>
       </ul>
       <p v-if="(activeItem==='收款信息'&&receiptBill===4)||activeItem==='付款信息'">
-        <el-button class="btn-info" round size="small" type="primary" @click="showDialog" v-if="billMsg.auditButton&&btnCheck">审核</el-button>
+        <el-button class="btn-info" round size="small" type="primary" @click="quickCheck"
+                   v-if="billMsg.auditButton">审核
+        </el-button>
       </p>
     </div>
     <ul class="bill-details-content">
@@ -29,7 +31,7 @@
             </el-table-column>
             <el-table-column align="center" label="物业地址 ">
               <template slot-scope="scope">
-                <span>{{billMsg.address}}</span>
+                <span>{{billMsg.address|nullFormatter(2)}}</span>
               </template>
             </el-table-column>
             <el-table-column align="center" label="收款方" v-if="activeItem==='付款信息'">
@@ -72,90 +74,102 @@
         <li v-if="activeItem==='收款信息'">
           <h4 class="f14">合计金额</h4>
           <p class="total-text">合计：<span>{{billMsg.amount}}</span>元</p>
-          <el-table border :data="!billMsg.inAccount?[{}]:billMsg.inAccount" header-row-class-name="theader-bg" :span-method="collapseRow" v-if="billMsg.inAccount||!billMsg.inAccount">
-            <el-table-column align="center" label="款类">
-              <template slot-scope="scope">
-                <span>{{billMsg.moneyTypeName}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="票据">
-              <template slot-scope="scope">
-                <span class="span-cursor" @click="getPaper('details')" v-if="billMsg.billCode">{{billMsg.billCode}}</span>
-                <span v-else>--</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="支付方式">
-              <template slot-scope="scope">
-                <span v-if="billMsg.inAccount&&billMsg.inAccount.length>0">{{scope.row.payMethod?scope.row.payMethod.label:'--'}}</span>
-                <span v-else>{{billMsg.method}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="金额（元）">
-              <template slot-scope="scope">
-                <span v-if="billMsg.inAccount&&billMsg.inAccount.length>0">{{scope.row.amount}}</span>
-                <span v-else>{{billMsg.amount}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column min-width="200" align="center" label="收款账户">
-              <template slot-scope="scope">
-                <p v-if="scope.row.cardNumber&&scope.row.cardNumber.length>0">{{scope.row.userName}} {{scope.row.bankName}} {{scope.row.cardNumber}}</p>
-                <span v-else>-</span>
-              </template>
-            </el-table-column>
+          <div class="card-list-item" v-for="(item,index) in billMsg.inAccount">
+            <el-table border :data="[billMsg.inAccount[index]]" header-row-class-name="theader-bg">
+              <el-table-column align="center" label="款类">
+                <template slot-scope="scope">
+                  <span>{{billMsg.moneyTypeName}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="票据">
+                <template slot-scope="scope">
+                  <span class="span-cursor" @click="getPaper('details')"
+                        v-if="billMsg.billCode">{{billMsg.billCode}}</span>
+                  <span v-else>--</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="支付方式">
+                <template slot-scope="scope">
+                  <span v-if="billMsg.inAccount&&billMsg.inAccount.length>0">{{scope.row.payMethod?scope.row.payMethod.label:'--'}}</span>
+                  <span v-else>{{billMsg.method}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="金额（元）">
+                <template slot-scope="scope">
+                  <span v-if="billMsg.inAccount&&billMsg.inAccount.length>0">{{scope.row.amount}}</span>
+                  <span v-else>{{billMsg.amount}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="手续费金额（元）">
+                <template slot-scope="scope">
+                  <span v-if="billMsg.inAccount&&billMsg.inAccount.length>0">{{scope.row.fee}}</span>
+                  <!--                  <span v-else>{{billMsg.amount}}</span>-->
+                </template>
+              </el-table-column>
+              <el-table-column min-width="200" align="center" label="收款账户">
+                <template slot-scope="scope">
+                  <p v-if="scope.row.cardNumber&&scope.row.cardNumber.length>0">{{scope.row.userName}}
+                    {{scope.row.bankName}} {{scope.row.cardNumber}}</p>
+                  <span v-else>-</span>
+                </template>
+              </el-table-column>
 
-            <el-table-column align="center" label="状态">
-              <template slot-scope="scope">
-                <!--{{billMsg.checkStatus|getLabel}}-->
-                <span>{{billMsg.statusName}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="到账时间">
-              <template slot-scope="scope">
-                {{billMsg.toAccountTime|formatTime}}
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="操作">
-              <template slot-scope="scope">
-                <el-button type="text" @click="getPaper('create')" v-if="btnBill&&billMsg.billStatus&&billMsg.isDel===1&&(billMsg.billStatus.value===1||billMsg.billStatus.value===4)&&billMsg.payStatusValue!==4&&billMsg.payStatusValue!==11">开票</el-button>
-                <el-button type="text" @click="getPaper('client')" v-else-if="btnBill&&billMsg.billStatus&&billMsg.billStatus.value===2">打印客户联</el-button>
-                <span v-else>--</span>
-              </template>
-            </el-table-column>
-          </el-table>
+              <el-table-column align="center" label="状态">
+                <template slot-scope="scope">
+                  <!--{{billMsg.checkStatus|getLabel}}-->
+                  <span>{{billMsg.statusName}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="到账时间">
+                <template slot-scope="scope">
+                  {{billMsg.toAccountTime|formatTime}}
+                </template>
+              </el-table-column>
+              <!--<el-table-column align="center" label="操作">
+                <template slot-scope="scope">
+                  <el-button type="text" @click="getPaper('create')" v-if="btnBill&&billMsg.billStatus&&billMsg.isDel===1&&(billMsg.billStatus.value===1||billMsg.billStatus.value===4)&&billMsg.payStatusValue!==4&&billMsg.payStatusValue!==11">开票</el-button>
+                  <el-button type="text" @click="getPaper('client')" v-else-if="btnBill&&billMsg.billStatus&&billMsg.billStatus.value===2">打印客户联</el-button>
+                  <span v-else>&#45;&#45;</span>
+                </template>
+              </el-table-column>-->
+            </el-table>
+            <template v-if="billMsg.account&&billMsg.account.length>0&&billMsg.account[index].cardNumber.length>0&&billMsg.inAccountType===4">
+              <h4 class="f14">资料补充：</h4>
+              <el-table border :data="[billMsg.account[index]]" header-row-class-name="theader-bg">
+                <el-table-column align="center" prop="bankName" label="刷卡/转账银行">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.bankName.length>0">{{scope.row.bankName}}</span>
+                    <span v-else>--</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="userName" label="户名">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.userName.length>0">{{scope.row.userName}}</span>
+                    <span v-else>--</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="cardNumber" label="账户">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.cardNumber.length>0">{{scope.row.cardNumber}}</span>
+                    <span v-else>--</span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" prop="orderNo" label="订单编号">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.orderNo.length>0">{{scope.row.orderNo}}</span>
+                    <span v-else>--</span>
+                  </template>
+                </el-table-column>
+                <!--<el-table-column align="center" prop="amount" label="金额（元）"></el-table-column>
+                <el-table-column align="center" prop="fee" label="手续费（元）"></el-table-column>-->
+                <!--<el-table-column align="center" label="手续费（元）" prop="fee">
+                  <template slot-scope="scope">{{(scope.row.fee||scope.row.fee===0)?scope.row.fee:'&#45;&#45;'}}</template>
+                </el-table-column>-->
+              </el-table>
+            </template>
+          </div>
         </li>
         <li v-if="activeItem==='收款信息'">
-          <h4 class="f14">刷卡信息</h4>
-          <el-table border :data="billMsg.account" header-row-class-name="theader-bg">
-            <el-table-column align="center" prop="bankName" label="刷卡/转账银行">
-              <template slot-scope="scope">
-                <span v-if="scope.row.bankName.length>0">{{scope.row.bankName}}</span>
-                <span v-else>--</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="userName" label="户名">
-              <template slot-scope="scope">
-                <span v-if="scope.row.userName.length>0">{{scope.row.userName}}</span>
-                <span v-else>--</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="cardNumber" label="账户">
-              <template slot-scope="scope">
-                <span v-if="scope.row.cardNumber.length>0">{{scope.row.cardNumber}}</span>
-                <span v-else>--</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="orderNo" label="订单编号">
-              <template slot-scope="scope">
-                <span v-if="scope.row.orderNo.length>0">{{scope.row.orderNo}}</span>
-                <span v-else>--</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="amount" label="金额（元）"></el-table-column>
-            <!--<el-table-column align="center" prop="fee" label="手续费（元）"></el-table-column>-->
-            <el-table-column align="center" label="手续费（元）">
-              <template slot-scope="scope">{{billMsg.systemFee?billMsg.systemFee:'--'}}</template>
-            </el-table-column>
-          </el-table>
         </li>
         <li v-if="activeItem==='付款信息'">
           <h4 class="f14">账户信息</h4>
@@ -200,7 +214,9 @@
             <label>付款凭证:</label>
             <ul class="image-list" v-if="files.length>0">
               <li class="margin-right" v-for="(item,index) in files" :key="index" @click="previewPhoto(files,index)">
-                <upload-cell :type="item.type"></upload-cell>
+                <img :src="item|getSignImage(preloadFiles,_self)" alt="" v-if="isPictureFile(item.type)" height="90px"
+                     :key="item.path" :width="item.width">
+                <upload-cell :type="item.type" v-else></upload-cell>
                 <el-tooltip :content="item.name" placement="top">
                   <p class="span">{{item.name}}</p>
                 </el-tooltip>
@@ -245,7 +261,7 @@
           :total="total">
         </el-pagination>-->
       </li>
-      <li v-if="activeItem==='收款信息'">
+      <li v-if="activeItem==='收款信息'&&billMsg.RQcode">
         <h4 class="f14">收款二维码</h4>
         <img :src="billMsg.RQcode" alt="">
       </li>
@@ -290,331 +306,444 @@
   </span>
     </el-dialog>
     <preview :imgList="previewFiles" :start="previewIndex" v-if="preview" @close="preview=false"></preview>
-    <layer-invoice ref="layerInvoice" :printType="printType" :contId="$route.query.contId" @emitPaperSet="emitPaperSetFn"></layer-invoice>
-    <checkPerson :show="checkPerson.state" :type="checkPerson.type" :bizCode="checkPerson.code" :flowType="checkPerson.flowType" @submit="personChose" @close="checkPerson.state=false" v-if="checkPerson.state"></checkPerson>
+    <layer-invoice ref="layerInvoice" :printType="printType" :contId="$route.query.contId"
+                   @emitPaperSet="emitPaperSetFn"></layer-invoice>
+    <checkPerson :show="checkPerson.state" :type="checkPerson.type" :bizCode="checkPerson.code"
+                 :flowType="checkPerson.flowType" @submit="personChose" @close="checkPerson.state=false"
+                 v-if="checkPerson.state"></checkPerson>
   </div>
 </template>
 
 <script>
-  import LayerInvoice from '@/components/LayerInvoice'
-  import {FILTER} from "@/assets/js/filter";
-  import {MIXINS} from "@/assets/js/mixins";
-  import checkPerson from '@/components/checkPerson'
+    import LayerInvoice from '@/components/LayerInvoice'
+    import {FILTER} from "@/assets/js/filter";
+    import {MIXINS} from "@/assets/js/mixins";
+    import checkPerson from '@/components/checkPerson'
 
-  let timer = null
-  let target = 0
-  let scrollHeight = 0
+    let timer = null
+    let target = 0
+    let scrollHeight = 0
 
-  export default {
-    name: "bill-details",
-    mixins: [FILTER,MIXINS],
-    components:{
-      LayerInvoice,
-      checkPerson
-    },
-    data() {
-      return {
-        checkPerson: {
-          state:false,
-          type:3,
-          code:'',
-          flowType:0
+    export default {
+        name: "bill-details",
+        mixins: [FILTER, MIXINS],
+        components: {
+            LayerInvoice,
+            checkPerson
         },
-        tabs: ['审核信息'],
-        activeItem: '',
-        billId: 0,
-        billMsg: {},
-        list: [
-          {}
-        ],
-        receiptBill:4,
-        checkList: [],//审核信息
-        layer: {
-          show: false,
-          reasion: ''
+        data() {
+            return {
+                checkPerson: {
+                    state: false,
+                    type: 3,
+                    code: '',
+                    flowType: 0
+                },
+                tabs: ['审核信息'],
+                activeItem: '',
+                billId: 0,
+                billMsg: {},
+                list: [
+                    {}
+                ],
+                receiptBill: 4,
+                checkList: [],//审核信息
+                layer: {
+                    show: false,
+                    reasion: ''
+                },
+                invalidMax: 200,
+                files: [],
+                preloadFiles: [],
+                radioMask: false,
+                amount: {},
+                payRadio: 0,
+                checkBoxShow: false,//是否只展示审核信息
+                fullscreenLoading: false,//防抖
+                //分页
+                currentPage: 1,
+                pageSize: 10,
+                total: 0,
+                btnCheck: false,//是否有审核权限
+                btnPrint: false,//是否有打印权限
+                btnBill: false,//是否有开票权限
+                printType: 'client',//票据是否只显示客户联
+            }
         },
-        invalidMax: 200,
-        files: [],
-        radioMask: false,
-        amount:{},
-        payRadio:0,
-        checkBoxShow:false,//是否只展示审核信息
-        fullscreenLoading:false,//防抖
-        //分页
-        currentPage:1,
-        pageSize:10,
-        total:0,
-        btnCheck:false,//是否有审核权限
-        btnPrint:false,//是否有打印权限
-        btnBill:false,//是否有开票权限
-        printType:'client',//票据是否只显示客户联
-      }
-    },
-    created() {
-      // debugger
-      this.activeItem = this.$route.query.tab
-      this.checkPerson.flowType=this.activeItem==='收款信息'?1:0
-      this.billId = this.$route.query.id
-      this.btnCheck = this.$route.query.power.toString()==='true'?true:false
-      // this.btnPrint = this.$route.query.print.toString()==='true'?true:false
-      this.btnBill = this.$route.query.bill.toString()==='true'?true:false
-      this.tabs.unshift(this.activeItem)
-      this.getData()
-      if(this.$route.query.type){
-        this.receiptBill=parseInt(this.$route.query.type)
-      }
-    },
-    methods: {
-      previewImg:function () {
-        let arr=[]
-        this.files.forEach(item=>{
-          arr.push(item.path)
-        })
-        this.fileSign(arr)
-      },
-      //监听点击票据打印
-      emitPaperSetFn:function () {
-        this.getData()
-        // this.$refs.layerInvoice.propCloseFn()
-      },
-      //开票
-      getPaper:function (type) {
-        this.printType='client'
-        if(type==='details'){
-          this.printType='all'
-          this.$refs.layerInvoice.show(this.billMsg.billId)
-        }else if(type==='client'){
-          this.$refs.layerInvoice.show(this.billMsg.billId)
-        }else {
-          this.$refs.layerInvoice.show(this.billId,true)
-        }
-      },
-      personChose:function () {
-        this.checkPerson.state=false
-        this.$message({
-          message:'下一个节点审核人设置成功'
-        })
-        this.getCheckData()
-      },
-      // 判断审核弹窗显示内容
-      showDialog: function () {
-        this.layer.show = true
-        if(this.activeItem==='付款信息'){
-          let param={
-            payId: this.billMsg.id,
-            moneyType:this.billMsg.moneyType,
-            moneyTypePid:this.billMsg.moneyTypePid,
-            contId:this.billMsg.contId
-          }
-          this.$ajax.get('/api/payInfo/auditOption', param).then(res => {
-            res = res.data
-            if (res.status === 200) {
-              // this.radioMask = res.data.num === 2 ? true : false
-              this.amount=Object.assign({},res.data)
-            }
-          })
-        }
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-        this.currentPage = val
-        this.getData()
-      },
-      getData: function () {
-        let param = {
-          payId: this.billId,
-          type: this.activeItem === '收款信息' ? 1 : 2
-        }
-        let src=param.type===1?'/payInfo/selectRevDetail':'/payInfo/selectPayDetail'
-        this.$ajax.get(`/api${src}`, param).then(res => {
-          res = res.data
-          if (res.status === 200) {
-            this.billMsg = Object.assign({}, res.data)
-            if (res.data.filePath) {
-              this.files = this.$tool.cutFilePath(JSON.parse(res.data.filePath))
-            }
-            if(res.data.inAccountType&&(res.data.inAccountType===3)&&param.type===1&&res.data.billPath&&res.data.billPath.length>0){
-              this.files = [].concat({
-                path:res.data.billPath,
-                name:'pos小票'
-              })
-            }
-            this.checkPerson.code=res.data.payCode
-            this.getCheckData()
-          }
-        })
-      },
-      /**
-       * 获取审核信息
-       */
-      getCheckData:function () {
-        let param={
-          /*pageSize:this.pageSize,
-          pageNum:this.currentPage,*/
-          flowType:this.billMsg.audit.flowType,
-          bizCode:this.billMsg.audit.bizCode
-        }
-        this.$ajax.get('/api/machine/getAuditListToFinance',param).then(res=>{
-          // debugger
-          res=res.data
-          if(res.status===200){
-            this.checkList = res.data.data
-            this.total=res.data.total
-          }
-        })
-      },
-      /**
-       * 审核
-       */
-      checkBill: function (type) {
-        if(this.radioMask&&!this.payRadio&&type===1){
-          this.$message({
-            message:'请选择支付方式'
-          })
-          return
-        }
-        let param = {
-          // bizId: this.billMsg.audit.bizId,
-          bizCode: this.billMsg.audit.bizCode,
-          // flowId: this.billMsg.audit.flowId,
-          // sort: this.billMsg.audit.nodeSort,
-          flowType: this.activeItem==='付款信息'?0:1
-        }
-        param.ApprovalForm = {
-          result: type,
-          remark: this.layer.reasion
-        }
-        this.fullscreenLoading=true
-        this.$ajax.postJSON('/api/machine/audit', param).then(res => {
-          res = res.data
-          if (res.status === 200) {
-            this.fullscreenLoading=false
+        created() {
+            // debugger
+            this.activeItem = this.$route.query.tab
+            this.checkPerson.flowType = this.activeItem === '收款信息' ? 1 : 0
+            this.billId = this.$route.query.id
+            this.btnCheck = this.$route.query.power.toString() === 'true' ? true : false
+            // this.btnPrint = this.$route.query.print.toString()==='true'?true:false
+            this.btnBill = this.$route.query.bill.toString() === 'true' ? true : false
+            this.tabs.unshift(this.activeItem)
             this.getData()
-            if(this.radioMask&&type===1){
-              this.secondCheck()
-            }else {
-              this.$message({
-                message:res.message
-              })
-              this.layer.show = false
+            if (this.$route.query.type) {
+                this.receiptBill = parseInt(this.$route.query.type)
             }
-          }
-        }).catch(error=>{
-          this.fullscreenLoading=false
-          if(error.message==='下一节点审批人不存在'){
-            this.checkPerson.state=true
-          }else {
-            this.$message({
-              message:error
-            })
-          }
-        })
-      },
-      secondCheck:function () {
-        let param={
-          payId:this.billId,
-          payMethod:parseInt(this.payRadio)
+            let _listName = {
+                1: {name: '收付款单', url: '/Bill'},
+                2: {name: '收款审核', url: '/moneyCheck?type=1'},
+                3: {name: '付款审核', url: '/moneyCheck?type=2'}
+            }
+            let arr = this.$tool.getRouter(['二手房', '财务', _listName[Number(this.$route.query.listName)].name], _listName[Number(this.$route.query.listName)].url);
+            arr.push({name: `${this.$route.query.tab === '收款信息' ? '收款' : '付款'}详情`, path: this.$route.fullPath});
+            this.setPath(arr);
+        },
+        methods: {
+            previewImg: function () {
+                let arr = []
+                this.files.forEach(item => {
+                    arr.push(item.path)
+                })
+                this.fileSign(arr)
+            },
+            //监听点击票据打印
+            emitPaperSetFn: function () {
+                this.getData()
+                // this.$refs.layerInvoice.propCloseFn()
+            },
+            //开票
+            getPaper: function (type) {
+                this.printType = 'client'
+                if (type === 'details') {
+                    this.printType = 'all'
+                    this.$refs.layerInvoice.show(this.billMsg.billId)
+                } else if (type === 'client') {
+                    this.$refs.layerInvoice.show(this.billMsg.billId)
+                } else {
+                    this.$refs.layerInvoice.show(this.billId, true)
+                }
+            },
+            personChose: function () {
+                this.checkPerson.state = false
+                this.$message({
+                    message: '下一个节点审核人设置成功'
+                })
+                this.getCheckData()
+            },
+            //审核按钮是否操作抢单
+            quickCheck:function(){
+                if(this.billMsg.grabDept&&false){//抢单，判断当前登录人部门是否包含在设置的部门中，是则调用抢单接口
+                    this.$ajax.get('/api/machine/getAuditAuth',{bizCode:this.billMsg.payCode,flowType:this.activeItem === '付款信息'?0:1}).then(res=>{
+                        res=res.data
+                        if(res.status===200){
+                            this.showDialog()
+                        }
+                    }).catch(error=>{
+                        this.$message({
+                            message:`抢单失败`
+                        })
+                    })
+                }else{
+                    this.showDialog()
+                }
+            },
+            // 判断审核弹窗显示内容
+            showDialog: function () {
+                this.layer.show = true
+                if (this.activeItem === '付款信息') {
+                    let param = {
+                        payId: this.billMsg.id,
+                        moneyType: this.billMsg.moneyType,
+                        moneyTypePid: this.billMsg.moneyTypePid,
+                        contId: this.billMsg.contId
+                    }
+                    this.$ajax.get('/api/payInfo/auditOption', param).then(res => {
+                        res = res.data
+                        if (res.status === 200) {
+                            // this.radioMask = res.data.num === 2 ? true : false
+                            this.amount = Object.assign({}, res.data)
+                        }
+                    })
+                }
+            },
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                this.currentPage = val
+                this.getData()
+            },
+            getData: function () {
+                let param = {
+                    payId: this.billId,
+                    type: this.activeItem === '收款信息' ? 1 : 2
+                }
+                let src = param.type === 1 ? '/payInfo/selectRevDetail' : '/payInfo/selectPayDetail'
+                this.$ajax.get(`/api${src}`, param).then(res => {
+                    res = res.data
+                    if (res.status === 200) {
+                        this.billMsg = Object.assign({}, res.data)
+                        if (res.data.filePath) {
+                            this.files = this.$tool.cutFilePath(JSON.parse(res.data.filePath))
+                            let preloadList = []
+                            this.files.forEach((item, index) => {//判断附件是否为图片，是则存入临时数组获取签名用于缩略图展示
+                                if (this.isPictureFile(item.type)) {
+                                    preloadList.push(item.path)
+                                }
+                            })
+                            this.fileSign(preloadList, 'preload').then(res => {
+                                this.preloadFiles = res
+                            })
+                        }
+                        if (res.data.inAccountType && (res.data.inAccountType === 3) && param.type === 1 && res.data.billPath && res.data.billPath.length > 0) {
+                            this.files = [].concat({
+                                path: res.data.billPath,
+                                name: 'pos小票'
+                            })
+                        }
+                        this.checkPerson.code = res.data.payCode
+                        this.getCheckData()
+                    }
+                })
+            },
+            /**
+             * 获取审核信息
+             */
+            getCheckData: function () {
+                let param = {
+                    /*pageSize:this.pageSize,
+                    pageNum:this.currentPage,*/
+                    flowType: this.billMsg.audit.flowType,
+                    bizCode: this.billMsg.audit.bizCode
+                }
+                this.$ajax.get('/api/machine/getAuditListToFinance', param).then(res => {
+                    // debugger
+                    res = res.data
+                    if (res.status === 200) {
+                        this.checkList = res.data.data
+                        this.total = res.data.total
+                    }
+                })
+            },
+            /**
+             * 审核
+             */
+            checkBill: function (type) {
+                if (this.radioMask && !this.payRadio && type === 1) {
+                    this.$message({
+                        message: '请选择支付方式'
+                    })
+                    return
+                }
+                let param = {
+                    // bizId: this.billMsg.audit.bizId,
+                    bizCode: this.billMsg.audit.bizCode,
+                    // flowId: this.billMsg.audit.flowId,
+                    // sort: this.billMsg.audit.nodeSort,
+                    flowType: this.activeItem === '付款信息' ? 0 : 1,
+                    modularType: 0
+                }
+                param.ApprovalForm = {
+                    result: type,
+                    remark: this.layer.reasion
+                }
+                if (type === 2 && this.layer.reasion.length === 0) {
+                    this.$message({
+                        message: '请输入拒绝原因'
+                    })
+                    return;
+                } else {
+                    this.fullscreenLoading = true
+                }
+                this.$ajax.postJSON('/api/machine/audit', param).then(res => {
+                    res = res.data
+                    if (res.status === 200) {
+                        this.fullscreenLoading = false
+                        this.getData()
+                        if (this.radioMask && type === 1) {
+                            this.secondCheck()
+                        } else {
+                            this.$message({
+                                message: res.message
+                            })
+                            this.layer.show = false
+                        }
+                    }
+                }).catch(error => {
+                    this.fullscreenLoading = false
+                    if (error.message === '下一节点审批人不存在') {
+                        this.checkPerson.state = true
+                    } else {
+                        this.$message({
+                            message: error
+                        })
+                    }
+                })
+            },
+            secondCheck: function () {
+                let param = {
+                    payId: this.billId,
+                    payMethod: parseInt(this.payRadio)
+                }
+                this.$ajax.put('/api/payInfo/auditPass', param, 2).then(res => {
+                    res = res.data
+                    if (res.status === 200) {
+                        this.$message({
+                            message: res.message
+                        })
+                        this.payRadio = 0
+                        this.layer.show = false
+                    }
+                })
+            },
+            clearLayer: function () {
+                this.layer.reasion = ''
+                this.layer.show = false
+            },
+            choseTab: function (item) {
+                this.activeItem = item
+                if (item !== '审核信息') {
+                    this.checkBoxShow = false
+                    return
+                }
+                this.checkBoxShow = true
+                /*target = this.$refs.checkBox.offsetTop
+                scrollHeight = document.querySelector('.view').parentNode.clientHeight
+                console.log(`target:${target}`)
+                console.log(`容器：${scrollHeight}`)
+                this.scrollTop()*/
+            },
+            scrollTop: function () {
+                let scrollTop = document.querySelector('.view').parentNode.scrollTop
+                document.querySelector('.view').parentNode.scrollTop = scrollTop + 30
+                console.log(scrollTop)
+                if (scrollTop + scrollHeight >= target) {
+                    clearTimeout(timer)
+                } else {
+                    timer = setTimeout(() => {
+                        this.scrollTop()
+                    }, 50)
+                }
+            },
+            //合并单元格
+            collapseRow: function ({rowIndex, columnIndex}) {
+                if (this.billMsg.inAccount && (columnIndex < 2 || columnIndex > 3)) {
+                    if (rowIndex === 0) {
+                        return [this.billMsg && this.billMsg.inAccount.length, 1]
+                    } else {
+                        return [0, 0]
+                    }
+                } else {
+                    return [1, 1]
+                }
+            },
+        },
+        computed: {
+            invalidNumber() {
+                return this.layer.reasion.length
+            }
+        },
+        filters: {
+            nullFormatter: function (val, type = 1) {
+                if (!val) {
+                    return type === 1 ? '无' : '--'
+                } else {
+                    return val
+                }
+            },
+            nullFilter: function (val) {
+                if (!val) {
+                    return val === 0 ? 0 : '-'
+                } else {
+                    return val
+                }
+            },
+            /**
+             * 过滤显示图片缩略图
+             * @param val后端返回的所有文件资源遍历的当前项
+             * @param list图片资源获取签名后的临时数组
+             * @vm 接收vue实例通过this._self传递才有效
+             */
+            getSignImage(val, list, vm) {
+                if (list.length === 0) {
+                    return '';
+                } else {
+                    let imgDir = list.find(item => {
+                        return item.includes(val.path)
+                    })
+                    let img = new Image();
+                    img.src = imgDir;
+                    img.onload = function () {
+                        let persent = parseFloat((img.width / img.height).toFixed(2))
+                        let imgWidth = 0
+                        // console.log(persent)
+                        if (img.width > 100) {
+                            imgWidth = 100
+                            // picture.style.height=`${800/this.persent}px`
+                            if (img.height > 90) {
+                                // picture.style.height=`${window.innerHeight}px`
+                                if (persent > 1) {
+                                    imgWidth = 90 * persent * 0.6
+                                } else {
+                                    imgWidth = 90 * persent
+                                }
+                            }
+                        } else {
+                            if (img.height > 90) {
+                                // picture.style.height=`${window.innerHeight}px`
+                                imgWidth = 90 * persent
+                            }
+                        }
+                        vm.$set(val, 'width', `${imgWidth}px`)
+                    }
+                    return imgDir
+                }
+            }
         }
-        this.$ajax.put('/api/payInfo/auditPass',param,2).then(res=>{
-          res=res.data
-          if(res.status===200){
-            this.$message({
-              message:res.message
-            })
-            this.payRadio=0
-            this.layer.show = false
-          }
-        })
-      },
-      clearLayer: function () {
-        this.layer.reasion = ''
-        this.layer.show = false
-      },
-      choseTab: function (item) {
-        this.activeItem = item
-        if (item !== '审核信息') {
-          this.checkBoxShow=false
-          return
-        }
-        this.checkBoxShow=true
-        /*target = this.$refs.checkBox.offsetTop
-        scrollHeight = document.querySelector('.view').parentNode.clientHeight
-        console.log(`target:${target}`)
-        console.log(`容器：${scrollHeight}`)
-        this.scrollTop()*/
-      },
-      scrollTop: function () {
-        let scrollTop = document.querySelector('.view').parentNode.scrollTop
-        document.querySelector('.view').parentNode.scrollTop = scrollTop + 30
-        console.log(scrollTop)
-        if (scrollTop + scrollHeight >= target) {
-          clearTimeout(timer)
-        } else {
-          timer = setTimeout(() => {
-            this.scrollTop()
-          }, 50)
-        }
-      },
-      //合并单元格
-      collapseRow: function ({rowIndex, columnIndex}) {
-        if (this.billMsg.inAccount&&(columnIndex <2||columnIndex>3)) {
-          if (rowIndex === 0) {
-            return [this.billMsg&&this.billMsg.inAccount.length, 1]
-          } else {
-            return [0, 0]
-          }
-        }else {
-          return [1,1]
-        }
-      },
-    },
-    computed: {
-      invalidNumber() {
-        return this.layer.reasion.length
-      }
-    },
-    filters:{
-      nullFormatter:function (val,type=1) {
-        if(!val){
-          return type===1?'无':'--'
-        }else {
-          return val
-        }
-      },
-      nullFilter:function (val) {
-        if(!val){
-          return val===0?0:'-'
-        }else {
-          return val
-        }
-      }
     }
-  }
 </script>
 
 <style scoped lang="less">
   @import "~@/assets/common.less";
   @import "~@/assets/less/lsx.less";
 
+  .card-list-item {
+    position: relative;
+
+    &:not(:last-of-type) {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed @border-D8;
+      /*&:after{
+        content: '';
+        display: inline-block;
+        width: 100%;
+        border: 1px dashed grey;
+      }*/
+    }
+
+    > h4 {
+      margin-top: @margin-10 !important;
+      font-weight: inherit !important;
+    }
+  }
+
   .input-group {
     align-items: flex-start;
     max-width: 812px;
+
     &:first-of-type {
       margin-bottom: @margin-base;
     }
+
     > label {
       color: @color-6c;
       max-width: 60px;
       min-width: 60px;
     }
+
     > p {
       line-height: 1.6;
       word-break: break-all;
     }
+
     ul.image-list {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
+
       > li {
         width: 120px;
         height: 120px;
@@ -624,13 +753,14 @@
         justify-content: center;
         align-items: center;
         margin-bottom: @margin-base;
+
         .span {
           width: 100px;
           text-align: center;
           /*word-break: break-all;*/
           white-space: nowrap;
           overflow: hidden;
-          text-overflow:ellipsis;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -638,12 +768,15 @@
 
   .reasion-dialog {
     display: flex;
+
     > label {
       min-width: 46px;
     }
+
     /deep/ .input {
       flex: 1;
       position: relative;
+
       &-textarea {
         .el-textarea__inner {
           border: 0;
@@ -651,6 +784,7 @@
           background-color: @bg-FA;
         }
       }
+
       .text-absloute {
         position: absolute;
         bottom: 11px;
@@ -662,28 +796,35 @@
   .radio-dialog {
     margin-left: 46px;
     color: @color-6c;
+
     > li {
       padding: @margin-base;
+
       &:first-of-type {
         display: flex;
+
         > p {
           margin-right: @margin-10;
+
           span {
             color: @color-red;
           }
         }
       }
-      &:nth-of-type(2){
-        >span{
+
+      &:nth-of-type(2) {
+        > span {
           color: @color-233;
         }
       }
-      &:nth-of-type(3){
-        .el-radio{
+
+      &:nth-of-type(3) {
+        .el-radio {
           color: @color-233;
         }
       }
     }
+
     .color-light {
       color: @color-red;
     }
@@ -701,8 +842,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     > ul {
       display: flex;
+
       > li {
         flex: 1;
         align-self: center;
@@ -712,9 +855,11 @@
         justify-content: center;
         min-width: 60px;
         padding: @margin-10 @margin-15;
+
         &.active {
           color: @color-blue;
           position: relative;
+
           &:after {
             content: '';
             position: absolute;
@@ -726,6 +871,7 @@
         }
       }
     }
+
     /*> p {
       position: absolute;
       top: 50%;
@@ -736,20 +882,25 @@
 
   .bill-details-content {
     padding: 0 @margin-10;
+
     > li {
       h4 {
         margin: @margin-base 0;
         font-weight: bold;
       }
+
       .total-text {
         margin-bottom: 10px;
+
         > span {
           color: @color-orange;
         }
       }
-      .warning-text{
+
+      .warning-text {
         margin-top: @margin-10;
-        >p{
+
+        > p {
           font-size: 14px;
           color: red;
         }

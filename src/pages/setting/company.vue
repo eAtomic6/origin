@@ -51,45 +51,45 @@
         <el-button @click="addCompany" icon="el-icon-plus" type="primary">公司信息</el-button>
       </p>
       <el-table :data="tableData" style="width: 100%" border ref="tableCom" :max-height="tableNumberCom">
-        <el-table-column align="center" label="城市" prop="cityName" width="90">
+        <el-table-column label="城市" prop="cityName" width="90">
         </el-table-column>
-        <el-table-column align="center" label="门店" prop="storeName">
+        <el-table-column label="门店" prop="storeName">
         </el-table-column>
-        <el-table-column align="center" label="账户类型" min-width="50">
+        <el-table-column label="账户类型" min-width="50">
           <template slot-scope="scope">
             <p v-for="(item,index) in scope.row.companyBankList" :key="index">{{ item.type===0?'个人账户':'企业账户' }}</p>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="开户名" min-width="180">
+        <el-table-column label="开户名" min-width="180">
           <template slot-scope="scope">
             <p v-for="(item,index) in scope.row.companyBankList" :key="index">{{ item.bankAccountName }}</p>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="银行卡号">
+        <el-table-column label="银行卡号">
           <template slot-scope="scope">
             <p v-for="(item,index) in scope.row.companyBankList" :key="index">{{ item.bankCard|formatBankCard }}</p>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="银行">
+        <el-table-column label="银行">
           <template slot-scope="scope">
             <p v-for="(item,index) in scope.row.companyBankList" :key="index">{{ item.bankName }}</p>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="支行">
+        <el-table-column label="支行">
           <template slot-scope="scope">
             <p v-for="(item,index) in scope.row.companyBankList" :key="index">{{ item.bankBranchName==='—'?'--':item.bankBranchName }}</p>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="合作方式" prop="cooperationMode.label" min-width="50">
+        <el-table-column label="合作方式" prop="cooperationMode.label" min-width="50">
         </el-table-column>
-        <el-table-column align="center" label="添加时间" prop="createTime" min-width="60">
+        <el-table-column label="添加时间" prop="createTime" min-width="60">
           <template slot-scope="scope">
             <span>{{scope.row.createTime|formatDate(2)}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="添加人" prop="createByName">
+        <el-table-column label="添加人" prop="createByName">
         </el-table-column>
-        <el-table-column align="center" label="操作" min-width="60">
+        <el-table-column label="操作" min-width="60">
           <template slot-scope="scope">
             <el-button type="text" @click="viewEditCompany(scope.row,'init')" size="medium" v-if="power['sign-set-gs'].state">查看</el-button>
             <el-button type="text" class="edit-btn" @click="viewEditCompany(scope.row,'edit')" size="medium" v-if="power['sign-set-gs'].state&&editBtnShow(scope.row)">编辑</el-button>
@@ -99,7 +99,6 @@
       <el-pagination
         v-show="tableData.length"
         class="pagination-info"
-        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pageNum"
         :page-size="pageSize"
@@ -113,7 +112,7 @@
     :close-on-press-escape="$tool.closeOnClickModal"
     :title="companyFormTitle"
     :visible.sync="AddEditVisible"
-    width="1180px"
+    width="1000px"
     :before-close="handleClose"
     class="dialog-info">
       <el-form :model="companyForm" label-position='right'>
@@ -140,14 +139,14 @@
               </el-form-item>
             </div>
             <div class="item item-display">
-              <el-form-item label="门店特许费比例: " class="allow">
-                <el-input v-model="companyForm.franchiseRatio" size="mini"  :disabled="fourthStoreNoEdit" @input="cutNumber('franchiseRatio')"></el-input>%
+              <el-form-item label="平台费比例: " class="allow">
+                <el-input v-model="companyForm.franchiseRatio" size="mini" :clearable="true" :disabled="fourthStoreNoEdit" @input="cutNumber('franchiseRatio')"></el-input>%
               </el-form-item>
               <el-form-item label="门店名称: " class="store-name">
-                <el-input size="mini" v-model.trim="companyForm.name" placeholder="营业执照上的名字" maxlength="50" :disabled="fourthStoreNoEdit" @input="inputOnly(100,'name')"></el-input>
+                <el-input size="mini" v-model.trim="companyForm.name" placeholder="营业执照上的名字" maxlength="50" :clearable="true" :disabled="fourthStoreNoEdit" @input="inputOnly(100,'name')"></el-input>
               </el-form-item>
               <el-form-item label="法人姓名: ">
-                <el-input size="mini" maxlength="15" v-model.trim="companyForm.lepName" :disabled="fourthStoreNoEdit" @input="inputOnly(999,'lepName')"></el-input>
+                <el-input size="mini" maxlength="15" v-model.trim="companyForm.lepName" :clearable="true" :disabled="fourthStoreNoEdit" @input="inputOnly(999,'lepName')"></el-input>
               </el-form-item>
             </div>
             <div class="item item-display">
@@ -157,10 +156,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="证件号: " class="id-card">
-                <el-input size="mini" :maxlength="companyForm.lepDocumentType===1?18:companyForm.lepDocumentType===2?9:11" v-model.trim="companyForm.lepDocumentCard" :disabled="fourthStoreNoEdit" @input="inputOnly(1000,'lepDocumentCard')"></el-input>
+                <el-input size="mini" :maxlength="companyForm.lepDocumentType===1?18:companyForm.lepDocumentType===2?9:companyForm.lepDocumentType===3?11:18" v-model.trim="companyForm.lepDocumentCard" :clearable="true" :disabled="fourthStoreNoEdit" @input="inputOnly(1000,'lepDocumentCard')"></el-input>
               </el-form-item>
-              <el-form-item label="法人手机号码: ">
-                <el-input size="mini" oninput="if(value.length>11)value=value.slice(0,11)" v-model="companyForm.lepPhone" :disabled="fourthStoreNoEdit" @keyup.native="getInt(2)"></el-input>
+              <el-form-item label="法人手机号码: " class="mobile">
+                <el-input size="mini" maxlength="11" v-model="companyForm.lepPhone" :clearable="true" :disabled="fourthStoreNoEdit" @keyup.native="getInt(2)"></el-input>
               </el-form-item>
             </div>
             <div class="item">
@@ -170,18 +169,18 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="统一社会信用代码: " v-if="creditCodeShow" class="tongyi">
-                <el-input size="mini" v-model.trim="documentCard.creditCode" :disabled="fourthStoreNoEdit" @input="inputOnly(1,'creditCode')"></el-input>
+                <el-input size="mini" v-model.trim="documentCard.creditCode" :clearable="true" :disabled="fourthStoreNoEdit" @input="inputOnly(1,'creditCode')"></el-input>
               </el-form-item>
               <el-form-item label="工商注册号: " v-if="icRegisterShow" class="gongshang">
-                <el-input size="mini" v-model.trim="documentCard.icRegisterCode" :disabled="fourthStoreNoEdit" @input="inputOnly(2,'icRegisterCode')"></el-input>
+                <el-input size="mini" v-model.trim="documentCard.icRegisterCode" :clearable="true" :disabled="fourthStoreNoEdit" @input="inputOnly(2,'icRegisterCode')"></el-input>
               </el-form-item>
               <el-form-item label="组织机构代码: " v-if="icRegisterShow" class="zuzhi">
-                <el-input size="mini" v-model.trim="documentCard.organizationCode" :disabled="fourthStoreNoEdit" @input="inputOnly(3,'organizationCode')"></el-input>
+                <el-input size="mini" v-model.trim="documentCard.organizationCode" :clearable="true" :disabled="fourthStoreNoEdit" @input="inputOnly(3,'organizationCode')"></el-input>
               </el-form-item>
             </div>
             <div class="item shuiwu">
               <el-form-item label="税务登记证: " v-if="icRegisterShow">
-                <el-input size="mini" v-model.trim="documentCard.taxRegisterCode" :disabled="fourthStoreNoEdit" @input="inputOnly(4,'taxRegisterCode')"></el-input>
+                <el-input size="mini" v-model.trim="documentCard.taxRegisterCode" :clearable="true" :disabled="fourthStoreNoEdit" @input="inputOnly(4,'taxRegisterCode')"></el-input>
               </el-form-item>
             </div>
             <div class="tip tip-top">
@@ -198,55 +197,42 @@
         </div>
         <div class="company-info">
           <p>添加企业银行账户</p>
-          <div class="info-content">
-            <el-table style="width: 100%" :data="companyBankList" class="addBankRow">
-              <el-table-column align="center" label="" width="170">
-                <template slot-scope="scope">
-                  <el-form-item label="账户类型: ">
-                    <el-select size="small" v-model="companyBankList[scope.$index].type" class="property" :disabled="fourthStoreNoEdit">
-                      <el-option v-for="item in bankType" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" label="" width="260">
-                <template slot-scope="scope">
-                  <el-form-item label="开户名: ">
-                    <el-input size="small" class="card-owner" maxlength="30" v-model.trim="companyBankList[scope.$index].bankAccountName" :disabled="fourthStoreNoEdit" @input="inputOnly(scope.$index,'bankAccountName')"></el-input>
-                  </el-form-item>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" label="" width="238">
-                <template slot-scope="scope">
-                  <el-form-item label="银行卡号: ">
-                    <el-input size="small" oninput="if(value.length>20)value=value.slice(0,20)" v-model="companyBankList[scope.$index].bankCard" :disabled="fourthStoreNoEdit" @keyup.native="getInt(3,scope.$index)"></el-input>
-                  </el-form-item>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" label="" width="215">
-                <template slot-scope="scope">
-                  <el-form-item label="银行: ">
-                    <el-select size="small" v-model="companyBankList[scope.$index].bankId" filterable :disabled="fourthStoreNoEdit" class="bank-item">
-                      <el-option v-for="item in adminBanks" :key="item.id" :label="item.bankName" :value="item.bankId"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" label="" width="192">
-                <template slot-scope="scope" v-if="companyBankList[scope.$index].type===1">
-                  <el-form-item label="支行: ">
-                    <el-input size="small" class="bank-branch" v-model.trim="companyBankList[scope.$index].bankBranchName" :disabled="fourthStoreNoEdit" @input="inputOnly(scope.$index,'bankBranchName')"></el-input>
-                  </el-form-item>
-                </template>
-              </el-table-column>
-              <el-table-column label="" width="64">
-                <template slot-scope="scope">
-                  <span @click="addRow" class="button" :class="{'direct-sale':fourthStoreNoEdit}"><i class="icon el-icon-plus"></i></span>
-                  <span @click="removeRow(scope.$index)" class="button" :class="{'direct-sale':fourthStoreNoEdit}"><i class="icon el-icon-minus"></i></span>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
+          <ul class="info-content">
+            <li v-for="(item,index) in companyBankList" :key="index" class="addBankRow">
+              <div class="row-item">
+                <div>
+                  <label>账户类型: </label>
+                  <el-select size="small" v-model="item.type" class="property" :disabled="fourthStoreNoEdit">
+                    <el-option v-for="m in bankType" :key="m.value" :label="m.label" :value="m.value"></el-option>
+                  </el-select>
+                </div>
+                <div>
+                  <label>开户名: </label>
+                  <el-input size="small" class="card-owner" maxlength="30" v-model.trim="item.bankAccountName" :clearable="true" :disabled="fourthStoreNoEdit" @input="inputOnly(index,'bankAccountName')"></el-input>
+                </div>
+                <div>
+                  <label>银行卡号: </label>
+                  <el-input size="small" maxlength="20" v-model="item.bankCard" :clearable="true" :disabled="fourthStoreNoEdit" @keyup.native="getInt(3,index)"></el-input>
+                </div>
+              </div>
+              <div class="row-item">
+                <div>
+                  <label>银行: </label>
+                  <el-select size="small" v-model="item.bankId" filterable :disabled="fourthStoreNoEdit" class="bank-item" @change="addBankCode($event,index)">
+                    <el-option v-for="m in adminBanks" :key="m.id" :label="m.bankName" :value="m.id"></el-option>
+                  </el-select>
+                </div>
+                <div v-if="item.type===1" class="zhi-hang">
+                  <label>支行: </label>
+                  <el-input size="small" class="bank-branch" v-model.trim="item.bankBranchName" :clearable="true" :disabled="fourthStoreNoEdit" @input="inputOnly(index,'bankBranchName')"></el-input>
+                </div>
+              </div>
+              <div class="button-box">
+                <span @click="addRow" class="button" :class="{'direct-sale':fourthStoreNoEdit}"><i class="icon el-icon-plus"></i></span>
+                <span @click="removeRow(index)" class="button" :class="{'direct-sale':fourthStoreNoEdit}"><i class="icon el-icon-minus"></i></span>
+              </div>
+            </li>
+          </ul>
         </div>
         <div class="company-info">
           <p>添加电子签章</p>
@@ -261,8 +247,10 @@
                     <p class="text">点击上传</p>
                   </li>
                   <el-tooltip effect="dark" :content="contractName" placement="bottom">
-                    <li v-show="companyForm.contractSign!==''">
-                      <div @click="getPicture(1)"><upload-cell type=".png"></upload-cell></div>
+                    <li v-show="companyForm.contractSign">
+                      <div @click="getPicture(1)">
+                        <img :src="preConFile[0]" width="90px" height="80px">
+                      </div>
                       <p class="pic-name">{{contractName}}</p>
                       <span class="del" @click="delStamp(1)"><i class="el-icon-close"></i></span>
                     </li>
@@ -280,9 +268,9 @@
                     <p class="text">点击上传</p>
                   </li>
                   <el-tooltip effect="dark" :content="financialName" placement="bottom">
-                    <li v-show="companyForm.financialSign!==''">
+                    <li v-show="companyForm.financialSign">
                       <div @click="getPicture(2)">
-                        <upload-cell type=".png"></upload-cell>
+                        <img :src="preFinFile[0]" width="90px" height="80px">
                       </div>
                       <p class="pic-name">{{financialName}}</p>
                       <span class="del" @click="delStamp(2)"><i class="el-icon-close"></i></span>
@@ -322,7 +310,7 @@
         <span>法人信息</span>
         <p><span>法人姓名: {{ companyForm.lepName }}</span><span>法人手机号码: {{ companyForm.lepPhone }}</span></p>
         <p><span>证件类型: {{ companyForm.lepDocumentType }}</span><span class="card-no">证件号: {{ companyForm.lepDocumentCard }}</span></p>
-        <p><span>门店特许费比例: {{companyForm.franchiseRatio}}%</span></p>
+        <p><span>平台费比例: {{companyForm.franchiseRatio}}%</span></p>
       </div>
       <div>
         <span>营业执照信息</span>
@@ -334,11 +322,11 @@
         <span>电子签章信息</span>
         <div class="stamp">
           <span>合同章: </span>
-          <div @click="getPicture(1)"><upload-cell type=".png" class="picture" v-show="companyForm.contractSign!==''"></upload-cell></div>
+          <div @click="getPicture(1)"><img :src="preConFile[0]" alt="" width="120px" height="120px"></div>
         </div>
         <div class="stamp">
           <span>财务章: </span>
-          <div @click="getPicture(2)"><upload-cell type=".png" class="picture" v-show="companyForm.financialSign!==''"></upload-cell></div>
+          <div @click="getPicture(2)"><img :src="preFinFile[0]" alt="" width="120px" height="120px"></div>
         </div>
       </div>
     </div>
@@ -372,7 +360,7 @@
       name: "合作方式"
     },
     franchiseRatio: {
-      name: "门店特许费比例"
+      name: "平台费比例"
     },
     name: {
       name: "门店名称"
@@ -413,7 +401,8 @@
       bankAccountName: '',
       bankCard: '',
       type: 1,
-      bankId: ''
+      bankId: '',
+      bankCode: ''
     }
   ]
   export default {
@@ -456,7 +445,6 @@
         },
         contractName: "",
         financialName: "",
-        imgList: [],
         bankType:[
           {
             label:'个人账户',
@@ -483,7 +471,9 @@
         // 添加公司信息的门店
         storePage:1,
         storeTotal:0,
-        temKey: "" //门店搜索值
+        temKey: "", //门店搜索值
+        preConFile: [], //合同章缩略图
+        preFinFile: [] //财务章缩略图
       }
     },
     mounted() {
@@ -721,6 +711,8 @@
         this.companyForm.cityId = this.searchForm.cityId
         this.companyForm.cityName = this.cityInfo.cityName
         this.clearStore('init')
+        this.preConFile = []
+        this.preFinFile = []
       },
       // 重置表单
       clearFn(type) {
@@ -758,7 +750,8 @@
           bankAccountName: '',
           bankCard: '',
           type: 1,
-          bankId: ''
+          bankId: '',
+          bankCode: ''
         }
         this.companyBankList.push(row)
       },
@@ -778,12 +771,19 @@
           this.companyForm.financialSign = obj.param[0].path+`?${obj.param[0].name}`
           this.financialName = obj.param[0].name
         }
+        let preloadList = [obj.param[0].path]
+        this.fileSign(preloadList, 'preload').then(res => {
+            obj.btnId === 'imgcontract' ? this.preConFile = res : this.preFinFile = res
+        })
       },
       // 删除电子签章
       delStamp(type) {
         type === 1 ? this.companyForm.contractSign = "" : this.companyForm.financialSign = ""
       },
       submitConfirm() {
+        if(this.version === 3) {
+          delete rule['cooperationMode']
+        }
         this.$tool.checkForm(this.companyForm,rule).then(() => {
           if(this.companyForm.lepDocumentCard) {
             let val = this.companyForm.lepDocumentCard
@@ -827,7 +827,7 @@
               isOk = false
               if(bankList[i].bankAccountName) {
                 if(bankList[i].bankCard) {
-                  if(bankList[i].bankCard.length >= 16) {
+                  if(bankList[i].bankCard.length >= 12) {
                     if(bankList[i].bankId) {
                       if(bankList[i].type === 1 && !bankList[i].bankBranchName) {
                         that_.$message({message:"支行不能为空"})
@@ -976,8 +976,6 @@
           }
         })
         let currentRow = JSON.parse(JSON.stringify(row))
-        this.contractName = currentRow.contractSign.split('?')[1]
-        this.financialName = currentRow.financialSign.split('?')[1]
         let newForm = {
           id: currentRow.id,
           cityId: currentRow.cityId,
@@ -998,8 +996,19 @@
         }
         this.companyForm = newForm
         this.getStoreRadio(type)
+        //获取电子章文件名和签名展示缩略图
+        this.contractName = currentRow.contractSign.split('?')[1]
+        this.financialName = currentRow.financialSign.split('?')[1]
+        let arr1 = [currentRow.contractSign.split('?')[0]]
+        let arr2 = [currentRow.financialSign.split('?')[0]]
+        this.fileSign(arr1, 'preload').then(res => {
+            this.preConFile = res
+        })
+        this.fileSign(arr2, 'preload').then(res => {
+            this.preFinFile = res
+        })
       },
-      // 获取门店特许费比例值
+      // 获取平台费比例值
       getStoreRadio(type) {
         this.$ajax.get('/api/setting/company/updateShowFee',
           {storeId:type==='init'?this.companyForm.storeId:this.companyForm.storeName}
@@ -1017,27 +1026,13 @@
       },
       // 合同章 财务章 点击预览
       getPicture(type) {
-        this.imgList = []
-        let pic1 = this.companyForm.contractSign
-        let pic2 = this.companyForm.financialSign
+        let img_arr = []
         if(type === 1) {
-          if(pic2 === "") {
-            this.imgList.push(pic1.split('?')[0])
-          } else {
-            this.imgList.push(pic1.split('?')[0],pic2.split('?')[0])
-          }
-        } else if(type === 2) {
-          if(pic1 === "") {
-            this.imgList.push(pic2.split('?')[0])
-          } else {
-            this.imgList.push(pic2.split('?')[0],pic1.split('?')[0])
-          }
+          img_arr.push(this.companyForm.contractSign.split('?')[0])
+        } else {
+          img_arr.push(this.companyForm.financialSign.split('?')[0])
         }
-        this.fileSign(this.imgList)
-      },
-      handleSizeChange(val) {
-        this.pageSize = val
-        this.getCompanyList()
+        this.fileSign(img_arr)
       },
       handleCurrentChange(val) {
         this.pageNum = val
@@ -1058,13 +1053,21 @@
         this.searchTime = []
         this.pageNum = 1
       },
+      // 获取银行缩写code 如:ICBC
+      addBankCode(e,i) {
+        this.adminBanks.find(item => {
+          if(e === item.id) {
+            this.companyBankList[i].bankCode = item.bankId
+          }
+        })
+      },
       getInt(num,index) {
         if(num===1) {
-          this.searchForm.bankCard = this.searchForm.bankCard.replace(/[^\?\d]/g,'')
+          this.searchForm.bankCard = this.$tool.numberInput(this.searchForm.bankCard)
         } else if(num===2) {
-          this.companyForm.lepPhone = this.companyForm.lepPhone.replace(/[^\?\d]/g,'')
+          this.companyForm.lepPhone = this.$tool.numberInput(this.companyForm.lepPhone)
         } else if(num===3) {
-          this.companyBankList[index].bankCard = this.companyBankList[index].bankCard.replace(/[^\?\d]/g,'')
+          this.companyBankList[index].bankCard = this.$tool.numberInput(this.companyBankList[index].bankCard)
         }
       },
       inputOnly(index,type){
@@ -1124,6 +1127,9 @@
     computed: {
       cityInfo(){
         return this.getUser.user
+      },
+      version(){
+        return this.getUser.version
       }
     }
 }
@@ -1184,7 +1190,7 @@
 }
 .dialog-info {
   .company-info {
-    padding: 10px 20px;
+    padding: 5px 20px 10px;
     /deep/ .el-form-item__label::before {
       content: "*";
       color: red;
@@ -1213,12 +1219,12 @@
       .info-content {
         > .item {
           display: flex;
-          &-display {
-            justify-content: space-between;
-          }
           > .el-form-item {
             display: flex;
             margin-bottom: 0;
+            &:nth-child(-n+2) {
+              margin-right: 60px;
+            }
             /deep/ .el-input {
               width: 200px;
               .el-input__inner {
@@ -1233,23 +1239,26 @@
           }
           .allow {
             /deep/ .el-input {
-              width: 158px;
+              width: 186px;
             }
           }
           .store-name {
             margin-left: -12px;
           }
           .id-card {
-            margin-left: 42px;
+            margin-left: 14px;
+          }
+          .mobile {
+            margin-left: -28px;
           }
           .tongyi {
-            margin-left: 97px;
+            margin-left: -56px;
           }
           .gongshang {
-            margin-left: 139px;
+            margin-left: -14px;
           }
           .zuzhi {
-            margin-left: 124px;
+            margin-left: -28px;
           }
         }
       }
@@ -1276,18 +1285,47 @@
     }
     &:nth-child(2) {
       border-top: 1px solid #edecf0;
-      /deep/ .el-table__header-wrapper {
-        display: none;
-      }
-      .el-table__row {
-        .el-form-item {
-          margin-bottom: 0;
-          /deep/ .el-form-item__label{
-            padding: 0;
+      .addBankRow {
+        position: relative;
+        .row-item {
+          display: flex;
+          margin-top: 10px;
+          >div label {
+            margin-right: 8px;
+            &::before {
+              content: "*";
+              color: red;
+              position: relative;
+              top: 3px;
+              margin-right: 1px;
+            }
+          }
+          >div:nth-child(-n+2) {
+            margin-right: 20px;
+          }
+          &:nth-child(2) {
+            padding-left: 28px;
           }
         }
-      }
-      .addBankRow {
+        &:first-child {
+          .button-box span:last-child {
+            visibility: hidden;
+          }
+        }
+        /deep/ .el-select, .el-input {
+          width: 200px;
+        }
+        .zhi-hang {
+          margin-left: 14px;
+          /deep/ .el-input {
+            width: 499px;
+          }
+        }
+        .button-box {
+          position: absolute;
+          right: 25px;
+          top: 25px;
+        }
         .button {
           display: inline-block;
           padding: 0;
@@ -1306,47 +1344,11 @@
         .direct-sale {
           display: none;
         }
-        /deep/ .el-input {
-          width: 168px;
-        }
-        /deep/ .card-owner {
-          width: 200px;
-        }
-        /deep/ .bank-branch {
-          width: 150px!important;
-        }
-        /deep/ .property {
-          .el-input {
-            width: 95px!important;
-            height: 32px;
-          }
-        }
-        /deep/ .bank-item {
-          .el-input {
-            height: 32px;
-          }
-        }
-        &.el-table {
-          tr:first-child td:last-child {
-            span:last-child {
-              display: none;
-            }
-          }
-          /deep/ .cell {
-            padding: 0;
-          }
-        }
       }
-      /deep/ .el-table::before {
-        display: none;
-      }
-      /deep/ .el-table--enable-row-hover .el-table__body tr:hover>td {
-        background-color: #fff!important;
-      }
-      /deep/ .el-table td { border: 0; padding: 0; }
     }
     &:last-child {
       border-top: 1px solid #edecf0;
+      border-bottom: 1px solid #edecf0;
       > div {
         display: flex;
         margin-bottom: @margin-10;
@@ -1379,11 +1381,6 @@
                 position: relative;
                 cursor: pointer;
                 text-align: center;
-                > img {
-                  width: 60px;
-                  height: 60px;
-                  border-radius: 4px;
-                }
                 .text {
                   position: absolute;
                   font-size: @size-base;
@@ -1487,8 +1484,8 @@
         margin-top: 20px;
         span { margin-right: 5px; }
         > div {
-          width: 160px;
-          height: 160px;
+          width: 120px;
+          height: 120px;
           background-color: rgba(236,238,241,1);
           position: relative;
           border-radius: 8px;
@@ -1496,6 +1493,12 @@
             position: absolute;
             top: -6px;
             font-size: 160px!important;
+          }
+          img {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
           }
         }
       }
@@ -1512,7 +1515,7 @@
   border-bottom: 1px solid rgba(237,236,240,1);
 }
 /deep/ .el-dialog__footer {
-  padding-top: 0;
+  padding-top: 10px;
   padding-bottom: 10px;
 }
 /deep/ .el-table th {

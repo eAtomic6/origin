@@ -3,7 +3,7 @@ let getVal=function (val) {
   if(type!=='[object Number]'&&!val){
     return '--'
   }else if(type==='[object Object]'){
-    return val.label
+    return getVal(val.label)
   }else {
     return val
   }
@@ -36,6 +36,15 @@ let FILTER={
   filters:{
     getLabel:function (val) {
       return getVal(val)
+    },
+    getSignImage(val,list){
+      if(list.length===0){
+          return '';
+      }else {
+          return list.find(item=>{
+              return item.includes(val)
+          })
+      }
     }
   },
 }

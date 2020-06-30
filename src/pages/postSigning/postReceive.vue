@@ -5,7 +5,7 @@
             <!-- 筛选条件 -->
             <el-form :inline="true" ref="propForm" :model="propForm" class="prop-form" size="small">
                 <el-form-item label="关键字" prop="search">
-                    <el-tooltip content="合同编号/物业地址/业主/客户/房产证号/手机号" placement="top">
+                    <el-tooltip content="合同编号/纸质合同编号/物业地址/业主/客户/房产证号/手机号" placement="top">
                         <el-input class="w200" v-model="propForm.search" placeholder="请输入" clearable></el-input>
                     </el-tooltip>
                 </el-form-item>
@@ -71,6 +71,16 @@
                         :value="item"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="签约方式">
+                    <el-select v-model="propForm.recordType" class="w120" :clearable="true">
+                        <el-option
+                        v-for="item in dictionary['64']"
+                        :key="item.key"
+                        :label="item.value"
+                        :value="item.key">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
             </el-form>
         </ScreeningTop>
         <!-- 列表 -->
@@ -79,39 +89,54 @@
                 <!-- <div class="paper-tit-fl"><i class="iconfont icon-tubiao-11 mr-10 font-cl1"></i>数据列表</div> -->
             </div>
             <el-table ref="tableCom" border :max-height="tableNumberCom" :data="tableData.list" v-loading="loadingList" class="paper-table">
-                <el-table-column :formatter="nullFormatterData" label="合同编号" align="center" min-width="120">
+                <el-table-column :formatter="nullFormatterData" label="合同信息" min-width="150">
                     <template slot-scope="scope">
-                        <span class="blue" @click="contractFn(scope.row)">{{scope.row.code}}</span>
+                        <p>
+                            合同:
+                            <span class="blue" @click="contractFn(scope.row)" style="cursor:pointer;">{{scope.row.code}}</span>
+                        </p>
+                        <p v-if="scope.row.recordType.value===2">
+                            纸质合同编号:
+                            <span class="blue" @click="contractFn(scope.row)" style="cursor:pointer;">{{scope.row.pCode}}</span>
+                        </p>
                     </template>
                 </el-table-column>
-                <el-table-column :formatter="nullFormatterData" prop="signDate" label="签约日期" align="center" min-width="90">
+                <el-table-column prop="recordType.label" label="签约方式" min-width="60"></el-table-column>
+                <el-table-column :formatter="nullFormatterData" prop="signDate" label="签约时间" min-width="90">
                     <template slot-scope="scope">
-                        {{dateFormat(scope.row.signDate)}}
+                        {{scope.row.signDate|formatTime(false)}}
                     </template>
                 </el-table-column>
-                <el-table-column :formatter="nullFormatterData" label="后期状态" align="center" min-width="80">
+                <el-table-column :formatter="nullFormatterData" label="后期状态" min-width="80">
                     <template slot-scope="scope">
                         {{statusLaterStageFn(scope.row.statusLaterStage.value)}}
                     </template>
                 </el-table-column>
-                <el-table-column :formatter="nullFormatterData" prop="propertyAddr" label="物业地址" align="center" min-width="120">
+                <el-table-column :formatter="nullFormatterData" prop="propertyAddr" label="物业地址" min-width="160">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.propertyAddr.length===0">--</span>
+                        <template v-else>
+                            <p>{{scope.row.propertyAddr.split(' ')[0]}}</p>
+                            <p>{{scope.row.propertyAddr.split(' ')[1]}}</p>
+                        </template>
+                    </template>
                 </el-table-column>
-                <el-table-column :formatter="nullFormatterData" prop="transFlowName" label="交易流程" align="center" min-width="260">
+                <el-table-column :formatter="nullFormatterData" prop="transFlowName" label="交易流程" min-width="260">
                 </el-table-column>
-                <el-table-column :formatter="nullFormatterData" prop="propertyRightAddr" label="产权地址" align="center" min-width="120">
+                <el-table-column :formatter="nullFormatterData" prop="propertyRightAddr" label="产权地址" min-width="120">
                 </el-table-column>
-                <el-table-column :formatter="nullFormatterData" prop="propertyRightRegion" label="产权地址区域" align="center" min-width="120">
+                <el-table-column :formatter="nullFormatterData" prop="propertyRightRegion" label="产权地址区域" min-width="120">
                 </el-table-column>
-                <el-table-column :formatter="nullFormatterData" prop="owner" label="业主" align="center" min-width="90">
+                <el-table-column :formatter="nullFormatterData" prop="owner" label="业主" min-width="90">
                 </el-table-column>
-                <el-table-column :formatter="nullFormatterData" prop="customer" label="客户" align="center" min-width="90">
+                <el-table-column :formatter="nullFormatterData" prop="customer" label="客户" min-width="90">
                 </el-table-column>
-                <el-table-column :formatter="nullFormatterData" label="成交经纪人" align="center" min-width="140">
+                <el-table-column :formatter="nullFormatterData" label="成交经纪人" min-width="140">
                     <template slot-scope="scope">
                         {{agentFn(scope.row.dealagentStoreName,scope.row.dealAgentName)}}
                     </template>
                 </el-table-column>
-                <el-table-column :formatter="nullFormatterData" label="操作" align="center" min-width="120">
+                <el-table-column :formatter="nullFormatterData" label="操作" min-width="120">
                     <template slot-scope="scope">
                         <el-button v-if="power['sign-qh-rev-receive'].state" class="blue" type="text" @click="receiveFn(scope.row)">{{receiveComFn(scope.row.statusLaterStage.value,1)}}</el-button>
                     </template>
@@ -207,22 +232,23 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <div class="receive-label" v-if="receive.refuseReasons">
+                            <!-- <div class="receive-label" v-if="receive.refuseReasons">
                                 <span class="cl-1 mr-10">拒绝原因：</span>
                                 <div class="receive-txt">{{receive.refuseReasons}}</div>
-                            </div>
+                            </div> -->
                         </el-tab-pane>
                         <el-tab-pane label="合同资料库">
                             <div class="contract-box">
                                 <template v-if="ContractDatabase.length > 0">
                                     <div v-for="items in ContractDatabase" :key="items.kind">
                                         <div class="contract-tit">{{titleFn(items.kind)}}</div>
-                                        <div class="contract-main" v-for="item in items.children" :key="item.title">
+                                        <div class="contract-main" v-for="(item,index) in items.children" :key="item.title+index">
                                             <p class="cl-1 mb-10"><span class="spna"><template v-if="item.isrequire">*</template></span>{{item.title}}</p>
                                             <ul class="steps-img">
-                                                <el-tooltip class="item" effect="dark" :content="ies.name" placement="bottom" v-for="(ies,i) in item.value" :key="ies.name">
+                                                <el-tooltip class="item" effect="dark" :content="ies.name" placement="bottom" v-for="(ies,i) in item.value" :key="ies.name+i">
                                                     <li @click="previewPhoto(item.value,i)">
-                                                        <div class="img">
+                                                        <img class="suolue-img" :src="ies.path|getSignImage(preloadFiles)" alt="" v-if="isPictureFile(ies.fileType)" width="70%" height="85px">
+                                                        <div class="img" v-else>
                                                             <uploadCell :type="stepsTypeImg(ies.path)"></uploadCell>
                                                         </div>
                                                         <p class="p">{{ies.name}}</p>
@@ -243,7 +269,7 @@
             <span slot="footer">
                 <el-button v-if="power['sign-qh-rev-receive'].state" class="paper-btn paper-btn-blue" type="primary" size="small" @click="saveBtnFn(receive.receive)" round>保存</el-button>
                 <el-button v-if="power['sign-qh-rev-receive'].state" class="paper-btn plain-btn-blue" size="small" v-show="receiveComFn(receive.receive,0)" @click="receiveBtnFn" round>接收</el-button>
-                <el-button v-if="power['sign-qh-rev-receive'].state" class="paper-btn plain-btn-red" size="small" @click="refusedFn" v-show="receiveComFn(receive.receive,0)" round>拒绝</el-button>
+                <!-- <el-button v-if="power['sign-qh-rev-receive'].state" class="paper-btn plain-btn-red" size="small" @click="refusedFn" v-show="receiveComFn(receive.receive,0)" round>拒绝</el-button> -->
             </span>
         </el-dialog>
     </div>
@@ -288,7 +314,8 @@
                     late: '',
                     dateMo: '',
                     depAttr:'',
-                    areaName:''
+                    areaName:'',
+                    recordType:''
                 },
                 // 筛选选项
                 rules: {
@@ -338,7 +365,9 @@
                     proWidth: '1000px',
                     rabbet: true,
                     center: false,
-                    footer: true
+                    footer: true,
+                    receive: '',
+                    e: {}
                 },
                 // 弹层切换展示那个
                 activeName: '0',
@@ -382,8 +411,10 @@
                 dictionary:{
                     '520':'合同资料库标题',
                     '53':'合作方式',
+                    '64':'签约方式'
                 },
-                textAutosize:{ minRows: 7, maxRows: 7 }
+                textAutosize:{ minRows: 7, maxRows: 7 },
+                preloadFiles:[]
             }
         },
         computed: {
@@ -503,33 +534,14 @@
             },
             // 接收
             receiveFn(e) {
+                if(!e.dealAgentId) {
+                    this.$message({message:'当前合同没有成交经纪人', type: 'error'})
+                    return
+                }
                 if(!this.power['sign-qh-rev-receive'].state){
                     this.noPower(this.power['sign-qh-rev-receive'].name);
                     return false
                 }
-                this.receive = {
-                    show: true,
-                    tit: '接收',
-                    proWidth: '1000px',
-                    rabbet: true,
-                    center: false,
-                    footer: true,
-                    receive: e.statusLaterStage.value,
-                    refuseReasons: e.refuseReasons,
-                    e,
-                }
-                // 获取角色
-                this.loading4 = true;
-                this.$ajax.get("/api/roles").then(res => {
-                    res = res.data;
-                    if (res.status === 200) {
-                        this.dealTableRule = [...res.data];
-                    }
-                    this.loading4 = false;
-                }).catch(err => {
-                    this.errMeFn(err);
-                    this.loading4 = false;
-                })
                 // 获取列表数据
                 this.loadingdealTable = true;
                 this.$ajax.get('/api/postSigning/clickReceive', {
@@ -538,6 +550,11 @@
                 }).then(res => {
                     res = res.data
                     if (res.status === 200) {
+                        this.receive.show = true
+                        this.receive.receive = e.statusLaterStage.value
+                        this.receive.e = e
+                        this.getRole()
+                        this.getDataBase(e.id)
                         let arr = [...res.data];
                         arr.map(e => {
                             if(e.roleId == 0) {
@@ -560,9 +577,25 @@
                         this.loadingdealTable = false;
                     });
                 })
-                // 合同资料库数据
+            },
+            // 获取角色
+            getRole() {
+                this.loading4 = true;
+                this.$ajax.get("/api/roles").then(res => {
+                    res = res.data;
+                    if (res.status === 200) {
+                        this.dealTableRule = [...res.data];
+                    }
+                    this.loading4 = false;
+                }).catch(err => {
+                    this.errMeFn(err);
+                    this.loading4 = false;
+                })
+            },
+            // 合同资料库数据
+            getDataBase(e) {
                 this.$ajax.get("/api/postSigning/getDatabase", {
-                    contractCode: e.id
+                    contractCode: e
                 }).then(res => {
                     res = res.data;
                     if (res.status === 200) {
@@ -570,6 +603,19 @@
                         if (!!res.data) {
                             let j = JSON.parse(res.data.address)
                             arr = this.recursiveFn([...j]);
+                            let preloadList=[]
+                            j.forEach(e => {
+                                e.value.forEach(t =>{
+                                    if(this.isPictureFile(t.fileType)) {
+                                        preloadList.push(t.path)
+                                    }
+                                })
+                            })
+                            if(preloadList.length){
+                                this.fileSign(preloadList,'preload').then(res=>{
+                                    this.preloadFiles=res
+                                })  
+                            }
                         }
                         this.ContractDatabase = arr;
                     }
@@ -861,7 +907,8 @@
                 this.pageNum = 1;
                 this.$refs.propForm.resetFields();
                 // this.getListData();
-              this.EmployeList = []
+                this.EmployeList = []
+                this.propForm.recordType = ''
             },
             // 查询
             queryFn() {
@@ -942,7 +989,8 @@
                     pageNum: this.pageNum,
                     pageSize: this.pageSize,
                     depAttr:this.propForm.depAttr,
-                    areaName:this.propForm.areaName
+                    areaName:this.propForm.areaName,
+                    recordType:this.propForm.recordType
                 }
 
                 //点击查询时，缓存筛选条件
@@ -1049,7 +1097,8 @@
                         late: query.statusLaterStage,
                         dateMo: query.signDateSta?[query.signDateSta,query.signDateEnd]:'',
                         depAttr:query.depAttr,
-                        areaName:query.areaName
+                        areaName:query.areaName,
+                        recordType:query.recordType
                     }
                     if(this.propForm.regionName){
                         this.dep=Object.assign({},this.dep,{id:this.propForm.region,empId:this.propForm.regionName,empName:query.empName})

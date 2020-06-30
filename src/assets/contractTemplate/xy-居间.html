@@ -70,6 +70,13 @@
         .text-indent {
             text-indent: 30px;
         }
+        .sign-title{
+            padding: 5px 30px;
+        }
+        .sign-title>ul>li{
+            display: inline-block;
+            min-width: 300px;
+        }
         .sign {
             margin-top: 50px;
             margin-bottom: 40px;
@@ -165,10 +172,16 @@
         <h2 class="center">居间服务合同</h2>
         <p class="title">合同编号：<input systemParam="code" type="text" tag="input" class="no-border" readonly="readonly" value="" /></p>
         <div>
-            <div class="sign-title">
-                <p class="bold">甲方（出卖方）：<span systemParam="ownerName" tag="input-auto" class="color-grey"></span></p>
-                <p class="bold">乙方（买受方）：<span systemParam="guestName" tag="input-auto" class="color-grey"></span></p>
-                <p style="position:relative;"><img class="SignatureLocation" style="position:absolute;left:130px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /><span class="bold">丙方（居间人）：</span><span tag="input-auto" class="input-before input-select text-limit dropdown-item" systemparam="true" extendParam="val3"></span></p>
+            <div class="sign-title bold">
+                <ul>
+                    <li><span>甲方（出卖人）：</span><span systemParam="ownerName" tag="input-auto" class="color-grey"></span></li>
+                    <li><span>证件号码：</span><span systemparam="ownerID" tag="input-auto"></span></li>
+                </ul>
+                <ul>
+                    <li><span>乙方（买受人）：</span><span systemParam="guestName" tag="input-auto" class="color-grey"></span></li>
+                    <li><span>证件号码：</span><span systemparam="guestID" tag="input-auto"></span></li>
+                </ul>
+                <p style="position:relative;"><img class="SignatureLocation" style="position:absolute;left:130px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /><span class="bold">丙方（居间人）：</span><span tag="input-auto" class="text-limit" systemparam="true" extendParam="val3"></span></p>
             </div>
             <div class="text-indent">
                 甲乙双方在丙方的居间服务下就坐落于襄阳市<span systemParam="propertyAddr" extendParam="val4" class="text-limit" tag="input-auto"></span>的房屋，于<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val5"/>与出卖人签订了《存量房买卖合同》（以下简称“《买卖合同》”）。甲、乙、丙三方在友好协商的基础上，订立本居间服务合同，以兹共同遵守。
@@ -247,13 +260,47 @@
         </div>
     </div>
 </body>
-<!--<script type="text/javascript" src="./datepicker.js"></script>
-<script type="text/javascript" src="./dropdown.js"></script>
-<script type="module" src="./xy-JJ.js"></script>-->
 
- <script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser-polyfill.min.js"></script>
 <script type="text/javascript" src="/browser.min.js"></script>
 <script type="text/javascript" src="/datepicker.js"></script>
 <script type="text/javascript" src="/dropdown.js"></script>
-<script type="text/javascript" src="/js/bundle_jj_xy20190610.js"></script>
+<script type="text/javascript" src="/js/bundle_jj_xy20191128.js"></script>
+<!-- <script>
+  (function () {
+    var scriptList = document.getElementsByTagName("script")
+    console.log(scriptList)
+    if(!scriptList[0].src){
+      var host='https://sign2.jjw.com'
+      var host_other="http://sign2.jjw.com:28879"
+      var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_mm20190402.js","datepicker.css"]
+      for (let i = 0; i < addrList.length; i++) {
+        if(window.location.host==='localhost:8080'){
+          if(addrList[i].indexOf('bundle')>-1){
+            // addrList[i]=host_other+'/'+addrList[i]
+            addrList[i]='./xy-JJ.js'
+          }else{
+            addrList[i]=host_other+'/'+addrList[i]
+          }
+        }else{
+          addrList[i]='/'+addrList[i]
+        }
+        if(addrList[i].indexOf('.css')>-1){
+          var hm = document.createElement("link");
+          hm.rel="stylesheet"
+          hm.href = addrList[i];
+          /*var s = document.getElementsByTagName("link")[0];
+          s.parentNode.insertBefore(hm,s);*/
+          document.head.appendChild(hm);
+        }else{
+          var hm = document.createElement("script");
+          addrList[i].includes('xy-JJ')&&(hm.type = 'module');
+          hm.src = addrList[i];
+          var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+          s.parentNode.insertBefore(hm,s);
+        }
+      }
+    }
+  })();
+</script> -->
 </html>

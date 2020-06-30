@@ -441,6 +441,8 @@
                   val127:''
                 }
                 break
+              case 'd':
+                break
               default:
                 errorArr2.push({
                   type:'input',
@@ -508,7 +510,7 @@
                         prohibit(bindElem,['a','b'],'diya')
                     }
                     if(attr==='delivery'){
-                        prohibit(bindElem,['a','b','c'],'delivery')
+                        prohibit(bindElem,['a','b','c','d'],'delivery')
                     }
                     if(attr==='reject'){
                         prohibit(bindElem,['a','b','c'],'reject')
@@ -563,7 +565,7 @@
                       prohibit(inputbox[i],['a','b'],'diya')
                   }
                   if(attr==='delivery'){
-                      prohibit(inputbox[i],['a','b','c'],'delivery')
+                      prohibit(inputbox[i],['a','b','c','d'],'delivery')
                   }
                   if(attr==='reject'){
                       prohibit(inputbox[i],['a','b','c'],'reject')
@@ -775,11 +777,13 @@
         companyName.setAttribute('list',companyNameTxt)
       }
     }
+
+    let readonlyArr = ['ownerName','ownerID','ownerNames','ownerIDs','guestName','guestID','guestNames','guestIDs','propertyAddr','dealPriceUpper','square']
     if(onlyReadDom.length>0){
       onlyReadDom.forEach((element,index) => {
         if(readonlyItem==='signDate'){
            element.setAttribute('value', arr[index])
-        }else if(readonlyItem==='propertyAddr'||readonlyItem==='square'||readonlyItem==='dealPriceUpper'||readonlyItem==='ownerName'||readonlyItem==='ownerNames'||readonlyItem==='guestName'||readonlyItem==='guestNames'){
+        }else if(readonlyArr.includes(readonlyItem)){
             if(element.getAttribute("extendParam")==="val7"){
                 let value = msg["propertyAddr"]
                 if(value.substring(0,3)==="武汉市"){
@@ -948,14 +952,18 @@
                 //监听listen属性，判断是否有输入类型限制
                 let spanAttr=tip.target.getAttribute('listen')
                 if(spanAttr==='number'){
-                    ev.target.value=ev.target.value.replace(/[^\d]/g, "")
+                    ev.target.value=ev.target.value.replace(/[^\d\/]/g, "")
                 }
                 if(spanAttr==='chinese'){
-                    ev.target.value=ev.target.value.replace(/[^\d]/g, "")
+                    ev.target.value=ev.target.value.replace(/[^\d\/]/g, "")
                     if(ev.target.value.length>0){
+                      if(ev.target.value == '/') {
+                        tip.target.innerHTML=ev.target.value
+                      }else {
                         let str = toChineseNumber(ev.target.value)
                         let value=str.split('元')[0]
                         tip.target.innerHTML=value
+                      }
                     }else {
                       tip.target.innerHTML=''
                       tip.target.classList.add('input-before')

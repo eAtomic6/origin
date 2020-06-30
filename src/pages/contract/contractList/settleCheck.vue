@@ -5,29 +5,28 @@
     <ScreeningTop @propQueryFn="queryFn('search')" @propResetFormFn="resetFormFn" class="adjustbox">
       <el-form :inline="true" :model="adjustForm" class="adjust-form" size="mini">
         <el-form-item label="关键字">
-          <el-tooltip effect="dark" content="合同编号/房源编号/客源编号" placement="top">
+          <el-tooltip effect="dark" content="合同编号/纸质合同编号/房源编号/客源编号" placement="top">
             <el-input v-model="adjustForm.keyword" style="width:150px" clearable placeholder="请输入"></el-input>
           </el-tooltip>
         </el-form-item>
+
         <el-form-item label="发起日期">
           <el-date-picker v-model="adjustForm.signDate" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" :default-time="['00:00:00', '23:59:59']" format="yyyy-MM-dd" value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
 
         <el-form-item label="合同类型">
-          <!-- <el-select v-model="adjustForm.contType" placeholder="全部" class="width150" clearable>
-            <el-option v-for="item in dictionary['10']" :key="item.key" :label="item.value" :value="item.key">
-            </el-option>
-          </el-select> -->
           <el-select v-model="adjustForm.contTypes" multiple placeholder="全部" style="width:200px" :class="{'width300':adjustForm.contTypes&&adjustForm.contTypes.length>3}">
             <el-option
               v-for="item in dictionary['10']"
+              v-if="item.key!=6&&item.key!=5&&item.key!=4"
               :key="item.key"
               :label="item.value"
               :value="item.key">
             </el-option>
           </el-select>
         </el-form-item>
+
         <el-form-item label="合作方式">
           <el-select v-model="adjustForm.depAttr" placeholder="全部" class="width150" clearable>
             <el-option v-for="item in dictionary['53']" :key="item.key" :label="item.value" :value="item.key">
@@ -35,13 +34,14 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="部门">
-          <!-- <el-select v-model="Form.getDepName" clearable filterable remote placeholder="请选择门店" :remote-method="getDepNameFn" @change="changeDepNameFn" @clear="clearDepNameFn" :loading="loading" class="width200">
-              <el-option v-for="item in adjustForm.getDepName" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        <el-form-item label="签约方式">
+          <el-select v-model="adjustForm.recordType" placeholder="全部" :clearable="true" style="width:150px">
+            <el-option v-for="item in dictionary['64']" :key="item.key" :label="item.value" :value="item.key">
+            </el-option>
           </el-select>
-          <el-select v-model="Form.getAgentName" clearable filterable placeholder="经纪人" :loading="loading2" class="width100">
-              <el-option v-for="item in adjustForm.getAgentName" :key="item.empId" :label="item.name" :value="item.empId"></el-option>
-          </el-select> -->
+        </el-form-item>
+
+        <el-form-item label="部门">
           <select-tree :data="DepList" :init="adjustForm.depName" @checkCell="depHandleClick" @clear="clearDep" @search="searchDep" class="fl"></select-tree>
           <el-select :clearable="true" v-loadmore="moreEmploye" class="margin-left" size="small" v-model="adjustForm.dealAgentId" @change="handleEmpNodeClick" placeholder="请选择">
             <el-option
@@ -55,68 +55,66 @@
 
         <el-form-item label="审核状态">
           <el-select v-model="adjustForm.examineState" placeholder="全部" class="width150">
-            <!-- <el-option
-              v-for="item in toExamineState"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option> -->
             <el-option label="审核中" value="0"></el-option>
             <el-option label="通过" value="1"></el-option>
             <el-option label="驳回" value="2"></el-option>
           </el-select>
         </el-form-item>
-
       </el-form>
     </ScreeningTop>
 
     <!-- 数据列表 -->
     <div class="contract-list">
-      <!-- <div class="form-title-fl"><i class="iconfont icon-tubiao-11 mr8"></i>数据列表</div>    -->
       <el-table :data="tableData.list" ref="tableCom" :max-height="tableNumberCom" style="width: 100%" v-loading="loadingTable" @row-dblclick='toDetail' border>
-        <el-table-column label="合同编号" align="center" min-width="120" fixed>
+        <el-table-column label="合同信息" min-width="140" fixed>
           <template slot-scope="scope">
-            <div class="blue curPointer" @click="goContractDetail(scope.row)">{{scope.row.code}}</div>
+            <p style="text-align:left;">合同：<span class="blue curPointer" @click="goContractDetail(scope.row)">{{scope.row.code}}</span></p>
+            <p v-if="scope.row.recordType&&scope.row.recordType.value===2&&scope.row.pCode" style="text-align:left;">纸质合同编号：<span class="blue curPointer" @click="goContractDetail(scope.row)">{{scope.row.pCode}}</span></p>
           </template>
         </el-table-column>
-        <el-table-column label="合同类型" prop="contType" :formatter="nullFormatter" align="center" min-width="60">
 
+        <el-table-column label="合同类型" min-width="60">
+          <template slot-scope="scope">
+            <span v-if="scope.row.loanType">{{scope.row.loanType===7?"全款买卖":"贷款买卖"}}</span>
+            <span v-else>{{scope.row.contType.label}}</span>
+          </template>
         </el-table-column>
 
-        <el-table-column label="成交总价" :formatter="nullFormatter" prop="dealPrice" align="center" min-width="90">
+        <el-table-column label="成交总价" :formatter="nullFormatter" prop="dealPrice" min-width="90">
           <template slot-scope="scope">
             <span>{{scope.row.dealPrice}} 元</span>
             <span v-for="item in dictionary['507']" :key="item.key" v-if="item.key===scope.row.timeUnit&&scope.row.contType.value===1"> / {{item.value}}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="成交经纪人" :formatter="nullFormatter" align="center" min-width="120">
+        <el-table-column label="成交经纪人" :formatter="nullFormatter" min-width="100">
           <template slot-scope="scope">
             <p>{{scope.row.dealAgentStoreName}}</p>
             <p>{{scope.row.dealAgentName}}</p>
           </template>
         </el-table-column>
 
-        <el-table-column label="发起日期" align="center" min-width="90">
+        <el-table-column label="发起日期" min-width="90">
           <template slot-scope="scope">
             <p>{{scope.row.sponsorTime | getDate}}</p>
           </template>
         </el-table-column>
 
-        <el-table-column label="发起人" :formatter="nullFormatter" align="center" min-width="120">
+        <el-table-column label="发起人" :formatter="nullFormatter" min-width="120">
           <template slot-scope="scope">
             <p>{{scope.row.sponsorStoreName}}</p>
             <p>{{scope.row.sponsorName}}</p>
+            <p v-if="!scope.row.sponsorStoreName&&!scope.row.sponsorName">-</p>
           </template>
         </el-table-column>
 
-        <el-table-column label="实际结算" :formatter="nullFormatter" align="center" min-width="90">
+        <el-table-column label="实际结算" :formatter="nullFormatter" min-width="90">
           <template slot-scope="scope">
             <p>{{scope.row.amount}}元</p>
           </template>
         </el-table-column>
 
-        <el-table-column label="审核状态" align="center" min-width="80">
+        <el-table-column label="审核状态" min-width="80">
           <template slot-scope="scope">
             <span class="blue" v-if="scope.row.examineState.value===0">审核中</span>
             <span class="green" v-if="scope.row.examineState.value===1">通过</span>
@@ -124,15 +122,14 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="审核日期" align="center" min-width="90">
+        <el-table-column label="审核时间" min-width="110">
           <template slot-scope="scope">
-            <p>{{scope.row.examineTime | getDate}}</p>
+            <p>{{scope.row.examineTime | formatTime(false)}}</p>
           </template>
         </el-table-column>
 
-        <el-table-column label="当前审核人" align="center" min-width="120">
+        <el-table-column label="当前审核人" min-width="120">
           <template slot-scope="scope">
-
             <span v-if="scope.row.auditorId>0&&scope.row.examineState.value===0">
               <p>{{scope.row.examineStoreName}}</p>
               <p>{{scope.row.examineName}}</p>
@@ -141,7 +138,8 @@
             <p class="btn-text-info" type="text" v-if="getUserMsg&&(scope.row.preAuditId === getUserMsg.empId || scope.row.auditorId === getUserMsg.empId)&&scope.row.examineState&&scope.row.examineState.value===0" @click="choseCheckPerson(scope.row,getUserMsg.empId===scope.row.auditorId?2:1)">{{getUserMsg.empId===scope.row.auditorId?'转交审核人':'设置审核人'}}</p>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="下一步审核人" min-width="120">
+
+        <el-table-column label="下一步审核人" min-width="120">
           <template slot-scope="scope">
             <span v-if="scope.row.nextAuditId>0">
               <p>{{scope.row.nextAuditStoreName}}</p>
@@ -151,7 +149,8 @@
             <p class="btn-text-info color-red" type="text" v-if="getUserMsg&&(scope.row.auditorId === getUserMsg.empId&&scope.row.nextAuditId!==0)&&scope.row.examineState&&scope.row.examineState.value===0" @click="choseCheckPerson(scope.row,3)">设置审核人</p>
           </template>
         </el-table-column>
-        <el-table-column label="审核备注" align="center" min-width="120">
+
+        <el-table-column label="审核备注" min-width="120">
           <template slot-scope="scope">
             <span v-if="scope.row.remarks&&(scope.row.remarks).trim().length > 0">
               <el-popover trigger="hover" placement="top">
@@ -167,15 +166,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" min-width="120" fixed="right" align="center">
+        <el-table-column label="操作" min-width="120" fixed="right" class-name="null-formatter">
           <template slot-scope="scope">
-            <template v-if="scope.row.examineState.value=== 0 && scope.row.auditorId === getUserMsg.empId">
-              <el-button type="text" class="curPointer" @click="auditApply(scope.row)">审核</el-button>
-            </template>
-            <span v-else>--</span>
+            <div class="btn" @click="auditApply(scope.row)" v-if="scope.row.examineState.value=== 0 && (scope.row.auditorId === getUserMsg.empId || ((!(scope.row.auditorId>0))&&getUserMsg&&scope.row.grabDept))">审核</div>
+            <div style="color:red;" v-if="scope.row.examineState.value===0&&scope.row.auditorId>0&&getUserMsg&&scope.row.auditorId!==getUserMsg.empId">{{scope.row.examineName}}正在审核</div>
+            <div v-if="scope.row.examineState.value!==0||scope.row.examineState.value===0&&((!(scope.row.auditorId>0))&&getUserMsg&&scope.row.grabDept&&scope.row.grabDept.indexOf(String(getUserMsg.depId))===-1)">--</div>
           </template>
         </el-table-column>
-
       </el-table>
       <el-pagination
       @current-change="handleCurrentChange"
@@ -195,7 +192,6 @@
             <p>合同编号：<span class="blue">{{layerAudit.contractCode}}</span></p>
             <p>发起日期：<span>{{layerAudit.createTime | getDate}}</span></p>
             <p>发起人：<span>{{layerAudit.sponsorStoreName + '-' + layerAudit.sponsorName}}</span></p>
-
           </div>
           <div class="col-li">
             <p>物业地址：<span>{{layerAudit.propertyAddr}}</span></p>
@@ -221,7 +217,7 @@
             <el-table-column prop="level4" label="合作门店"></el-table-column>
             <el-table-column label="业绩分成比例">
               <template slot-scope="scope">
-                  <p>{{scope.row.ratio}}%</p>
+                <p>{{scope.row.ratio}}%</p>
               </template>
             </el-table-column>
             <el-table-column prop="serviceFee" label="当期刷卡手续费（元）"></el-table-column>
@@ -238,11 +234,10 @@
                 <li v-for="(item,index) in uploadList" :key="item.index">
                   <el-tooltip class="item" effect="dark" :content="item.name" placement="bottom">
                     <div class="namePath" @click="previewPhoto(uploadList,index)">
-                        <upload-cell :type="item.fileType"></upload-cell>
-                        <p>{{item.name}}</p>
+                      <upload-cell :type="item.fileType"></upload-cell>
+                      <p>{{item.name}}</p>
                     </div>
                   </el-tooltip>
-                  <!-- <i class="iconfont icon-tubiao-6" @click="ZTdelectData(index)" v-if="isDelete===item.index+item.path"></i> -->
                 </li>
             </ul>
           </div>
@@ -298,7 +293,7 @@
             <p>应收佣金：<span>{{layerAudit.thisCost}}元</span></p>
           </div>
           <div class="col-li">
-              <p>当期实际结算：<span>{{layerAudit.actualsettlement}}元（当期实收*结算比例-成本）</span></p>
+            <p>当期实际结算：<span>{{layerAudit.actualsettlement}}元（当期实收*结算比例-成本）</span></p>
           </div>
         </div>
 
@@ -308,7 +303,7 @@
             <el-table-column prop="level4" label="合作门店"></el-table-column>
             <el-table-column label="业绩分成比例">
               <template slot-scope="scope">
-                  <p>{{scope.row.ratio}}%</p>
+                <p>{{scope.row.ratio}}%</p>
               </template>
             </el-table-column>
             <el-table-column prop="serviceFee" label="当期刷卡手续费（元）"></el-table-column>
@@ -320,17 +315,16 @@
         <!-- 上传附件 -->
         <div class="audit-col">
           <div class="uploadfile">
-              <div class="uploadtitle">结算凭证</div>
-              <ul class="ulData">
-                <li v-for="(item,index) in uploadList" :key="item.index">
-                  <el-tooltip class="item" effect="dark" :content="item.name" placement="bottom">
-                    <div class="namePath" @click="previewPhoto(uploadList,index)">
-                        <upload-cell :type="item.fileType"></upload-cell>
-                        <p>{{item.name}}</p>
-                    </div>
-                  </el-tooltip>
-                  <!-- <i class="iconfont icon-tubiao-6" @click="ZTdelectData(index)" v-if="isDelete===item.index+item.path"></i> -->
-                </li>
+            <div class="uploadtitle">结算凭证</div>
+            <ul class="ulData">
+              <li v-for="(item,index) in uploadList" :key="item.index">
+                <el-tooltip class="item" effect="dark" :content="item.name" placement="bottom">
+                  <div class="namePath" @click="previewPhoto(uploadList,index)">
+                    <upload-cell :type="item.fileType"></upload-cell>
+                    <p>{{item.name}}</p>
+                  </div>
+                </el-tooltip>
+              </li>
             </ul>
           </div>
         </div>
@@ -348,7 +342,6 @@
         <div class="audit-col bordernone">
           <!-- 表格 -->
           <div class="mb20">审核信息：</div>
-
           <el-table :data="checkInfo" border style="width: 100%" class="table table2 mt20">
             <el-table-column label="时间" width=160 align=center>
               <template slot-scope="scope">
@@ -359,11 +352,6 @@
             </el-table-column>
             <el-table-column prop="roleName" label="职务"  width=110></el-table-column>
             <el-table-column prop="operate" label="操作" :formatter="nullFormatter" align="center" width=100>
-              <!-- <template slot-scope="scope">
-                <span class="blue" v-if="scope.row.auditState === 4">未审核</span>
-                <span class="green" v-if="scope.row.auditState === 1">通过</span>
-                <span class="red" v-if="scope.row.auditState === 2">驳回</span>
-              </template> -->
             </el-table-column>
             <el-table-column label="备注">
               <template slot-scope="scope">
@@ -382,20 +370,13 @@
             </el-table-column>
           </el-table>
         </div>
-
-
       </div>
       <!-- 图片放大 -->
       <preview :imgList="previewFiles" :start="previewIndex" v-if="preview" @close="preview=false"></preview>
-
     </el-dialog>
     <checkPerson :show="checkPerson.state" :type="checkPerson.type" :page="checkPerson.page" :showLabel="checkPerson.label" :bizCode="checkPerson.code" :flowType="checkPerson.flowType" @submit="personChose" @close="myclose" v-if="checkPerson.state"></checkPerson>
-
-
   </div>
 </template>
-
-
 
 <script>
   import ScreeningTop from '@/components/ScreeningTop';
@@ -422,8 +403,7 @@
         loading2:false,
         loadingTable:false,
         settleMarks: '',
-        // settleMarks:'',
-         adjustForm:{
+        adjustForm:{
           signDate: '', //发起日期
           contType: '', //合同类型
           depAttr: '', //合作方式
@@ -431,42 +411,14 @@
           depName:'',
           dealAgentStoreId: '',
           dealAgentId: '',
-          // getDepName: [{
-          //   name: "全部",
-          //   id: ""
-          // }],    //选择门店
-          // getAgentName: [{
-          //   name: "全部",
-          //   empId: ""
-          // }],
-                     //审核状态
           keyword: ''   //关键字
-
         },
-
-
-        // toExamineState: [{
-        //   label: '审核中',
-        //   value: 0
-        // },
-        // {
-        //   label: '通过',
-        //   value: 1
-        // },
-        // {
-        //   label: '驳回',
-        //   value: 2
-        // }],
-        // Form :{
-        //   getDepName: '',
-        //   getAgentName: ''
-        // },
         dictionary: {
           //数据字典
           "10": "", //合同类型
-          "17": "", //审核状态
           "507": "",//成交总价单位
-          "53": "" //合作方式
+          "53": "", //合作方式
+          "64":"",//签约方式  线上线下
         },
         layerAudit:{
           contractType:{
@@ -475,33 +427,24 @@
           statusLaterStage: {
             label:""
           },
-
-
         },
         checkInfo:[],
-        // preview:false,
-        // start:'',
         isDelete:'',
         //上传的协议
         uploadList: [],
         myCheckId: '',
-
         auditForm: {
           textarea: '', //备注
         },
-
         // 弹框里用到的
         dialogImageUrl: '',
         dialogVisible: false,
         dialogVisible2: false,
-
         tableData:[],
-
         // 分页
         pageNum: 1,
         pageSize: 10,
         count: 0,
-
         power: {
           'sign-ht-js-query': {
             state: false,
@@ -516,8 +459,6 @@
               state:false,
           },
         }
-
-
       }
     },
 
@@ -525,56 +466,26 @@
       getUserMsg(){
         return this.getUser.user
       }
-        // settlemark(){
-        //   return this.layerAudit.settlementRemarks.length;
-        // }
     },
 
     filters: {
-       getDate(val) {
-         return TOOL.dateFormat(val);
-       },
-       getTime(val) {
-         if(val === ''){
-           return '-'
-         }
-         return TOOL.timeFormat(val)
-       }
+      getDate(val) {
+        return TOOL.dateFormat(val);
+      },
+      getTime(val) {
+        if(val === ''){
+          return '-'
+        }
+        return TOOL.timeFormat(val)
+      }
     },
 
     methods:{
-      //图片预览
-      // getPicture(value,index){
-      //     this.start=index;
-      //     let arr=[];
-      //     // console.log(value);
-      //     value.forEach(item =>{
-      //         arr.push(item.path)
-      //     })
-      //     this.fileSign(arr)
-      // },
-
-      //合同主体的删除
-      // ZTdelectData(index){
-      //     this.uploadList.splice(index,1)
-      // },
-
-      // //显示删除按钮
-      // moveIn(value){
-      //     this.isDelete=value
-      // },
-      // moveOut(value){
-      //     if(this.isDelete===value){
-      //         this.isDelete=''
-      //     }
-      // },
       trim(str){
         return str.replace(/(^\s*)|(\s*$)/g, "")
       },
       myclose: function() {
         this.checkPerson.state=false
-        // this.queryFn();
-
       },
        // 选择审核人
       choseCheckPerson:function (row,type) {
@@ -590,212 +501,143 @@
       },
       personChose:function () {
         this.checkPerson.state=false
-        // this.$message({
-        //   message:`成功${this.checkPerson.type==='set'?'设置审核人':'转交审核人'}`
-        // })
         this.queryFn();
       },
 
-
       // 控制弹框body内容高度，超过显示滚动条
       clientHeight() {
-          return this.clientHei - 265 + 'px'
+        return this.clientHei - 265 + 'px'
       },
       clientHeight2() {
-          return this.clientHei - 197 + 'px'
+        return this.clientHei - 197 + 'px'
       },
-
-      // 得到部门门店和经纪人信息
-      // getDepNameFn(e) {
-      //   this.loading = true;
-      //   this.$ajax.get("/api/access/deps", {keyword: e})
-      //   .then(res => {
-      //     let data = res.data;
-      //     if (res.data.status === 200) {
-      //       this.loading = false;
-      //       if(e === '' || !e){
-      //         this.adjustForm.getDepName = [{
-      //           name: "全部",
-      //           id: ""
-      //         },...data.data]
-      //       }else{
-      //         this.adjustForm.getDepName = data.data
-      //       }
-
-      //     }
-      //   }).catch(error => {
-      //       this.$message({
-      //         message: error
-      //       })
-      //   })
-      // },
-
-
-      // changeDepNameFn(e) {
-      //   if(e !== "" || !!e){
-      //     this.loading2 = true;
-      //     this.$ajax.get("/api/organize/employees",{
-      //       cityId:this.userMsg.cityId,
-      //       depId: e
-      //     })
-      //     .then(res => {
-
-      //       if (res.data.status === 200) {
-      //         this.loading2 = false;
-      //         this.Form.getAgentName = '';
-      //         if(res.data.data.length > 0){
-
-      //           this.adjustForm.getAgentName = [{
-      //             name: "全部",
-      //             empId: ""
-      //           },...res.data.data]
-      //         }
-      //         else{
-      //           this.adjustForm.getAgentName = res.data.data
-      //         }
-
-      //       }
-
-      //     }).catch(error => {
-      //         this.$message({
-      //           message: error
-      //         })
-      //     })
-      //   }else{
-      //       this.Form.getAgentName = '';
-      //       this.adjustForm.getAgentName = [{
-      //           name: "全部",
-      //           empId: ""
-      //       }]
-      //       this.Form.getDepName = '';
-      //       this.getDepNameFn('');
-      //   }
-      // },
-
-      // 清除部门搜索
-      // clearDepNameFn(){
-      //     this.getDepNameFn('');
-      // },
-
-
 
       // 重置
       resetFormFn() {
-          TOOL.clearForm(this.adjustForm);
-          this.pageNum = 1;
-          // this.changeDepNameFn('');
-          // this.pageNum=1;
-          // this.queryFn();
+        TOOL.clearForm(this.adjustForm);
+        this.pageNum = 1;
         this.EmployeList = []
       },
 
       // 查询
       queryFn(type="init") {
-        // console.log(this.power)
-        // if(this.power['sign-ht-js-query'].state){
+        this.loadingTable = true;
+        let beginDate;
+        let endDate;
+        if(type==="search"){
+          this.pageNum=1
+        }
+        if(this.adjustForm.signDate && this.adjustForm.signDate.length === 2){
+          beginDate = TOOL.dateFormat(this.adjustForm.signDate[0]);
+          endDate = TOOL.dateFormat(this.adjustForm.signDate[1]);
+        }
+        let param = {
+          contResultVo: {
+            beginDate,
+            endDate,
+            examineState: this.adjustForm.examineState,    //this.examineState
+            depAttr: this.adjustForm.depAttr,
+            dealAgentStoreId: this.adjustForm.dealAgentStoreId, 
+            depName:this.adjustForm.depName,   //this.Form.getDepName.id,
+            dealAgentId: this.adjustForm.dealAgentId,    //this.Form.getAgentName.empId,
+            keyword: this.adjustForm.keyword,
+            recordType:this.adjustForm.recordType
+          },
+          pageNum: this.pageNum,
+          pageSize: this.pageSize
 
-          this.loadingTable = true;
-          let beginDate;
-          let endDate;
-          if(type==="search"){
-            this.pageNum=1
+        }
+        if(this.adjustForm.contTypes&&this.adjustForm.contTypes.length>0){
+          param.contResultVo["contTypes"]=this.adjustForm.contTypes.join(',')
+        }else{
+          param.contResultVo["contTypes"]=''
+        }
+        if(type==="search"||type==="page"){
+          param.contResultVo.empName=this.dep.empName
+          sessionStorage.setItem('sessionQuery',JSON.stringify({
+            path:'/settleCheck',
+            url:'/contract/contResultList',
+            query:param,
+            methods:"postJSON"
+          }))
+        }
+        // 结算审核列表
+        this.$ajax.postJSON("/api/contract/contResultList", param).then(res => {
+          let data = res.data;
+          if (res.data.status === 200) {
+            this.tableData = data.data
           }
-          if(this.adjustForm.signDate && this.adjustForm.signDate.length === 2){
-              beginDate = TOOL.dateFormat(this.adjustForm.signDate[0]);
-              endDate = TOOL.dateFormat(this.adjustForm.signDate[1]);
-          }
-          let param = {
-            contResultVo: {
-              beginDate,
-              endDate,
-              examineState: this.adjustForm.examineState,    //this.examineState
-              // contractType: this.adjustForm.contTypes,    //this.adjustForm.contType.key,
-              depAttr: this.adjustForm.depAttr,
-              dealAgentStoreId: this.adjustForm.dealAgentStoreId, 
-              depName:this.adjustForm.depName,   //this.Form.getDepName.id,
-              dealAgentId: this.adjustForm.dealAgentId,    //this.Form.getAgentName.empId,
-              keyword: this.adjustForm.keyword
-
-            },
-            pageNum: this.pageNum,
-            pageSize: this.pageSize
-
-          }
-          if(this.adjustForm.contTypes&&this.adjustForm.contTypes.length>0){
-            param.contResultVo["contTypes"]=this.adjustForm.contTypes.join(',')
-          }else{
-           param.contResultVo["contTypes"]=''
-          }
-          if(type==="search"||type==="page"){
-              param.contResultVo.empName=this.dep.empName
-              sessionStorage.setItem('sessionQuery',JSON.stringify({
-                path:'/settleCheck',
-                url:'/contract/contResultList',
-                query:param,
-                methods:"postJSON"
-              }))
-            }
-            // 结算审核列表
-            this.$ajax
-            .postJSON("/api/contract/contResultList", param)
-            .then(res => {
-              let data = res.data;
-              if (res.data.status === 200) {
-                this.tableData = data.data
-              }
-              this.$nextTick(()=>{
-                this.loadingTable = false;
-              })
-
-
-            }).catch(error => {
-                this.$message({
-                  message: error
-                })
-            })
-        // }else{
-        //   this.noPower(this.power['sign-ht-js-query'].name)
-        // }
-
+          this.$nextTick(()=>{
+            this.loadingTable = false;
+          })
+        }).catch(error => {
+          this.$message({
+            message: error
+          })
+        })
       },
 
       // 双击详情事件
       toDetail(e){
         if(this.power['sign-ht-js-vdetail'].state){
-            this.dialogVisible2 = true
-            let param = {
-              id: e.id,
+          this.dialogVisible2 = true
+          let param = {
+            id: e.id,
+          }
+          this.$ajax.get("/api/settlement/applyExamineById", param)
+          .then(res => {
+            if (res.data.status === 200) {
+              this.layerAudit = res.data.data.contractResult;
+              this.settleMarks = res.data.data.contractResult.settlementRemarks.length;
+              this.myCheckId = res.data.data.contractResult.id; //结算id
+              this.uploadList = res.data.data.contractResult.vouchers;
+              this.checkInfo = res.data.data.examineDetails
             }
-            this.$ajax.get("/api/settlement/applyExamineById", param)
-            .then(res => {
-              if (res.data.status === 200) {
-
-                this.layerAudit = res.data.data.contractResult;
-                this.settleMarks = res.data.data.contractResult.settlementRemarks.length;
-                this.myCheckId = res.data.data.contractResult.id; //结算id
-                this.uploadList = res.data.data.contractResult.vouchers;
-                this.checkInfo = res.data.data.examineDetails
-              }
-            }).catch(error => {
-                this.$message({
-                message: error
-                })
-            });
+          }).catch(error => {
+              this.$message({
+              message: error
+            })
+          });
         }else{
           this.noPower(this.power['sign-ht-js-vdetail'].name)
         }
-
       },
 
       // 点击审核事件
       auditApply(e){
-        this.dialogVisible = true
-        this.auditForm.textarea = ''
-        let param = {
-          id: e.id,
+        if(e.auditorId === this.getUserMsg.empId){
+          this.dialogVisible = true
+          this.auditForm.textarea = ''
+          let param = {
+            id:e.id
+          }
+          this.getCheckData(param)
+        }else{
+          let param={
+            bizCode:e.code,
+            flowType:5
+          }
+          this.$ajax.get('/api/machine/getAuditAuth',param).then(res=>{
+            res = res.data
+            if(res.status===200){
+              this.dialogVisible = true
+              this.auditForm.textarea = ''
+              let param = {
+                id:e.id
+              }
+              this.getCheckData(param)
+            }
+          }).catch(error=>{
+            this.$message({
+              message:error,
+              type: "error"
+            })
+          })
         }
-        this.$ajax.get("/api/settlement/applyExamineById", param)
-        .then(res => {
+      },
+      //审核弹窗数据获取
+      getCheckData(param){
+        this.$ajax.get("/api/settlement/applyExamineById", param).then(res => {
           if (res.data.status === 200) {
            this.layerAudit = res.data.data.contractResult;
            this.settleMarks = res.data.data.contractResult.settlementRemarks.length;
@@ -803,15 +645,14 @@
            this.uploadList = res.data.data.contractResult.vouchers;
           }
         }).catch(error => {
-            this.$message({
-             message: error
-            })
+          this.$message({
+            message: error
+          })
         });
       },
 
       // 驳回操作
       refuseFn() {
-
         if((this.auditForm.textarea).trim() !== ""){
           this.fullscreenLoading=true
           let param = {
@@ -828,23 +669,27 @@
               this.dialogVisible = false
                 // 数据刷新
               this.queryFn();
-
               setTimeout(() => {
-
-                this.$message('已驳回');
-
+                this.$message({
+                  message:"已驳回",
+                  type:"success"
+                });
               }, 2000);
             }
           }).catch(error => {
             this.$nextTick(()=>{
               this.fullscreenLoading=false
             })
-              this.$message({
-                message: error
-              })
+            this.$message({
+              message: error,
+              type:"error"
+            })
           });
         }else if((this.auditForm.textarea).trim() === ""){
-          this.$message('审核备注未填写！');
+          this.$message({
+            message:'审核备注未填写！',
+            type:"warning"
+          });
         }
 
       },
@@ -898,8 +743,6 @@
       //跳转合同详情页
       goContractDetail(e){
          if(this.power['sign-com-htdetail'].state){
-          // console.log(e)
-          this.setPath(this.$tool.getRouter(['合同','结算审核','合同详情'],'settleCheck'));
           this.$router.push({
             path:'/contractDetails',
             query: {
@@ -996,9 +839,9 @@
 
 
     components: {
-          ScreeningTop,
-          checkPerson
-      }
+      ScreeningTop,
+      checkPerson
+    }
   };
 </script>
 <style lang="less">
@@ -1050,7 +893,7 @@
   }
 
   .adjustbox{
-    box-shadow:0px 1px 6px 0px rgba(7,47,116,0.1);
+    // box-shadow:0px 1px 6px 0px rgba(7,47,116,0.1);
   }
 
   .adjust-form {
@@ -1074,18 +917,7 @@
     .el-table{
       th{
         background-color: #EEF2FB;
-        &:first-child{
-          /*padding-left: 20px;*/
-        }
       }
-      tr{
-        td{
-          &:first-child{
-            /*padding-left: 20px;*/
-          }
-        }
-      }
-
     }
   }
 
@@ -1357,10 +1189,15 @@
   }
 
 }
-
-
-
-
-
+/deep/ .null-formatter {
+  .cell:empty {
+    position: relative;
+    &:before {
+      content: '--';
+      width: 30px;
+      display: inline-block;
+    }
+  }
+}
 
 </style>

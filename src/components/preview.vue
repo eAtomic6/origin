@@ -126,7 +126,7 @@
       opera:function (type) {
         switch (type){
           case 1:
-            this.fileSign([].concat(this.imgSrc.split('?')[0]),'download')
+            this.fileSign([].concat(this.imgSrc.split('?')[0]),'download',false)
             break
           case 2:
             this.transform+=90
@@ -286,7 +286,7 @@
   bottom: 0;
   left: 0;
   background:rgba(0,0,0,0.6);
-  z-index: 99;
+  z-index: 9999;
   overflow: hidden;
 }
   .pagination,.btn-close{

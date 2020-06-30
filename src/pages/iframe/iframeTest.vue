@@ -12,13 +12,14 @@ import {MIXINS_ZL} from "../contract/mixins/ZL.js";
 import {MIXINS_DB} from "../contract/mixins/DB.js";
 import {MIXINS_YX} from "../contract/mixins/YX.js";
 import {MIXINS_DJ} from "../contract/mixins/DJ.js";
+// import {MIXINS_WT} from "../contract/mixins/WT.js";
 
   export default {
     name: "iframe-test",
     mixins: [MIXINS_MM],
     data(){
       return{
-        src:'租赁.html'
+        src:'LZ-租赁.html'
       }
     },
     created(){

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="/datepicker.css"/>
+     <link rel="stylesheet" href="/datepicker.css"/>
     <title>意向金合同</title>
     <style>
         body {
@@ -231,8 +231,8 @@
         </div>
         <div class="tips"><span class="fb">提示：</span>凡我司替客户保管任何款项，均须向客户出具盖有我司财务专用章的正式收据或发票；所有客户主张相关权利均须出示此种收据或发票方为有效，其余形式我司一律不予认可，并与我司无关。</div>
         <p class="fb">第一条：物业位置及购买条件</p>
-        <p>（一）立书人<span class="input-before" extendParam="val2" tag="input-auto" systemParam="guestName"></span>（以下简称买方）愿意委托<input
-            type="text" extendParam="val3" tag="input" maxlength="25" class="dropdown-item text-limit" style="width:360px"/>（以下简称受托方）购买<span class="input-before" extendParam="val4" tag="input-auto" systemParam="ownerName"></span>（以下简称卖方）坐落于<span class="input-before" systemParam="propertyAddr" extendParam="val5" tag="input-auto"></span>的房产（以下简称该房产）。</p>
+        <p>（一）立书人<span class="input-before" extendParam="val2" tag="input-auto" systemParam="guestName"></span>（以下简称买方）愿意委托<span
+           extendParam="val3" systemParam="true" class="input-before" tag="input-auto"></span>（以下简称受托方）购买<span class="input-before" extendParam="val4" tag="input-auto" systemParam="ownerName"></span>（以下简称卖方）坐落于<span class="input-before" systemParam="propertyAddr" extendParam="val5" tag="input-auto"></span>的房产（以下简称该房产）。</p>
         <p>1、买方在对该房屋进行综合考察后，认为该房屋权利状态、质量、户型、面积、楼层、朝向及相关配套设施符合要求，并约定以人民币大写：<span class="input-before" extendParam="val6" tag="input-auto" systemParam="subscriptionPriceUpper"></span>圆整（¥<span class="input-before" extendParam="val7" tag="input-auto" systemParam="subscriptionPrice"></span>）购买该房产；</p>
         <div class="pop">
             <span>2、付款方式：</span><span class="input-before" extendParam="val8" tag="input-auto"></span>
@@ -276,44 +276,46 @@
         </p>
     </div>
 </body>
-<script type="text/javascript" src="/browser-polyfill.min.js"></script>
+ <script type="text/javascript" src="/browser-polyfill.min.js"></script>
 <script type="text/javascript" src="/browser.min.js"></script>
 <script type="text/javascript" src="/datepicker.js"></script>
 <script type="text/javascript" src="/dropdown.js"></script>
-<script type="text/javascript" src="/js/bundle_yx20190409.js"></script>
- <!-- <script>
-     (function () {
-      var scriptList = document.getElementsByTagName("script")
-      console.log(scriptList)
-      if(!scriptList[0].src){
-        var host='https://sign2.jjw.com'
-        var host_other="http://sign2.jjw.com:28879"
-        var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_yx20190402.js","datepicker.css"]
-        for (let i = 0; i < addrList.length; i++) {
-          if(window.location.host==='localhost:8080'){
-            if(addrList[i].indexOf('bundle')>-1){
-              addrList[i]=host_other+'/'+addrList[i]
-            // addrList[i]='./YX.js'
-            }else{
-              addrList[i]=host_other+'/'+addrList[i]
-            }
-          }else{
-            addrList[i]='/'+addrList[i]
-          }
-          if(addrList[i].indexOf('.css')>-1){
-            var hm = document.createElement("link");
-            hm.rel="stylesheet"
-            hm.href = addrList[i];
-            var s = document.getElementsByTagName("link")[0];
-            s.parentNode.insertBefore(hm,s);
-          }else{
-            var hm = document.createElement("script");
-            hm.src = addrList[i];
-            var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
-            s.parentNode.insertBefore(hm,s);
-          }
-        }
-      }
-    })();
-</script>  -->
+<script type="text/javascript" src="/js/bundle_yx20191127.js"></script>
+<!--<script>
+    (function () {
+     var scriptList = document.getElementsByTagName("script")
+     console.log(scriptList)
+     if(!scriptList[0].src){
+       var host='https://sign2.jjw.com'
+       var host_other="http://sign2.jjw.com:28879"
+       var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_yx20190409.js","datepicker.css"]
+       for (let i = 0; i < addrList.length; i++) {
+         if(window.location.host==='localhost:8080'){
+           if(addrList[i].indexOf('bundle')>-1){
+             // addrList[i]=host_other+'/'+addrList[i]
+             addrList[i]="./YX.js"
+           }else{
+             addrList[i]=host_other+'/'+addrList[i]
+           }
+         }else{
+           addrList[i]='/'+addrList[i]
+         }
+         if(addrList[i].indexOf('.css')>-1){
+           var hm = document.createElement("link");
+           hm.rel="stylesheet"
+           hm.href = addrList[i];
+           // var s = document.getElementsByTagName("link")[0];
+           // s.parentNode.insertBefore(hm,s);
+           document.head.appendChild(hm);
+         }else{
+           var hm = document.createElement("script");
+           addrList[i].includes('YX')&&(hm.type = 'module');
+           hm.src = addrList[i];
+           var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+           s.parentNode.insertBefore(hm,s);
+         }
+       }
+     }
+   })();
+</script>-->
 </html>

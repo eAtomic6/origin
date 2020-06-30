@@ -245,7 +245,7 @@
         color: #6C7986;
     }
     /deep/&.el-table td {
-        padding: 25px 0;
+        //padding: 25px 0;
     }
     /deep/&.el-table td:last-child>.cell {
         padding-right: 0;
@@ -258,6 +258,14 @@
         margin: 0 6px;
         position: relative;
         top: 3px;
+    }
+    .remark {
+        position: absolute;
+        left: 0;
+        top: 37px;
+        border: 1px solid red;
+        border-radius: 50%;
+        color: red;
     }
 }
 
@@ -664,9 +672,9 @@
         }
         .stepsData-tit{
             margin: 18px 0 0 12px;
-        }  
+        }
     }
-    
+
     .view-title {
         font-weight: bold;
         padding-left: 40px;
@@ -768,6 +776,11 @@
             position: relative;
             top: 35px;
             left: 30px;
+        }
+        >.suolue-img{
+            position: relative;
+            top: 10px;
+            left: 18px;
         }
         >.p{
             position: absolute;

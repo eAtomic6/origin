@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- <link rel="stylesheet" href="./datepicker.css"/> -->
+    <link rel="stylesheet" href="/datepicker.css"/>
+    <title>居间合同</title>
+    <style>
+        body {
+            font-family: SimHei;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        p, ul, h1, h2, h3, h4 {
+            margin: 0px;
+            padding: 0px;
+        }
+        ul {
+            list-style: none;
+        }
+        .BODERRED{
+            border-color: red !important;
+        }
+        input {
+            border: 0;
+            border-bottom: 1px solid grey;
+            outline: none;
+            font-family: SimHei;
+        }
+
+        .no-border {
+            border: none;
+        }
+        .container {
+            width: 840px;
+            padding: 0 40px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        h2 {
+            font-size: 20px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .agreements {
+            margin-top: 10px;
+            text-indent: 30px;
+        }
+        .mt-30 {
+            margin-top: 30px;
+        }
+        .sign-pos > p {
+            text-align: right;
+            padding-right: 10px;
+        }
+        .sign-pos input {
+            width: 250px;
+        }
+        span[tag='input-auto']{
+            border-bottom: 1px solid gray;
+            padding: 2px 10px;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+        span[tag='input-auto'].input-before:before{
+            content:'请输入';
+            text-align: center;
+            color: #a1a1a1;
+        }
+        span[tag='input-auto'].input-before.input-select:before{
+            content:'请选择';
+            text-align: center;
+            color: #a1a1a1;
+        }
+        span[tag='input-readonly'].input-before:before{
+            content:'';
+            text-align: center;
+            color: #a1a1a1;
+        }
+        .alert-viwer{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            padding: 10px;
+            border-radius: 4px;
+            background: #fff;
+            z-index: 999;
+            box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+        .alert-viwer>textarea{
+            background: #fff;
+            border: 1px solid #dcdfe6;
+        }
+        .alert-viwer>p{
+            text-align: right;
+            margin: 6px 0 0;
+            padding: 0;
+            line-height: normal;
+        }
+        .alert-viwer>p>span{
+            display: inline-block;
+            background: #409eff;
+            padding: 6px 12px;
+            color: #FFFFFF;
+            border-radius: 4px;
+        }
+        .alert-viwer>p>span:last-of-type{
+            background: #fff;
+            color: #606266;
+            border: 1px solid #dcdfe6;
+        }
+        .page1 {
+            break-before: page;
+            page-break-before: always;
+        }
+        @page {
+            size: 955px 1350px;
+        }
+    </style>
+</head>
+<body>
+    <span id="submit" style="position: absolute;top: -1000px;z-index: 0;">click</span>
+    <div class="container">
+        <div class="alert-viwer" style="display: none;">
+            <textarea id="inputArea" cols="30" rows="4"></textarea>
+            <p class="control-btn">
+                <span>保存</span>
+                <span>取消</span>
+            </p>
+        </div>
+        <div class="agreements">
+            <h2>佣 金 支 付 承 诺 书（卖方）</h2>
+            <p style="text-align: right;">合同编号：<input systemParam="code" type="text" tag="input" readonly="readonly" value="" class="no-border" /></p>
+            <div class="mt-30">
+                本人/本公司<span tag="input-auto" class="text-limit" systemParam="ownerName" extendParam="val1"></span>（身份证/营业执照号码：<span tag="input-auto" class="text-limit" systemParam="ownerID" extendParam="val2"></span>）与买方<span tag="input-auto" class="text-limit" systemParam="guestName" extendParam="val3"></span>（身份证/营业执照号码：<span tag="input-auto" class="text-limit" systemParam="guestID" extendParam="val4"></span>）于<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val5"/>就物业签署了《二手房买卖合同》及相关协议，约定实际转让成交价为人民币<span tag="input-auto" class="text-limit" systemParam="dealPrice" extendParam="val6"></span>元（大写：<span tag="input-auto" class="text-limit" systemParam="dealPriceUpper" extendParam="val7"></span>圆整）。
+            </div>
+            <div>
+                现本人/本公司承诺，基于<span tag="input-auto" class="text-limit" systemParam="guestStoreName" extendParam="val8"></span>在促成本人/本公司与买方签署合同达成房地产买卖法律关系过程中所提供之积极服务，本人/本公司自愿于就上述物业签署《咸宁市存量房买卖合同》之前向<span tag="input-auto" class="text-limit" systemParam="guestStoreName" extendParam="val9"></span>支付佣金人民币<span tag="input-auto" class="text-limit" systemParam="ownerCommission" extendParam="val10"></span>元（大写：<span tag="input-auto" class="text-limit" systemParam="ownerCommissionUpper" extendParam="val11"></span>圆整）。如因本人/本公司过错或违约，致买卖双方未能签订《咸宁市存量房买卖合同》，本人/本公司仍需向<span tag="input-auto" class="text-limit" systemParam="guestStoreName" extendParam="val12"></span>支付相当于买卖双方总佣金金额的违约金。本承诺书承诺佣金金额与《咸宁市存量房买卖合同》或其它合同不一致的，以本承诺书为准。
+            </div>
+            <div>
+                本人/本公司承诺，如与买方自行解除《二手房买卖合同》或相关协议后再与买方另行成交办理过户，以及由本人/本公司与买方的亲属,委托人,代理人或其他有密切联系的第三人（包括但不限于：买方或买方的亲属,委托人,代理人等担任法定代表人,股东,监事,经理等人员的公司或买方的关联企业）成交出售该物业的，本人/本公司仍须按本承诺书之约定向<span tag="input-auto" class="text-limit" systemParam="guestStoreName" extendParam="val13"></span>支付佣金。
+            </div>
+            <div>
+                本人与<span tag="input-auto" class="text-limit" systemParam="guestStoreName" extendParam="val14"></span>的居间合同履行地为居间人住所地，本人同意因居间合同产生的纠纷双方应协商解决，协商不成可向交易房地产所在地人民法院提请诉讼。
+            </div>
+            <div class="mt-30">特此承诺。</div>
+            <div class="sign-pos">
+                <p class="mt-30">承诺方：<input type="text" readonly="readonly" noline="true" /></p>
+                <p class="mt-30" style="position:relative;">代理人：<input type="text" readonly="readonly" noline="true" /></p>
+            </div>
+        </div>
+        <div class="agreements page1">
+            <h2>佣 金 支 付 承 诺 书（买方）</h2>
+            <p style="text-align: right;">合同编号：<input systemParam="code" type="text" tag="input" readonly="readonly" value="" class="no-border" /></p>
+            <div class="mt-30">
+                本人/本公司<span tag="input-auto" class="text-limit" systemParam="guestName" extendParam="val30"></span>（身份证/营业执照号码：<span tag="input-auto" class="text-limit" systemParam="guestID" extendParam="val31"></span>）与卖方<span tag="input-auto" class="text-limit" systemParam="ownerName" extendParam="val32"></span>（身份证/营业执照号码：<span tag="input-auto" class="text-limit" systemParam="ownerID" extendParam="val33"></span>）于<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val34"/>就物业签署了《二手房买卖合同》及相关协议，约定实际转让成交价为人民币<span tag="input-auto" class="text-limit" systemParam="dealPrice" extendParam="val35"></span>元（大写：<span tag="input-auto" class="text-limit" systemParam="dealPriceUpper" extendParam="val36"></span>圆整）。
+            </div>
+            <div>
+                现本人/本公司承诺，基于<span tag="input-auto" class="text-limit" systemParam="guestStoreName" extendParam="val37"></span>在促成本人/本公司与卖方签署合同达成房地产买卖法律关系过程中所提供之积极服务，本人/本公司自愿于就上述物业签署《咸宁市存量房买卖合同》之前向<span tag="input-auto" class="text-limit" systemParam="guestStoreName" extendParam="val38"></span>支付佣金人民币<span tag="input-auto" class="text-limit" systemParam="custCommission" extendParam="val39"></span>元（大写：<span tag="input-auto" class="text-limit" systemParam="custCommissionUpper" extendParam="val40"></span>圆整）。如因本人/本公司过错或违约，致买卖双方未能签订《咸宁市存量房买卖合同》，本人/本公司仍需向<span tag="input-auto" class="text-limit" systemParam="guestStoreName" extendParam="val41"></span>支付相当于买卖双方总佣金金额的违约金。本承诺书承诺佣金金额与《咸宁市存量房买卖合同》或其它合同不一致的，以本承诺书为准。
+            </div>
+            <div>
+                本人/本公司承诺，如与卖方自行解除《二手房买卖合同》或相关协议后再与卖方另行成交办理过户，以及由本人/本公司与买方的亲属,委托人,代理人或其他有密切联系的第三人（包括但不限于：本人/本公司或本人/本公司的亲属,委托人,代理人等担任法定代表人,股东,监事,经理等人员的公司或本公司的关联企业）与卖方成交购入该物业的，本人/本公司仍须按本承诺书之约定向<span tag="input-auto" class="text-limit" systemParam="guestStoreName" extendParam="val42"></span>支付佣金。
+            </div>
+            <div>
+                本人同意因居间合同产生的纠纷双方应协商解决，协商不成可向交易房地产所在地人民法院提请诉讼。
+            </div>
+            <div class="mt-30">特此承诺。</div>
+            <div class="sign-pos">
+                <p class="mt-30">承诺方：<input type="text" readonly="readonly" noline="true" /></p>
+                <p class="mt-30" style="position:relative;">代理人：<input type="text" readonly="readonly" noline="true" /></p>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+<script type="text/javascript" src="/js/bundle_jj_xn20191211.js"></script>
+<!-- <script>
+    (function () {
+        var scriptList = document.getElementsByTagName("script")
+        console.log(scriptList)
+        if(!scriptList[0].src){
+            var host='https://sign2.jjw.com'
+            var host_other="http://sign2.jjw.com:28879"
+            var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_mm20190402.js","datepicker.css"]
+            for (let i = 0; i < addrList.length; i++) {
+                if(window.location.host==='localhost:8080'){
+                if(addrList[i].indexOf('bundle')>-1){
+                    // addrList[i]=host_other+'/'+addrList[i]
+                    addrList[i]='./XN-JJ.js'
+                }else{
+                    addrList[i]=host_other+'/'+addrList[i]
+                }
+                }else{
+                    addrList[i]='/'+addrList[i]
+                }
+                if(addrList[i].indexOf('.css')>-1){
+                    var hm = document.createElement("link");
+                    hm.rel="stylesheet"
+                    hm.href = addrList[i];
+                    /*var s = document.getElementsByTagName("link")[0];
+                    s.parentNode.insertBefore(hm,s);*/
+                    document.head.appendChild(hm);
+                }else{
+                    var hm = document.createElement("script");
+                    addrList[i].includes('XN-JJ')&&(hm.type = 'module');
+                    hm.src = addrList[i];
+                    var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+                    s.parentNode.insertBefore(hm,s);
+                }
+            }
+        }
+    })();
+</script> -->
+</html>

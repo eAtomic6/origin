@@ -22,7 +22,7 @@ function set_upload_param(up,param, filename,infoname='')
 		'success_action_status' : '200', //让服务端返回200,不然，默认会返回204
 		'x-oss-object-acl' : param.acl,
 		'signature': param.signature,
-    'Content-Disposition':`attachment;filename=${encodeURI(infoname)};filename*=UTF-8''${encodeURI(infoname)}`
+    'Content-Disposition':`attachment;filename=${encodeURIComponent(infoname)};filename*=UTF-8''${encodeURIComponent(infoname)}`
 	};
 	up.setOption({
 		'url': param.host,

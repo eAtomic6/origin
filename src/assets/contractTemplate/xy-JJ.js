@@ -33,10 +33,14 @@ function submit() {
         document.querySelector(`span[extendparam=${item}]`).classList.remove('BODERRED')
     }
     if(Obj1[item].length===0){
-        errorArr.push({
-        type:'input',
-        name:item
-        })
+        let _errorMsg = {
+            type:'input',
+            name:item
+        }
+        if(item==='val3'){
+            _errorMsg.company=true
+        }
+        errorArr.push(_errorMsg)
         break
     }
     }
@@ -112,6 +116,15 @@ textLong.forEach(function (item) {
 
 //基础数据赋值
 let msg = JSON.parse(window.sessionStorage.getItem("contractMsg"));
+// let msg={
+//     ownerName: '张三',
+//     code: "S0001191127005",
+//     guestName: '李四',
+//     companyNames: ["森林小镇", "金银湖三级门店哦"],
+//     propertyAddr: '武汉',
+//     ownerID: '123456',
+//     guestID: '567894'
+//   }
 for(let readonlyItem in msg){
     let onlyReadDom = Array.from(document.querySelectorAll(`*[systemparam=${readonlyItem}]`));
     let arr= []
@@ -124,8 +137,9 @@ for(let readonlyItem in msg){
     if(readonlyItem==="companyNames"){
         if(msg[readonlyItem].length>0){
             let companyName = document.querySelector(`*[extendParam="val3"]`)
-            let companyNameTxt = msg[readonlyItem].join(',')
-            companyName.setAttribute('list',companyNameTxt)
+            companyName.innerHTML = msg[readonlyItem][0]
+            // let companyNameTxt = msg[readonlyItem].join(',')
+            // companyName.setAttribute('list',companyNameTxt)
         }
     }
     if(onlyReadDom.length>0){
@@ -139,12 +153,26 @@ for(let readonlyItem in msg){
                 }else{
                     element.innerHTML = msg['ownerName']
                 }
+            }else if(readonlyItem==='ownerID'){
+                if(msg['ownerIDs']){
+                    let names = msg['ownerID']+'、'+msg['ownerIDs']
+                    element.innerHTML = names
+                }else{
+                    element.innerHTML = msg['ownerID']
+                }
             }else if(readonlyItem==='guestName'){
                 if(msg['guestNames']){
                     let names = msg['guestName']+'、'+msg['guestNames']
                     element.innerHTML = names
                 }else{
                     element.innerHTML = msg['guestName']
+                }
+            }else if(readonlyItem==='guestID'){
+                if(msg['guestIDs']){
+                    let names = msg['guestID']+'、'+msg['guestIDs']
+                    element.innerHTML = names
+                }else{
+                    element.innerHTML = msg['guestID']
                 }
             }else if(readonlyItem==='propertyAddr'){
                 if(element.getAttribute("extendParam")==="val4"){

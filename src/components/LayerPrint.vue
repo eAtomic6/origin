@@ -36,7 +36,7 @@
           } catch (e) {
             f.contentWindow.print();
           }
-          printCallBack&&printCallBack();
+          printCallBack && printCallBack();
         }, 100)
       },
       getStyle(printI) {
@@ -46,7 +46,17 @@
           str += styles1[i].outerHTML;
         }
         // str += styles1[styles1.length - 1].outerHTML//页面生成的最后一个style为当前页面的
-        str += `<style>header, footer {display: none;}body{font-family: SimHei;}</style>`;
+        str += `<style>header, footer {display: none;}body{font-family: SimHei;}@media print {
+.paper-info-child {
+      margin: 0 4.7mm;
+      font-size: 12px;
+      margin-top: 4mm;
+    }
+        @page {
+      size: auto;
+      margin: 0mm;
+    }
+      }</style>`;
         printI.contentDocument.head.innerHTML = str;
 
         // 添加link引入

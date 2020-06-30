@@ -8,21 +8,16 @@
         <div :class="{'active':isActive===1}" @click="changeType(1)">居间合同</div>
         <div :class="{'active':isActive===2}" @click="changeType(2)">买卖合同</div>
       </div>
-      <div class="btn" v-if="contType<4">
-        <!-- <el-button round><i class="iconfont icon-icon-test3"></i></el-button> -->
-        <!-- <el-button round><i class="iconfont icon-yuanjiaojuxing1"></i></el-button> -->
-        <!-- <div class="blowUp">
-          <div @click="blowUp">放大</div>
-          <div @click="shrink">缩小</div>
-        </div> -->
+      <!-- xuneng20191210修改：操作按钮去掉合同类型判断（contType>4） -->
+      <div class="btn" v-if="contType&&!isentrust">
         <el-button-group>
           <el-button round @click="blowUp"><i class="iconfont icon-icon-test3"></i></el-button>
           <el-button round @click="shrink"><i class="iconfont icon-yuanjiaojuxing1"></i></el-button>
         </el-button-group>
-        <el-button type="primary" round v-if="power['sign-ht-info-edit'].state&&(examineState<0||examineState===2)" @click="toEdit">编辑</el-button>
-        <!-- <div class="showPosBox" v-if="examineState===1&&contState===1&&isActive===1&&(companySigns.length>1||companySigns.length===1&&!isNewTemplate)" @mouseover="showList" @mouseout="closeList"> -->
-        <div class="showPosBox" v-if="examineState===1&&contState===1&&isActive===1&&(companySigns.length===1&&!isNewTemplate||companySigns.length!=1)" @mouseover="showList" @mouseout="closeList">
-          <!-- <el-button type="primary" round v-if="examineState===1&&contState===1&&isActive===1" @click="showPos" @mouseover.native="showList" @mouseout="closeList">签章位置</el-button> -->
+        <!-- <el-button type="primary" round v-if="power['sign-ht-info-edit'].state&&(examineState<0||examineState===2)" @click="toEdit">编辑</el-button> -->
+        <!-- <el-button type="primary" round v-if="power['sign-ht-info-edit'].state&&(contState!=3||contState===3&&resultState===1&&contChangeState!=2)" @click="toEdit">编辑</el-button> -->
+        <el-button type="primary" round v-if="power['sign-ht-info-edit'].state&&contState!=3" @click="toEdit">编辑</el-button>
+        <div class="showPosBox" v-if="examineState===1&&contState===1&&isActive===1&&(companySigns.length===1&&!isNewTemplate||companySigns.length!=1)&&showChooseSign" @mouseover="showList" @mouseout="closeList">
           <span class="signAddr" @click="showList_">{{isNewTemplate?"签章选择":"签章位置"}}</span>
           <div class="signList">
             <ul>
@@ -33,11 +28,11 @@
             </ul>
           </div>
         </div>
-        <!-- <el-button type="primary" round v-if="examineState===1&&contState===1&&isActive===1" @click="showPos">签章位置</el-button> -->
-        <el-button type="primary" round v-if="power['sign-ht-xq-void'].state&&contState!=3&&contState!=0" @click="dialogInvalid = true">撤单</el-button>
-        <el-button round type="primary" v-if="power['sign-ht-view-toverify'].state&&examineState<0&&contType<4&&isCanAudit===1" @click="isSubmitAudit=true">提交审核</el-button>
-        <el-button round type="primary" v-if="power['sign-ht-xq-modify'].state&&contState===3&&contChangeState!=2&&contChangeState!=1&&laterStageState!=5" @click="goChangeCancel(1)">变更</el-button>
-        <el-button round type="danger"  v-if="power['sign-ht-xq-cancel'].state&&contState===3&&contChangeState!=2&&laterStageState!=5"  @click="goChangeCancel(2)">解约</el-button>
+        <!-- <el-button type="primary" round v-if="power['sign-ht-xq-void'].state&&contState!=3&&contState!=0" @click="dialogInvalid = true">撤单</el-button> -->
+        <el-button type="primary" round v-if="power['sign-ht-xq-void'].state&&contState===2" @click="dialogInvalid = true">撤单</el-button>
+        <el-button round type="primary" v-if="power['sign-ht-view-toverify'].state&&examineState<0&&isCanAudit===1" @click="isSubmitAudit=true">提交审核</el-button>
+        <el-button round type="primary" v-if="power['sign-ht-xq-modify'].state&&contState===3&&contChangeState!=2&&contChangeState!=1&&laterStageState!=5&&changeExamineState!=0&&resultState===1" @click="goChangeCancel(1)">变更</el-button>
+        <el-button round type="danger"  v-if="power['sign-ht-xq-cancel'].state&&contState===3&&contChangeState!=2&&laterStageState!=5&&cancelExamineState!=0&&resultState===1"  @click="goChangeCancel(2)">解约</el-button>
         <!-- <el-button round v-if="power['sign-ht-view-print'].state&&examineState===1&&contState===1&&(!isNewTemplate&&signPositions.length>0||isNewTemplate&&storeId)" @click="signature(3)"  v-loading.fullscreen.lock="fullscreenLoading">签章打印</el-button> -->
         <el-popover
           v-if="power['sign-ht-view-print'].state&&examineState===1&&contState===1&&(!isNewTemplate&&signPositions.length>0||isNewTemplate&&storeId)"
@@ -47,10 +42,39 @@
           <img class="signImg" :src="signImg" alt="">
           <el-button slot="reference" round @click="signature(1)" v-loading.fullscreen.lock="fullscreenLoading">签章打印</el-button>
         </el-popover>
+        <el-button round v-else-if="power['sign-ht-view-print'].state&&examineState===1&&contState===1&&cityId===8&&contType==2" @click="signature(1)" v-loading.fullscreen.lock="fullscreenLoading">签章打印</el-button>
+
         <el-button round v-if="power['sign-ht-view-print'].state&&examineState===1&&contState===2" @click="dayin">签章打印</el-button>
-        <el-button type="primary" round @click="dialogCheck = true" v-if="examineState===0&&userMsg.empId===auditId">审核</el-button>
+        <el-button type="primary" round @click="toCheck" v-if="examineState===0&&userMsg.empId===auditId">审核</el-button>
         <el-button round v-if="examineState===0&&userMsg.empId!==auditId">审核中</el-button>
         <el-button round @click="showContData" v-if="power['sign-ht-xq-data'].state">资料库</el-button>
+      </div>
+      <!-- 委托合同按钮组 -->
+      <div class="btn" v-else-if="isentrust">
+        <el-button type="primary" round v-if="power['sign-ht-xq-entrust-edit'].state&&contState!=3" @click="toEdit">编辑</el-button>
+        <div class="showPosBox" v-if="examineState===1&&contState===1&&isActive===1&&companySigns.length!=1" @mouseover="showList" @mouseout="closeList">
+          <span class="signAddr" @click="showList_">签章选择</span>
+          <div class="signList">
+            <ul>
+              <li v-for="item in companySigns" :key="item.storeId" @click="chooseSign(item)">
+                {{item.name}}
+              </li>
+              <li v-if="companySigns.length===0" class="noCompanySigns">该门店暂未设置签章！</li>
+            </ul>
+          </div>
+        </div>
+        <el-popover
+          v-if="power['sign-ht-view-print'].state&&examineState===1&&contState===1&&storeId"
+          placement="top-start"
+          width="140"
+          trigger="hover">
+          <img class="signImg" :src="signImg" alt="">
+          <el-button slot="reference" round @click="signature(1)" v-loading.fullscreen.lock="fullscreenLoading">签章打印</el-button>
+        </el-popover>
+        <el-button round v-if="power['sign-ht-view-print'].state&&examineState===1&&contState===2" @click="dayin">签章打印</el-button>
+        <el-button type="primary" round @click="toCheck" v-if="examineState===0&&userMsg.empId===auditId">审核</el-button>
+        <el-button round type="primary" v-if="power['sign-ht-xq-entrust-edit'].state&&examineState<0&&isCanAudit===1" @click="isSubmitAudit=true">提交审核</el-button>
+        <el-button round v-if="examineState===0&&userMsg.empId!==auditId">审核中</el-button>
       </div>
       <div class="btn" v-else>
         <el-button-group>
@@ -64,41 +88,28 @@
     <div class="yulan" :style="{ height: clientHei }">
       <div class="content">
         <div class="signaturewrap">
-            <img v-for="(item,index) in src" :key="index" :src="item" alt="" :style="{width:getWidth}">
-            <!-- <div class="signature">
-                <img src="../../../assets/img/yz.png" class="yuanzhang" alt="">
-                <i class="el-icon-close"></i>
-            </div> -->
-
+          <img v-for="(item,index) in src" :key="index" :src="item" alt="" :style="{width:getWidth}">
         </div>
-        <!-- <div class="btnList">
-          <el-button class="paging iconfont icon-tubiao_shiyong-20" @click="del"></el-button>
-          <div class="tally"><span>{{count}}</span>/<span>{{showTotal}}</span></div>
-          <el-button class="paging iconfont icon-tubiao_shiyong-22" @click="add"></el-button>
-        </div> -->
-        <!-- <div class="blowUp">
-          <button @click="blowUp">放大</button>
-          <button @click="shrink">缩小</button>
-        </div> -->
       </div>
     </div>
 
     <!-- 合同撤单弹窗 -->
-    <el-dialog title="合同撤单" :visible.sync="dialogInvalid" width="740px" :closeOnClickModal="$tool.closeOnClickModal">
+    <el-dialog title="合同撤单" :visible.sync="dialogInvalid" width="400px" :closeOnClickModal="$tool.closeOnClickModal">
       <div class="top">
-        <p class="form-label">合同撤单原因</p>
-        <div class="reason">
+        <p class="invalid">是否确认撤单！</p>
+        <!-- <p class="form-label">合同撤单原因</p> -->
+        <!-- <div class="reason">
           <el-input type="textarea" :rows="6" placeholder="请填写合同撤单原因，最多100字 " v-model="invalidReason" resize='none' style="width:597px" maxlength="100">
           </el-input>
           <span>{{invalidReason.length}}/100</span>
           <p v-if="examineState>-1&&contState!=2"><span>注：</span>您的合同{{examineState===1?'已审核通过':'正在审核中'}}，是否确认要做撤单？撤单后，合同需要重新提审！</p>
           <p v-if="contState===2"><span>注：</span>您的合同已签章，是否确认要做撤单？撤单后，合同需要重新提审！</p>
           <p v-if="examineState<0"><span>注：</span>您的合同是否确认要做撤单？撤单后，合同需要重新提审！</p>
-        </div>
+        </div> -->
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button round @click="dialogInvalid = false">取消</el-button>
-        <el-button round type="primary" @click="setInvalid">保存</el-button>
+        <el-button round type="primary" @click="setInvalid">确定</el-button>
       </span>
     </el-dialog>
     <!-- 合同审核弹窗 -->
@@ -116,11 +127,25 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button round @click="checked(2)">驳回</el-button>
-        <el-button round type="success" @click="checked(1)">通过</el-button>
+        <el-button round type="primary" @click="checked(1)">通过</el-button>
+      </span>
+    </el-dialog>
+    <!-- 委托合同审核 -->
+    <el-dialog title="合同审核" :visible.sync="dialogEntrust" width="665px" :closeOnClickModal="$tool.closeOnClickModal">
+      <div class="checkBottom" style="padding-top:10px;padding-left:10px;">
+        <div class="reason">
+          <el-input type="textarea" :rows="5" placeholder="请输入通过或者驳回原因" v-model="entrustReason" resize='none' style="width:624px" maxlength="100">
+          </el-input>
+          <span>{{entrustReason.length}}/100</span>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button round @click="checked(2,'entrust')">驳回</el-button>
+        <el-button round type="primary" @click="checked(1,'entrust')">通过</el-button>
       </span>
     </el-dialog>
     <!-- 变更/解约编辑弹窗 -->
-    <changeCancel :dialogType="canceldialogType" :cancelDialog="changeCancel_" :contId="changeCancelId" :code="code" @closeChangeCancel="changeCancelDialog" v-if="changeCancel_"></changeCancel>
+    <changeCancel :dialogType="canceldialogType" :dialogContType="dialogContType" :cancelDialog="changeCancel_" :commission="commission" :cityCode="cityId" :contId="changeCancelId" :code="code" @close="changeCancelDialog" @success="freachChangeCancel" v-if="changeCancel_"></changeCancel>
      <!-- 提审确认框 -->
     <el-dialog title="提示" :visible.sync="isSubmitAudit" width="460px">
       <span>确定提审？</span>
@@ -136,14 +161,14 @@
     <!-- 设置/转交审核人 -->
     <checkPerson :show="checkPerson.state" :type="checkPerson.type" :showLabel="checkPerson.label" :bizCode="checkPerson.code" :flowType="checkPerson.flowType" @close="checkPerson.state=false" @submit="checkPerson.state=false" v-if="checkPerson.state"></checkPerson>
     <!-- 合同资料库弹窗 -->
-    <el-dialog title="资料库" :visible.sync="dialogContData" width="740px" :closeOnClickModal="$tool.closeOnClickModal">
+    <el-dialog title="资料库" :visible.sync="dialogContData" width="740px" :closeOnClickModal="$tool.closeOnClickModal" @close="closeContData">
       <div class="contData">
         <div class="classify" v-if="sellerList.length>0">
-          <p class="title">业主</p>
-          <div class="one_" v-for="(item,index) in sellerList" :key="index">
-            <p><i v-if="item.isrequire">*</i>{{item.title}}</p>
+          <div class="one_" v-for="(item,index) in sellerList" :key="index" v-if="item.value.length>0||((signingState&&signingState.value!==1&&signingState.value!==0)||!signingState)">
+            <p class="title">业主</p>
+            <p class="title_"><i v-if="item.isrequire">*</i>{{item.title}}</p>
             <ul class="ulData">
-              <li>
+              <li v-show="(signingState&&signingState.value!==1&&signingState.value!==0)||!signingState">
                 <file-up class="uploadSubject" :scane="dataScane" :id="'seller'+index" @getUrl="addSubject">
                   <i class="iconfont icon-shangchuan"></i>
                   <p>点击上传</p>
@@ -152,21 +177,22 @@
               <li v-for="(item_,index_) in item.value" :key="item_.index" @mouseover="moveIn(item.title+item_.path)" @mouseout="moveOut(item.title+item_.path)">
                 <el-tooltip class="item" effect="dark" :content="item_.name" placement="bottom">
                   <div class="namePath" @click="previewPhoto(item.value,index_,3)">
-                    <upload-cell :type="item_.fileType"></upload-cell>
+                    <img class="signImage" :src="item_.path|getSignImage(contDataFiles)" alt="" v-if="isPictureFile(item_.fileType)">
+                    <upload-cell :type="item_.fileType" v-else></upload-cell>
                     <p>{{item_.name}}</p>
                   </div>
                 </el-tooltip>
-                <i class="iconfont icon-tubiao-6" @click="delectData(index,index_,'seller')" :class="{'deleteShow':isDelete===item.title+item_.path}"></i>
+                <i class="iconfont icon-tubiao-6" @click="delectData(index,index_,'seller')" :class="{'deleteShow':isDelete===item.title+item_.path}" v-if="(signingState&&signingState.value!==1&&signingState.value!==0)||!signingState"></i>
               </li>
             </ul>
           </div>
         </div>
         <div class="classify" v-if="buyerList.length>0">
-          <p class="title">客户</p>
-          <div class="one_" v-for="(item,index) in buyerList" :key="index">
-            <p><i v-if="item.isrequire">*</i>{{item.title}}</p>
+          <div class="one_" v-for="(item,index) in buyerList" :key="index" v-if="item.value.length>0||((signingState&&signingState.value!==1&&signingState.value!==0)||!signingState)">
+            <p class="title">客户</p>
+            <p class="title_"><i v-if="item.isrequire">*</i>{{item.title}}</p>
             <ul class="ulData">
-              <li>
+              <li v-show="(signingState&&signingState.value!==1&&signingState.value!==0)||!signingState">
                 <file-up class="uploadSubject" :scane="dataScane" :id="'buyer'+index" @getUrl="addSubject">
                   <i class="iconfont icon-shangchuan"></i>
                   <p>点击上传</p>
@@ -175,21 +201,22 @@
               <li v-for="(item_,index_) in item.value" :key="item_.index" @mouseover="moveIn(item.title+item_.path)" @mouseout="moveOut(item.title+item_.path)">
                 <el-tooltip class="item" effect="dark" :content="item_.name" placement="bottom">
                   <div class="namePath" @click="previewPhoto(item.value,index_,3)">
-                    <upload-cell :type="item_.fileType"></upload-cell>
+                    <img class="signImage" :src="item_.path|getSignImage(contDataFiles)" alt="" v-if="isPictureFile(item_.fileType)">
+                    <upload-cell :type="item_.fileType" v-else></upload-cell>
                     <p>{{item_.name}}</p>
                   </div>
                 </el-tooltip>
-                <i class="iconfont icon-tubiao-6" @click="delectData(index,index_,'buyer')" :class="{'deleteShow':isDelete===item.title+item_.path}"></i>
+                <i class="iconfont icon-tubiao-6" @click="delectData(index,index_,'buyer')" :class="{'deleteShow':isDelete===item.title+item_.path}" v-if="(signingState&&signingState.value!==1&&signingState.value!==0)||!signingState"></i>
               </li>
             </ul>
           </div>
         </div>
         <div class="classify" v-if="otherList.length>0">
-          <p class="title">其他</p>
-          <div class="one_" v-for="(item,index) in otherList" :key="index">
-            <p><i v-if="item.isrequire">*</i>{{item.title}}</p>
+          <div class="one_" v-for="(item,index) in otherList" :key="index" v-if="item.value.length>0||((signingState&&signingState.value!==1&&signingState.value!==0)||!signingState)">
+            <p class="title">其他</p>
+            <p class="title_"><i v-if="item.isrequire">*</i>{{item.title}}</p>
             <ul class="ulData">
-              <li>
+              <li v-show="(signingState&&signingState.value!==1&&signingState.value!==0)||!signingState">
                 <file-up class="uploadSubject" :scane="dataScane" :id="'other'+index" @getUrl="addSubject">
                   <i class="iconfont icon-shangchuan"></i>
                   <p>点击上传</p>
@@ -198,18 +225,19 @@
               <li v-for="(item_,index_) in item.value" :key="item_.index" @mouseover="moveIn(item.title+item_.path)" @mouseout="moveOut(item.title+item_.path)">
                 <el-tooltip class="item" effect="dark" :content="item_.name" placement="bottom">
                   <div class="namePath" @click="previewPhoto(item.value,index_,3)">
-                    <upload-cell :type="item_.fileType"></upload-cell>
+                    <img class="signImage" :src="item_.path|getSignImage(contDataFiles)" alt="" v-if="isPictureFile(item_.fileType)">
+                    <upload-cell :type="item_.fileType" v-else></upload-cell>
                     <p>{{item_.name}}</p>
                   </div>
                 </el-tooltip>
-                <i class="iconfont icon-tubiao-6" @click="delectData(index,index_,'other')" :class="{'deleteShow':isDelete===item.title+item_.path}"></i>
+                <i class="iconfont icon-tubiao-6" @click="delectData(index,index_,'other')" :class="{'deleteShow':isDelete===item.title+item_.path}" v-if="(signingState&&signingState.value!==1&&signingState.value!==0)||!signingState"></i>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button round @click="dialogContData=false">取消</el-button>
+      <span slot="footer" class="dialog-footer" v-if="(signingState&&signingState.value!==1&&signingState.value!==0)||!signingState">
+        <el-button round @click="closeContData">取消</el-button>
         <el-button round type="primary" @click="uploading('上传成功')">保存</el-button>
       </span>
       <!-- 图片预览 -->
@@ -239,8 +267,6 @@ export default {
       invalidReason: "",
       textarea:"",
       isSign: 0,
-      //审核
-      operationType: "",
       //合同id
       id:'',
       code:'',
@@ -268,11 +294,18 @@ export default {
       contState:'',
       //审核状态
       examineState:'',
+      //结算状态
+      resultState:"",
       //合同类型
       contType:'',
       //变更解约
       contChangeState:'',
       laterStageState:'',
+      //变更解约审核状态
+      changeExamineState:"",
+      cancelExamineState:"",
+      //变更解约佣金
+      commission:"",
       //当前待审人id
       auditId:'',
       //当前登录人信息
@@ -319,6 +352,7 @@ export default {
       signImg:'',
       showSignList:false,
       isNewTemplate:true,//是否是新模板
+      showChooseSign: true,//是否显示选择签章位置按钮(咸宁用)
       dataScane:{
         path:"ziliaoku",
         id:this.$route.query.code
@@ -328,6 +362,10 @@ export default {
         'sign-ht-info-edit': {
           state: false,
           name: '编辑'
+        },
+        'sign-ht-xq-entrust-edit': {
+          state: false,
+          name: '委托合同编辑'
         },
         'sign-ht-xq-void': {
           state: false,
@@ -367,7 +405,13 @@ export default {
         },
       },
       countnum:0,//创建拖拽元素个数
-    };
+      contDataFiles:[],//资料库图片缩略图
+      isentrust:0,//是否是委托合同 1 是 0不是
+      dialogEntrust:false,//委托合同审核弹窗
+      entrustReason:"",//委托合同审核备注
+      signingState:'',//签后审核状态
+      dialogContType:1//变更解约弹窗是否是意向定金合同
+    }; 
   },
   created() {
     if (!window.location.origin) {
@@ -376,20 +420,22 @@ export default {
     this.http = window.location.origin
     this.id = this.$route.query.id;
     this.code = this.$route.query.code;
-    if (this.$route.query.operationType) {
-      this.operationType = this.$route.query.operationType;
+    this.isentrust = Number(this.$route.query.isentrust)
+    if(!Number(this.$route.query.isentrust)){
+      this.getContDataType();//获取合同资料库类型
     }
-    this.getContDataType();//获取合同集料库类型
+    
     this.getContImg();
     this.getAdmin();//获取当前登录人信息
-
+    let arr=this.$tool.getRouter(['二手房','合同','合同列表'],"contractList");
+    arr.push({name:'合同预览',path:this.$route.fullPath});
+    this.setPath(arr);
   },
   methods: {
-      tuozhuai(sign,countnum){
+    tuozhuai(sign,countnum){
         var oDiv=document.getElementsByClassName('signature')[countnum]
         var that=this
         oDiv.onmousedown = function(ev){
-          // debugger
             var disX = ev.clientX -oDiv.offsetLeft;
             var disY = ev.clientY - oDiv.offsetTop;
           var l=0;
@@ -534,12 +580,10 @@ export default {
         for(let i=0;i<signatures.length;i++){
           signatures[i].style.opacity=1
         }
-        // this.showTotal=this.total_r
       }else{
         this.count=1;
         this.showAddress=this.business;
         this.setSrc(this.showAddress,this.total_b);
-        // this.showTotal=this.total_b;
         var signatures=document.getElementsByClassName('signature')
         for(let i=0;i<signatures.length;i++){
           signatures[i].style.opacity=0
@@ -579,32 +623,71 @@ export default {
       }
     },
     //通过驳回
-    toChecked(param){
-      this.$ajax.postJSON('/api/machine/audit', param).then(res=>{
-        res=res.data
-        if(res.status===200){
-          this.dialogCheck=false;
-          this.isSignature=true;
-          this.getContImg();
-          this.$message({
-            message:'审核成功',
-            type:'success'
+    toChecked(param,type){
+      if(type==="entrust"){
+        this.$ajax.postJSON('/api/machine/audit', param).then(res=>{
+          res=res.data
+          if(res.status===200){
+            this.dialogEntrust=false;
+            this.getContImg();
+            this.$message({
+              message:'审核成功',
+              type:'success'
+            })
+          }
+        }).catch(error => {
+            if(error.message==='下一节点审批人不存在'){
+              this.checkPerson.code=this.code;
+              this.checkPerson.state=true;
+              this.checkPerson.type=3;
+              this.checkPerson.label=true;
+              this.checkPerson.flowType=11
+            }else{
+              this.$message({
+                message:error,
+                type: "error"
+              })
+            }
           })
+      }else{
+        let param_ = {
+          id:this.id
         }
-      }).catch(error => {
-          if(error.message==='下一节点审批人不存在'){
-            this.checkPerson.code=this.code;
-            this.checkPerson.state=true;
-            this.checkPerson.type=3;
-            // this.checkPerson.type=error.data.type===1?'set':'init';
-            this.checkPerson.label=true;
-          }else{
+        //验证此合同是否正在编辑
+        this.$ajax.get("/api/contract/audit",param_).then(res=>{
+          res=res.data
+          if(res.status===200){
+            this.$ajax.postJSON('/api/machine/audit', param).then(res=>{
+              res=res.data
+              if(res.status===200){
+                this.dialogCheck=false;
+                this.getContImg();
+                this.$message({
+                  message:'审核成功',
+                  type:'success'
+                })
+              }
+            }).catch(error => {
+                if(error.message==='下一节点审批人不存在'){
+                  this.checkPerson.code=this.code;
+                  this.checkPerson.state=true;
+                  this.checkPerson.type=3;
+                  this.checkPerson.label=true;
+                }else{
+                  this.$message({
+                    message:error,
+                    type: "error"
+                  })
+                }
+              })
+          }
+        }).catch(error =>{
             this.$message({
               message:error,
               type: "error"
             })
-          }
-        })
+          })
+      }
     },
     //签章
     signature(value){
@@ -616,23 +699,16 @@ export default {
           storeId:this.storeId
           // reduce:this.reduce//合同页数是否减少 0无  1有
         }
+        if(this.isentrust){
+          param.isentrust=1
+        }
         this.fullscreenLoading=true;
         //签章
         this.$ajax.post('/api/contract/signture', param).then(res=>{
           res=res.data;
           if(res.status===200){
-            // let pdfUrl=res.data;
-            // this.fullscreenLoading=false;
             this.getContImg()
-            // // debugger
-            // let pictureList = Array.from(document.getElementsByClassName('signature'))
-            // console.log(pictureList)
-            // pictureList.forEach(element => {
-            //   element.style.display="none"
-            // });
-            // this.getUrl(pdfUrl);
-            // this.haveUrl=true;
-            this.pdfUrl=`${this.http}/api/contract/getSignPdf?id=${this.id}`
+            this.pdfUrl=this.isentrust ? `${this.http}/api/contract/getSignPdf?id=${this.id}&isentrust=1` : `${this.http}/api/contract/getSignPdf?id=${this.id}`
             this.haveUrl=true;
             this.fullscreenLoading=false;
           }
@@ -648,10 +724,13 @@ export default {
           id:this.id,
           type:value
         }
+        if(this.isentrust){
+          param.isentrust=1
+        }
         this.$ajax.post('/api/contract/signture', param).then(res=>{
           res=res.data;
           if(res.status===200){
-            this.pdfUrl=`${this.http}/api/contract/getSignPdf?id=${this.id}`
+            this.pdfUrl=this.isentrust ? `${this.http}/api/contract/getSignPdf?id=${this.id}&isentrust=1` : `${this.http}/api/contract/getSignPdf?id=${this.id}`
             this.haveUrl=true;
           }
         })
@@ -677,46 +756,105 @@ export default {
         }
       })
     },
-    checked(num) {
-      //驳回/风险单
-      if (num===2 || this.isSign) {
-        if (this.textarea.length>0) {
-          this.textarea=this.textarea.replace(/\s/g,"");
-          if(this.textarea.length>0){
+    //审核弹窗
+    toCheck(){
+      if(this.isentrust){
+        this.dialogEntrust = true
+      }else{
+        let param = {
+          id:this.id
+        }
+        //验证此合同是否正在编辑
+        this.$ajax.get("/api/contract/audit",param).then(res=>{
+          res=res.data
+          if(res.status===200){
+            this.dialogCheck = true
+          }
+        }).catch(error =>{
+            this.$message({
+              message:error,
+              type: "error"
+            })
+          })
+        }
+      },
+    checked(num,type) {
+      if(type==="entrust"){
+        if(num===2){
+          this.entrustReason=this.entrustReason.replace(/\s/g,"");
+          if(this.entrustReason.length>0){
             let param = {
               bizCode:this.code,
-              flowType:3,
+              flowType:11,
+              modularType:0,//合同类型
               approvalForm:{
                 result: num,
-                isRisk: this.isSign, //风险单
-                remark: this.textarea
+                remark: this.entrustReason
               }
-            };
-            this.toChecked(param);
+            }
+            this.toChecked(param,type)
+          }else{
+            this.$message({
+              message: '请填写审核原因',
+              type: 'warning'
+            });
+          }
+        }else{
+          let param = {
+            bizCode:this.code,
+            flowType:11,
+            modularType:0,//合同类型
+            approvalForm:{
+              result: num,
+              remark: this.entrustReason
+            }
+          }
+          this.toChecked(param,type)
+        }
+      }else{
+        //驳回/风险单
+        if (num===2 || this.isSign) {
+          if (this.textarea.length>0) {
+            this.textarea=this.textarea.replace(/\s/g,"");
+            if(this.textarea.length>0){
+              let param = {
+                bizCode:this.code,
+                flowType:3,
+                modularType:0,//合同类型
+                approvalForm:{
+                  result: num,
+                  isRisk: this.isSign, //风险单
+                  remark: this.textarea
+                }
+              };
+              this.toChecked(param);
+            }else{
+              this.$message({
+                message: '请填写审核原因以及风险单原因',
+                type: 'warning'
+              });
+            }
           }else{
             this.$message({
               message: '请填写审核原因以及风险单原因',
               type: 'warning'
             });
           }
-        }else{
-          this.$message({
-            message: '请填写审核原因以及风险单原因',
-            type: 'warning'
-          });
+        } else {
+          let param = {
+            bizCode:this.code,
+            flowType:3,
+            modularType:0,//合同类型
+            approvalForm:{
+              result: num,
+              isRisk: this.isSign, //风险单
+              remark: this.textarea
+            }
+          };
+          this.toChecked(param);
         }
-      } else {
-        let param = {
-          bizCode:this.code,
-          flowType:3,
-          approvalForm:{
-            result: num,
-            isRisk: this.isSign, //风险单
-            remark: this.textarea
-          }
-        };
-        this.toChecked(param);
       }
+      
     },
     //获取当前待审节点
     // getAuditNode(){
@@ -734,56 +872,78 @@ export default {
     //获取合同预览图片
     getContImg(type){
       let param = {
-        id:this.id
+        id:this.id,
+        isentrust:this.isentrust
       };
       this.$ajax.get('/api/contract/preview', param).then(res=>{
-        res=res.data;
+        res=res.data
         if(res.status===200){
-          // this.getContData();
-          // if(res.data.contState.value===2&&!type){
-          //   this.signature(2)
-          // }
-          this.examineState=res.data.examineState.value;
-          this.laterStageState=res.data.laterStageState.value;
-          this.contState=res.data.contState.value;
-          this.contType=res.data.contType.value;
-          this.recordId=res.data.recordId;
+          if(this.isentrust){//委托合同
+            this.examineState=res.data.examineState
+            this.contState=res.data.entrustState
+          }else{
+            this.examineState=res.data.examineState.value
+            this.resultState=res.data.resultState.value
+            this.laterStageState=res.data.laterStageState.value
+            this.contState=res.data.contState.value;
+            this.contChangeState=res.data.contChangeState.value
+            this.isSign=res.data.isRisk
+            this.isHaveData=res.data.isHaveData;
+            //变更解约状态
+            this.changeExamineState=res.data.changeExamineState;
+            this.cancelExamineState=res.data.cancelExamineState;
+            //变更解约佣金
+            this.commission={
+              owner:res.data.ownerCommission,
+              user:res.data.custCommission
+            }
+            //签后审核状态
+            this.signingState=res.data.signingState
+            //变更解约参数  是否是意向定金合同
+            if(res.data.contType.value>3){
+              this.dialogContType=2
+            }else{
+              this.dialogContType=1
+            }
+          }
+          
           this.isCanAudit=res.data.isCanAudit;
-          this.guestStoreId=res.data.guestStoreId;
-          this.contChangeState=res.data.contChangeState.value;
           this.cityId=res.data.cityId;
           this.auditId=res.data.auditId;
-          this.isSign=res.data.isRisk;
-          this.isHaveData=res.data.isHaveData;
-          if(res.data.companySigns&&res.data.companySigns.length===1){
-            this.storeId=res.data.companySigns[0].storeId;
-            this.signImg=res.data.companySigns[0].contractSign;
+          this.contType=res.data.contType.value
+          //咸宁买卖无签章
+          if(res.data.cityId==8&&res.data.contType.value==2&&this.isentrust!=1){
+            //若为咸宁买卖 需要隐藏选择签章的按钮
+            this.showChooseSign=false
+            this.companySigns=[{contractSign: null,name: null,storeId: null}]
+          }else{
+            if(res.data.companySigns&&res.data.companySigns.length===1){
+              this.storeId=res.data.companySigns[0].storeId;
+              this.signImg=res.data.companySigns[0].contractSign;
+            }
+            this.companySigns=res.data.companySigns?res.data.companySigns:[];
           }
-          this.companySigns=res.data.companySigns?res.data.companySigns:[];
+          
           this.isNewTemplate=res.data.isNewTemplate;//是否是新合同模板
           if(res.data.isRisk){
             this.textarea=res.data.remarksExamine;
           }
-          // if(res.data.cityId===1&&(res.data.contType.value===2||res.data.contType.value===3)){
-
             //1 武汉  2 合肥  11 襄阳
           if(res.data.isWuHanMM===1&&(res.data.contType.value===2)){
             this.isShowType=true;
             //买卖
-            this.business=res.data.imgAddress.business;
+            this.business=res.data.imgAddress.business; 
             this.total_b=res.data.imgCount.business;
             //居间
             this.residence=res.data.imgAddress.residence;
             this.total_r=res.data.imgCount.residence;
             this.showAddress=res.data.imgAddress.residence;
-            // this.showTotal=res.data.imgCount.residence;
             this.setSrc(this.showAddress,res.data.imgCount.residence);
           }else {
             //其他
             this.address=res.data.imgAddress.address;
             this.total_a=res.data.imgCount.count;
             this.showAddress=res.data.imgAddress.address;
-            // this.showTotal=res.data.imgCount.count;
             this.setSrc(this.showAddress,res.data.imgCount.count);
           }
         }
@@ -791,7 +951,6 @@ export default {
     },
     //拼接地址
     setSrc(value,count){
-      // let src = value.substr(0,value.lastIndexOf('.'))+count+value.substr(value.lastIndexOf('.'));
       var arrSrc = [];
       for(let i=1;i<=count;i++){
         let src = value.substr(0,value.lastIndexOf('.'))+i+value.substr(value.lastIndexOf('.'));
@@ -814,34 +973,57 @@ export default {
     },
     //编辑
     toEdit(){
-      this.setPath(this.$tool.getRouter(['合同','合同列表','合同编辑'],'contractList'));
-      if(this.contType>3){
+      if(this.isentrust){
         this.$router.replace({
-          path: "/newIntention",
+          path: "/contractDetails",
           query: {
             id: this.id,
-            contType: this.contType,
-            operateType: 2
+            type:"agency",
+            contType:this.contType
           }
         });
       }else{
-        this.$router.replace({
-          path: "/addContract",
-          query: {
-            id: this.id,
-            operateType: 2,
-            type: this.contType
+        //锁定合同
+        if((this.contState===1&&this.examineState===0)||this.contState===2){
+          let param = {
+            id:this.id
           }
-        });
-      }
+          this.$ajax.put("/api/contract/lock",param,2).then(res=>{
 
+          })
+        }
+        // let arr = this.getPath
+        // arr.splice(3,1)
+        // arr.push({name:'合同预览',path:''})
+        // this.setPath(arr);
+        if(this.contType>3){
+          this.$router.replace({
+            path: "/newIntention",
+            query: {
+              id: this.id,
+              contType: this.contType,
+              operateType: 2
+            }
+          });
+        }else{
+          this.$router.replace({
+            path: "/addContract",
+            query: {
+              id: this.id,
+              operateType: 2,
+              type: this.contType
+            }
+          });
+        }
+      }
     },
      //提审
     submitAudit(){
       let param = {
         cityId:this.cityId,
-        flowType:3,
-        bizCode:this.code
+        flowType:this.isentrust?11:3,
+        bizCode:this.code,
+        modularType:0//合同类型
       }
       this.$ajax.get('/api/machine/submitAduit', param).then(res=>{
         res=res.data
@@ -861,12 +1043,13 @@ export default {
         }
       }).catch(error => {
           if(error.message==='下一节点审批人不存在'){
+            this.getContImg();
             this.isSubmitAudit=false
             this.checkPerson.code=this.code;
             this.checkPerson.state=true;
             this.checkPerson.type=1;
-            // this.checkPerson.type=error.data.type===1?'set':'init';
             this.checkPerson.label=true;
+            this.checkPerson.flowType=this.isentrust?11:3;
           }else{
             this.$message({
               message:error,
@@ -879,57 +1062,43 @@ export default {
     goChangeCancel(value) {
       this.changeCancelId = Number(this.id);
       if (value === 1) {
-        this.canceldialogType = "changeEdit";
+        this.canceldialogType = "bg";
         this.changeCancel_ = true;
       } else if (value === 2) {
-        this.canceldialogType = "cancelEdit";
+        this.canceldialogType = "jy";
         this.changeCancel_ = true;
       }
     },
     // 关闭变更解约弹窗
     changeCancelDialog() {
-      this.getContImg();
       this.changeCancel_ = false;
-      this.canceldialogType = "";
-      this.changeCancelId = "";
+    },
+    //关闭变更解约刷新
+    freachChangeCancel(){
+      this.changeCancel_ = false;
+      this.getContImg();
     },
     //撤单
     setInvalid(){
-      if(this.invalidReason.length>0){
-        this.invalidReason=this.invalidReason.replace(/\s/g,"")
-        if(this.invalidReason.length>0){
-          let param = {
-            id: this.id,
-            reason: this.invalidReason
-          };
-          this.$ajax.post('/api/contract/invalid', param).then(res=>{
-            res=res.data;
-            if(res.status===200){
-              this.getContImg();
-              this.dialogInvalid=false;
-              this.$message({
-                message:'操作成功',
-                type:"success"
-              })
-            }
-          }).catch(error => {
-            this.$message({
-              message:error,
-              type: "error"
-            })
-          })
-        }else{
+      let param = {
+        id: this.id
+      };
+      this.$ajax.post('/api/contract/invalid', param).then(res=>{
+        res=res.data;
+        if(res.status===200){
+          this.getContImg();
+          this.dialogInvalid=false;
           this.$message({
-            message:'请填写撤单原因',
-            type:"warning"
+            message:'操作成功',
+            type:'success'
           })
         }
-      }else{
+      }).catch(error=>{
         this.$message({
-          message:'请填写撤单原因',
-          type:"warning"
+          message:error,
+          type: "error"
         })
-      }
+      })
     },
     //合同资料库弹窗
     showContData(){
@@ -937,6 +1106,24 @@ export default {
         this.getContData();
       }
       this.dialogContData=true;
+    },
+    //关闭资料库弹窗
+    closeContData(){
+      this.dialogContData=false
+      // this.buyerList=[]
+      // this.sellerList=[]
+      // this.otherList=[]
+      // this.getContDataType()
+      let arr=[].concat(this.buyerList,this.sellerList,this.otherList)
+      arr.forEach(element => {
+        element.value=[]
+      });
+      // this.sellerList.forEach(element => {
+      //   element.value=[]
+      // });
+      // this.otherList.forEach(element => {
+      //   element.value=[]
+      // });
     },
      //获取合同资料库类型列表
     getContDataType() {
@@ -949,21 +1136,21 @@ export default {
           let dataType = JSON.parse(res.data);
           // console.log(dataType);
           dataType.forEach(element => {
-            if(element.type==='1'){
+            if(Number(element.type)===1){
               let item={};
               item.value=[];
               item.kind=element.type;
               item.title=element.name;
               item.isrequire=element.isNecessary;
               this.buyerList.push(item);
-            }else if(element.type==='2'){
+            }else if(Number(element.type)===2){
               let item={};
               item.value=[];
               item.kind=element.type;
               item.title=element.name;
               item.isrequire=element.isNecessary;
               this.sellerList.push(item);
-            }else if(element.type==='3'){
+            }else if(Number(element.type)===3){
               let item={};
               item.value=[];
               item.kind=element.type;
@@ -976,7 +1163,6 @@ export default {
       })
     },
     //获取合同资料库信息
-
     getContData() {
       let param = {
         id: this.id
@@ -984,6 +1170,7 @@ export default {
       this.$ajax.get("/api/contract/getContAttachmentById", param).then(res => {
         res = res.data;
         if (res.status === 200) {
+          let pathList = []
           if(res.data){
             let address = JSON.parse(res.data.address);
             // console.log(address)
@@ -991,20 +1178,21 @@ export default {
               element.value.forEach(item => {
                 let fileType = this.$tool.get_suffix(item.name);
                 item.fileType=fileType
+                pathList.push(item)
               });
-              if(element.kind==="1"){
+              if(Number(element.kind)===1){
                 this.buyerList.forEach(ele => {
                   if(element.title===ele.title){
                     ele.value=element.value
                   }
                 });
-              }else if(element.kind==="2"){
+              }else if(Number(element.kind)===2){
                 this.sellerList.forEach(ele => {
                   if(element.title===ele.title){
                     ele.value=element.value
                   }
                 });
-              }else if(element.kind==="3"){
+              }else if(Number(element.kind)===3){
                 this.otherList.forEach(ele => {
                   if(element.title===ele.title){
                     ele.value=element.value
@@ -1012,6 +1200,15 @@ export default {
                 });
               }
             });
+            let preloadList=[]
+            pathList.forEach((item,index)=>{//判断附件是否为图片，是则存入临时数组获取签名用于缩略图展示
+              if(this.isPictureFile(item.fileType)){
+                preloadList.push(item.path)
+              }
+            })
+            this.fileSign(preloadList,'preload').then(res=>{
+              this.contDataFiles=res
+            })
           }
         }
       });
@@ -1035,6 +1232,15 @@ export default {
         // this.otherList[num].value.push(arr[0]);
         this.otherList[num].value=this.otherList[num].value.concat(arr);
       }
+      let preloadList=[]
+      arr.forEach((item,index)=>{//判断附件是否为图片，是则存入临时数组获取签名用于缩略图展示
+        if(this.isPictureFile(item.fileType)){
+          preloadList.push(item.path)
+        }
+      })
+      this.fileSign(preloadList,'preload').then(res=>{
+        this.contDataFiles=this.contDataFiles.concat(res)
+      })
     },
     //显示删除按钮
     moveIn(value){
@@ -1173,6 +1379,22 @@ export default {
     getWidth:function () {
       return `${this.imgWidth}px`
     },
+  },
+  filters:{
+    /**
+     * 过滤显示图片缩略图
+     * @param val后端返回的所有文件资源遍历的当前项
+     * @param list图片资源获取签名后的临时数组
+     */
+    getSignImage(val,list){
+      if(list.length===0){
+        return '';
+      }else {
+        return list.find(item=>{
+          return item.includes(val)
+        })
+      }
+    }
   }
   // watch:{
   //   textarea:function(val){
@@ -1408,6 +1630,10 @@ export default {
       width: 90px;
       color: @color-6c;
     }
+    >.invalid{
+      font-size: 16px;
+      width: 120px;
+    }
     > .reason {
       position: relative;
       > span {
@@ -1474,16 +1700,20 @@ export default {
     height: 450px;
     overflow-y: auto;
     .classify {
-      padding-top: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid @border-ED;
-      .title {
-        font-size: 16px;
-        color: @color-324;
-      }
+      position: relative;
       .one_ {
-        padding-left: 20px;
-        > p {
+        padding-left: 10px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid @border-ED;
+        .title {
+          font-size: 16px;
+          color: @color-324;
+          position: absolute;
+          top: 10px;
+          left: 5px;
+        }
+        .title_ {
           font-size: 14px;
           padding: 10px 0;
           color: @color-6c;
@@ -1492,16 +1722,27 @@ export default {
           }
         }
       }
-      .noData{
-        text-align: center;
-        width: 100px;
-        height: 100px;
-        padding-top: 40px;
-        box-sizing: border-box;
-        border-radius:4px;
-        background: @color-F2;
-      }
     }
+    // .classify {
+    //   padding-top: 10px;
+    //   padding-bottom: 10px;
+    //   border-bottom: 1px solid @border-ED;
+    //   .title {
+    //     font-size: 16px;
+    //     color: @color-324;
+    //   }
+    //   .one_ {
+    //     padding-left: 20px;
+    //     > p {
+    //       font-size: 14px;
+    //       padding: 10px 0;
+    //       color: @color-6c;
+    //       > i {
+    //         color: @color-FF;
+    //       }
+    //     }
+    //   }
+    // }
     .ulData{
       display: flex;
       flex-wrap:wrap;
@@ -1551,6 +1792,11 @@ export default {
       box-sizing: border-box;
       border-radius:4px;
       background: @color-F2;
+      .signImage{
+        width:60px;
+        height: 60px;
+        margin: 1px 0;
+      }
       > p{
         padding-top: 3px;
         display: inline-block;

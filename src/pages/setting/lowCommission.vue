@@ -5,7 +5,7 @@
       <el-form :inline="true" :model="searchForm" class="prop-form" size="small">
         <el-form-item label="体系">
           <el-select v-model="searchForm.systemTag" placeholder="全部" :clearable="true" style="width:150px">
-            <el-option v-for="item in systemTagList" :key="item.key" :label="item.value" :value="item.key">
+            <el-option v-for="item in systemOpt" :key="item.key" :label="item.value" :value="item.key">
             </el-option>
           </el-select>
         </el-form-item>
@@ -38,34 +38,34 @@
         </div>
       </div>
       <el-table ref="tableCom" class="info-scrollbar" :data="tableData" style="width: 100%" border :max-height="tableNumberCom">
-        <el-table-column align="center" label="体系" min-width="50">
+        <el-table-column label="体系">
           <template slot-scope="scope">
-            <span v-for="item in systemTagList" :key="item.key" v-if="item.key===scope.row.systemTag">{{item.value}}</span>
+            <span v-for="item in systemArr" :key="item.key" v-if="item.key===scope.row.systemTag">{{item.value}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="成交总价" min-width="50">
+        <el-table-column label="成交总价">
           <template slot-scope="scope">
             <p v-for="item in scope.row.list" :key="item.id">{{item.dealPriceMin+' ~ '+item.dealPriceMax}}万</p>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="低佣比例" min-width="50">
+        <el-table-column label="低佣比例">
           <template slot-scope="scope">
             <p v-for="item in scope.row.list" :key="item.id"><span v-if="item.judgeType===1" style="font-size:16px;">≤ </span><span v-if="item.judgeType===2" style="font-size:16px;">= </span><span v-if="item.judgeType===3" style="font-size:16px;">≥ </span>{{item.comPercentMin}} %</p>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="设置时间" min-width="50">
+        <el-table-column label="设置时间">
           <template slot-scope="scope">
             <!-- <p v-for="item in scope.row.list" :key="item.id">{{item.settingTime|formatTime}}</p> -->
             {{scope.row.list[0].settingTime|formatTime}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="最新修改时间" min-width="50">
+        <el-table-column label="最新修改时间">
           <template slot-scope="scope">
             <!-- <p v-for="item in scope.row.list" :key="item.id">{{item.updateTime|formatTime}}</p> -->
             {{scope.row.list[0].updateTime|formatTime}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" min-width="120">
+        <el-table-column label="操作" min-width="120">
           <template slot-scope="scope">
             <el-button type="text" size="medium" @click="goEdit(scope.row)">编辑</el-button>
           </template>
@@ -87,7 +87,7 @@
         <div>
           <p class="form-label system">体系：</p>
           <el-select v-model="systemType" size="small" placeholder="全部" :disabled="forbid" :clearable="true" style="width:200px">
-            <el-option v-for="item in systemTagList" :key="item.key" :label="item.value" :value="item.key">
+            <el-option v-for="item in systemOpt" :key="item.key" :label="item.value" :value="item.key">
             </el-option>
           </el-select>
         </div>
@@ -160,6 +160,20 @@ import { TOOL } from "@/assets/js/common";
 
 export default{
   mixins: [MIXINS],
+  props: {
+      systemArr: {
+          type: Array,
+          default: function() {
+              return []
+          }
+      },
+      systemOpt: {
+          type: Array,
+          default: function() {
+              return []
+          }
+      }
+  },
   components: {
     ScreeningTop
   },
@@ -194,7 +208,6 @@ export default{
     }
   },
   created(){
-    this.getSystemTag()
     this.getDictionary();//字典
     let res=this.getDataList
     if(res&&(res.route===this.$route.path)){
@@ -542,7 +555,7 @@ export default{
   background-color: #fff;
   padding: 0 10px;
   border-radius: 2px;
-  box-shadow: 0px 1px 6px 0px rgba(7, 47, 116, 0.1);
+  // box-shadow: 0px 1px 6px 0px rgba(7, 47, 116, 0.1);
 }
 .listTitle {
   display: flex;

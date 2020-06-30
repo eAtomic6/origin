@@ -5,10 +5,10 @@
         </div>
         <div class="list1">
           <el-table :data="listData" style="width: 100%" border :max-height="tableHeight">
-            <el-table-column align="center" label="序号" type="index" :formatter="nullFormatter" width="100"></el-table-column>
-            <el-table-column align="left" label="名称" prop="name" :formatter="nullFormatter"></el-table-column>
-            <el-table-column align="center" label="交易步骤数" prop="stepsNum" :formatter="nullFormatter"></el-table-column>
-            <el-table-column align="center" label="操作">
+            <el-table-column label="序号" type="index" :formatter="nullFormatter" width="100"></el-table-column>
+            <el-table-column label="名称" prop="name" :formatter="nullFormatter"></el-table-column>
+            <el-table-column label="交易步骤数" prop="stepsNum" :formatter="nullFormatter"></el-table-column>
+            <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button @click="rowOperation(scope.row,'init')" type="text" size="small" v-if="power['sign-set-hq'].state">交易流程管理</el-button>
                 <el-button @click="rowOperation(scope.row,'edit')" type="text" size="small" v-if="power['sign-set-hq'].state">编辑</el-button>
@@ -63,7 +63,7 @@
         </el-dialog>
         <!-- 添加流程步骤 弹出框 -->
         <el-dialog title="添加流程步骤" :visible.sync="ProcessStepVisible" width="740px" :closeOnClickModal="$tool.closeOnClickModal">
-          <el-table :data="StepsOption" border class="process-list" max-height="400">
+          <el-table :data="stepsData" border class="process-list" max-height="400">
             <el-table-column label="步骤类型">
               <template slot-scope="scope">
                 <p>
@@ -106,7 +106,6 @@
         ProcessStepVisible: false, //添加流程步骤
         //流程管理列表
         manageData: [],
-        tempManage: [],
         isSettleOption: [
           {
             value: 0,
@@ -118,7 +117,7 @@
           }
         ],
         //流程步骤选项
-        StepsOption: [],
+        stepsData: [],
         flowCount: 0,
         currentFlowId: 0,
         AllSteps: [],
@@ -158,7 +157,6 @@
       },
       // 点击 交易流程管理 编辑 删除
       rowOperation(row, type) {
-        this.flowName = row.name
         if(type === 'edit') {
           this.dialogProcessVisible = true
           this.processTitle = "编辑交易流程"
@@ -166,6 +164,7 @@
           this.addForm.name = row.name
         } else if(type === 'init') {
           this.dialogManageVisible = true
+          this.flowName = row.name
           this.currentFlowId = row.id
           let param = {
             flowId: row.id
@@ -173,18 +172,21 @@
           this.$ajax.post('/api/flowmanage/selectFlowStepsList',param).then(res => {
             res = res.data
             if(res.status === 200) {
-              this.manageData = res.data
-              this.flowCount = this.manageData.length
-            }
-            this.manageData.forEach(i => {
-              this.AllSteps.forEach((v,index) => {
-                if(i.stepsName === v.name) {
-                  i.sort = ++index
-                }
+              let arr = [...res.data]
+              let arr2 = []
+              this.flowCount = arr.length
+              arr.forEach(i => {
+                this.AllSteps.forEach((v,index) => {
+                  if(i.stepsName === v.name) {
+                      i.sort = ++index
+                  }
+                })
+                arr2.push(i.id)
+                i.settlePercent = i.settlePercent === 0 ? "" : i.settlePercent
               })
-              i.settlePercent = i.settlePercent === 0 ? "" : i.settlePercent
-            })
-            this.tempManage = JSON.parse(JSON.stringify(this.manageData))
+              this.manageData = [...arr]
+              this.copyManageData = arr2.join()
+            }
           }).catch(error => {
               this.$message({message:error})
           })
@@ -245,26 +247,18 @@
         })
       },
       getTypeSteps() {
-        this.StepsOption = []
         this.$ajax.post(`/api/flowmanage/selectTypeStepsList`, {cityId: this.cityId}).then(res => {
           res = res.data
           if (res.status === 200) {
-            res.data.forEach(item => {
-              this.StepsOption.push({
-                typeId: item.typeId,
-                stepsSelect: false,
-                tempList: [],
-                typeName: item.typeName,
-                stepsList: item.stepsList
+            let arr = [...res.data]
+            arr.map(item => {
+              item.stepsSelect = false
+              item.tempList = []
+              item.stepsList.map(e => {
+                this.AllSteps.push(e)
               })
             })
-            this.StepsOption.forEach(item => {
-              if(item.stepsList) {
-                item.stepsList.forEach(e => {
-                  this.AllSteps.push(e)
-                })
-              }
-            })
+            this.stepsData = [...arr]
           }
         })
       },
@@ -287,12 +281,12 @@
       },
       addBtn() {
         this.ProcessStepVisible = true
-        this.StepsOption.forEach(item => {
+        this.stepsData.forEach(item => {
           item.tempList = []
           item.stepsSelect = false
         })
         this.manageData.forEach(i => {
-          this.StepsOption.forEach(v => {
+          this.stepsData.forEach(v => {
             if(i.stepsTypeName === v.typeName) {
               v.tempList.push(i.stepsName)
             }
@@ -308,7 +302,7 @@
       },
       // 全选
       allSelect(i,bool) {
-        let arr = this.StepsOption[i]
+        let arr = this.stepsData[i]
         if(bool) {
           let ar = []
           arr.stepsList.forEach(item => {
@@ -321,7 +315,7 @@
       },
       // 多选
       multiSelect(i,arr) {
-        let obj = this.StepsOption[i]
+        let obj = this.stepsData[i]
         let bool = obj.stepsList.length === arr.length
         obj.stepsSelect = bool
       },
@@ -332,15 +326,12 @@
           this.manageData.forEach(i => {
             arr1.push(i.stepsName)
           })
-          this.StepsOption.forEach(v => {
+          this.stepsData.forEach(v => {
             arr2 = arr2.concat(v.tempList)
           })
-          function getArrDifference(m,n) {
-            return arr1.concat(arr2).filter(function(v,i,arr) {
-              return arr.indexOf(v) === arr.lastIndexOf(v)
-            })
-          }
-          let arr = getArrDifference(arr1,arr2)
+          let arr = arr1.concat(arr2).filter(function(v,i,arr) {
+            return arr.indexOf(v) === arr.lastIndexOf(v)
+          })
           if(arr1.length < arr2.length) {
             this.managePush(arr)
           } else if(arr1.length > arr2.length) {
@@ -375,41 +366,20 @@
           }
           this.ProcessStepVisible = false
         } else if(type === 'flow') {
-          function equar(a, b) {
-            if (a.length !== b.length) {
-                return false
-            } else {
-                for (let i = 0; i < a.length; i++) {
-                    if (a[i].id !== b[i].id || a[i].isSettle !== b[i].isSettle || a[i].settlePercent !== b[i].settlePercent) {
-                        return false
-                    }
-                }
-                return true;
-            }
-          }
-          let flag = equar(this.manageData,this.tempManage)
-
           let arr = []
-          if(this.manageData.length) {
-            this.manageData.forEach((item,index) => {
-              if(this.flowCount === 0) {
-                arr.push({
-                  transStepsId: item.transStepsId,
-                  sort: item.sort,
-                  isSettle: item.isSettle,
-                  settlePercent: item.settlePercent===""?0:item.settlePercent
-                })
-              } else {
-                arr.push({
-                  transStepsId: item.transStepsId,
-                  sort: item.sort,
-                  isSettle: item.isSettle,
-                  id: item.id ? item.id : null,
-                  settlePercent: item.settlePercent===""?0:item.settlePercent
-                })
-              }
+          let arr2 = []
+          this.manageData.forEach((item,index) => {
+            arr.push({
+              transStepsId: item.transStepsId,
+              sort: item.sort,
+              isSettle: item.isSettle,
+              settlePercent: item.settlePercent===""?0:item.settlePercent
             })
-          }
+            if(this.flowCount) {
+              arr2.push(item.id)
+              arr[index].id = item.id ? item.id : null
+            }
+          })
 
           let param = {
             transFlowId: this.currentFlowId,
@@ -423,7 +393,7 @@
               this.dialogManageVisible = false
             }
           } else {
-            if(!flag) {
+            if(!(this.copyManageData === arr2.join())) {
               const url = "/api/flowmanage/updateFLowSteps"
               this.flowManagePost(url,param)
             } else {
@@ -510,9 +480,6 @@
     .list1 {
       padding: 0 12px;
       background-color: #fff;
-      /deep/ .has-gutter th:nth-child(2) {
-        text-align: center;
-      }
     }
     .processDialog {
       .add-form-item {

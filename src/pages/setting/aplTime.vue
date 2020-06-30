@@ -7,7 +7,7 @@
       <el-form :inline="true" :model="searchForm" class="form-head" size="small">
          <el-form-item label="体系">
           <el-select v-model="searchForm.sysid" filterable :clearable="true">
-            <el-option v-for="item in systemTagList" :key="item.key" :label="item.value" :value="item.key"></el-option>
+            <el-option v-for="item in systemOpt" :key="item.key" :label="item.value" :value="item.key"></el-option>
             <!-- <el-option v-for="item in dictionary['638']" :key="item.key" :label="item.value" :value="item.key"></el-option> -->
           </el-select>
         </el-form-item>
@@ -43,27 +43,27 @@
         <el-button @click="addSys" type="primary" icon="el-icon-plus">新增业绩申诉有效时间</el-button>
       </p>
       <el-table :data="tableData" style="width: 100%" border ref="tableCom" :max-height="tableNumberCom">
-        <el-table-column align="center" label="体系"  width="90">
+        <el-table-column  label="体系">
           <template slot-scope="scope">
-            <span v-for="item in systemTagList" :key="item.key" v-if="item.key===scope.row.systemTag">{{item.value}}</span>
+            <span v-for="item in systemArr" :key="item.key" v-if="item.key===scope.row.systemTag">{{item.value}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="业绩申诉有效时间">
+        <el-table-column  label="业绩申诉有效时间">
           <template slot-scope="scope">
             <span>{{scope.row.effectTime}}{{scope.row.timeUnit==1?'小时':'天'}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="设置时间"  min-width="50">
+        <el-table-column  label="设置时间">
            <template slot-scope="scope">
             <span>{{scope.row.settingTime|formatTime}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="最新修改时间"  min-width="60">
+        <el-table-column  label="最新修改时间">
           <template slot-scope="scope">
             <span>{{scope.row.updateTime|formatTime}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" min-width="60">
+        <el-table-column  label="操作">
           <template slot-scope="scope">
             <el-button type="text" class="edit-btn" @click="adclick2(scope.row)" size="medium">编辑</el-button>
           </template>
@@ -100,12 +100,12 @@
         <el-form :inline="true" size="medium">
         <el-form-item label="体系：" >
           <el-select v-model="formSys" :disabled="title=='编辑'?true:false" placeholder="请选择体系" :clearable="true">
-           <el-option v-for="item in systemTagList" :key="item.key" :label="item.value" :value="item.key"></el-option>
+           <el-option v-for="item in systemOpt" :key="item.key" :label="item.value" :value="item.key"></el-option>
             <!-- <el-option v-for="item in dictionary['638']" :key="item.key" :label="item.value" :value="item.key"></el-option> -->
           </el-select>
         </el-form-item>
         <el-form-item label="业绩申诉有效时间：" >
-          <el-input v-model="apltime" @keyup.native="numberFn"></el-input>
+          <el-input v-model="apltime" @input="numberFn" maxlength="3"></el-input>
           <el-select v-model="timeUnit" placeholder="请选择" style="margin-left:20px">
             <el-option v-for="item in dictionary['656']" :key="item.key" :label="item.value" :value="item.key"></el-option>
           </el-select>
@@ -127,8 +127,22 @@
   import {MIXINS} from "@/assets/js/mixins";
 
   export default {
-    name: "company",
+    name: "aplTime",
     mixins: [MIXINS],
+    props: {
+        systemArr: {
+            type: Array,
+            default: function() {
+                return []
+            }
+        },
+        systemOpt: {
+            type: Array,
+            default: function() {
+                return []
+            }
+        }
+    },
     data() {
       return {
         // 搜索表单中的数据
@@ -162,7 +176,6 @@
       }
     },
     created(){
-      this.getSystemTag()
       this.getDictionary()
       var param={
         cityId:this.cityInfo2.cityId,

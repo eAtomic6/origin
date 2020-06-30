@@ -11,12 +11,11 @@ const contraPreview = () => import('@/pages/setting/contraPreview')
 const postProcess = () => import('@/pages/setting/postProcess')
 const Company = () => import('@/pages/setting/company')
 const moneyType = () => import('@/pages/setting/moneyType')
-const aplTime = () => import('@/pages/setting/aplTime')
+const ruleSetting = () => import('@/pages/setting/ruleSetting')
 const operationLog = () => import('@/pages/setting/operationLog')
 const approvalProcess = () => import('@/pages/setting/approvalProcess')
-const lowCommission = () => import('@/pages/setting/lowCommission')
 const commission = () => import('@/pages/setting/commission')
-const commissionDialog = () => import('@/pages/setting/commissionDialog')
+const commissionOff = () => import('@/pages/setting/commissionOff')
 
 //票据管理
 const paperSet = () => import('@/pages/finance/paperSet')
@@ -29,7 +28,7 @@ const postReceive = () => import('@/pages/postSigning/postReceive')
 //业绩模块
 const actualAchievement = () => import('@/pages/achievement/actualAchievement')
 const receivableAchievement = () => import('@/pages/achievement/receivableAchievement')
-const storeReceive = () => import('./../pages/achievement/storeReceive.vue')
+const storeReceive = () => import('@/pages/achievement/storeReceive.vue')
 const achPage = () => import('@/pages/achievement/achPage')
 const achDetial = () => import('@/pages/achievement/achDetial')
 const achAppeal = () => import('@/pages/achievement/achAppeal')
@@ -44,6 +43,9 @@ const payBill = () => import('@/pages/finance/payBill')
 const payResult = () => import('@/pages/finance/payResult')
 const receiptBill = () => import('@/pages/finance/receiptBill')
 const receiptResult = () => import('@/pages/finance/receiptResult')
+const receiptCheck = () => import('@/pages/finance/receiptCheck')
+const receiptBill_simple = () => import('@/pages/finance/receiptBill_simple')
+const receiptBillDetails = () => import('@/pages/finance/receiptBillDetails')
 
 // 合同模块
 const newIntention = () => import("@/pages/contract/contractList/newIntention")
@@ -63,15 +65,27 @@ const contractCheck = () => import("@/pages/contract/contractList/contractCheck"
 const debitRecord = () => import("@/pages/contract/contractList/debitRecord");
 const routingRemitDetail = () => import("@/pages/contract/contractList/routingRemitDetail");
 const extendParams = () => import("@/pages/contract/contractList/extendParams");
+//其他类型合同
+const otherContractList = () => import("@/pages/contract/otherContract/otherContractList")
+const addOtherContract = () => import("@/pages/contract/otherContract/addOtherContract")
+const otherContractDetail = () => import("@/pages/contract/otherContract/otherContractDetail")
+//变更解约审核
+const changeCheck = () => import("@/pages/contract/contractList/changeCheck")
+const cancelCheck = () => import("@/pages/contract/contractList/cancelCheck")
+//合同主体签后审核
+const signedCheck = () => import("@/pages/contract/contractList/signedCheck")
 
 const Login = () => import("@/login")
 const iframTest = () => import("@/pages/iframe/iframeTest")
 
+//记账本
+const ledger = () => import("@/pages/ledger/ledgerDetails")
+const errorMsg = () => import("@/errorMsg")
+
 // Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
+  routes: [{
       path: "/",
       component: Index,
       redirect: "/login",
@@ -82,7 +96,7 @@ export default new Router({
           component: contractTemplate,
           meta: {
             root: true,
-            list: ["设置", "合同模板设置"]
+            list: ["设置", "后台设置", "合同模板设置"]
           }
         },
         {
@@ -94,7 +108,7 @@ export default new Router({
           component: postProcess,
           meta: {
             root: true,
-            list: ["设置", "后期流程设置"]
+            list: ["设置", "业务设置", "后期流程设置"]
           }
         },
         {
@@ -102,7 +116,7 @@ export default new Router({
           component: Company,
           meta: {
             root: true,
-            list: ["设置", "公司设置"]
+            list: ["设置", "业务设置", "公司设置"]
           }
         },
         {
@@ -110,23 +124,15 @@ export default new Router({
           component: moneyType,
           meta: {
             root: true,
-            list: ["设置", "款类设置"]
+            list: ["设置", "后台设置", "款类设置"]
           }
         },
         {
-          path: "aplTime",
-          component: aplTime,
+          path: "ruleSetting",
+          component: ruleSetting,
           meta: {
             root: true,
-            list: ["设置", "业绩申诉有效时间"]
-          }
-        },
-        {
-          path: "operationLog",
-          component: operationLog,
-          meta: {
-            root: true,
-            list: ["设置", "操作日志"]
+            list: ["设置", "业务设置", "规则设置"]
           }
         },
         {
@@ -134,15 +140,7 @@ export default new Router({
           component: approvalProcess,
           meta: {
             root: true,
-            list: ["设置", "审核流程"]
-          }
-        },
-        {
-          path: "lowCommission",
-          component: lowCommission,
-          meta: {
-            root: true,
-            list: ["设置", "低佣比例设置"]
+            list: ["设置", "业务设置", "审核流程"]
           }
         },
         {
@@ -150,23 +148,61 @@ export default new Router({
           component: commission,
           meta: {
             root: true,
-            list: ["设置", "手续费设置"]
+            list: ["手续费设置"]
           }
         },
         {
-          path: "commissionDialog",
-          component: commissionDialog,
+          path: "commissionOff",
+          component: commissionOff,
           meta: {
-            getParent: true
+            root: true,
+            list: ["设置", "后台设置", "线下手续费设置"]
           }
         },
         //设置模块 end
+        //操作模块 start
+        {
+          path: "operationLog",
+          component: operationLog,
+          meta: {
+            root: true,
+            list: ["操作日志"]
+          }
+        },
+        //操作模块 end
+        // 票据管理
+        {
+          path: "paperSet",
+          component: paperSet,
+          meta: {
+            root: true,
+            list: ["二手房", "财务", "票据管理"]
+          }
+        },
+        //分账记录
+        {
+          path: "routingRecord",
+          component: routingRecord,
+          meta: {
+            root: true,
+            list: ["二手房", "财务", "分账记录"]
+          }
+        },
+        //打款记录
+        {
+          path: "debitRecord",
+          component: debitRecord,
+          meta: {
+            root: true,
+            list: ["二手房", "财务", "打款记录"]
+          }
+        },
         {
           path: "actualHarvest",
           component: actualHarvest,
           meta: {
             root: true,
-            list: ["财务", "应收实收"]
+            list: ["二手房", "财务", "应收实收"]
           }
         },
         {
@@ -176,13 +212,21 @@ export default new Router({
             root: true
           }
         },
+        {
+          path: "receiptCheck",
+          component: receiptCheck,
+          meta: {
+            root: true,
+            list: ["财务", "收款审核"]
+          }
+        },
         // 业绩板块
         {
           path: "actualAchievement",
           component: actualAchievement,
           meta: {
             root: true,
-            list: ["业绩", "应收业绩"]
+            list: ["二手房", "业绩", "应收业绩"]
           }
         },
         {
@@ -190,7 +234,7 @@ export default new Router({
           component: achAppeal,
           meta: {
             root: true,
-            list: ["业绩", "业绩申诉审核"]
+            list: ["二手房", "业绩", "业绩申诉审核"]
           }
         },
         {
@@ -214,7 +258,7 @@ export default new Router({
           component: receivableAchievement,
           meta: {
             root: true,
-            list: ["业绩", "结算业绩"]
+            list: ["二手房", "业绩", "结算业绩"]
           }
         },
         {
@@ -222,7 +266,7 @@ export default new Router({
           component: storeReceive,
           meta: {
             root: true,
-            list: ["业绩", "业绩报表"]
+            list: ["二手房", "业绩", "业绩报表"]
           }
         },
         // 业绩板块 end
@@ -231,7 +275,7 @@ export default new Router({
           component: Bill,
           meta: {
             root: true,
-            list: ["财务", "收付款单"]
+            list: ["二手房", "财务", "收付款单"]
           }
         },
         {
@@ -263,7 +307,7 @@ export default new Router({
           component: adjustCheck,
           meta: {
             root: true,
-            list: ["合同", "调佣审核"]
+            list: ["二手房", "合同", "调佣审核"]
           }
         },
         {
@@ -271,7 +315,7 @@ export default new Router({
           component: settleCheck,
           meta: {
             root: true,
-            list: ["合同", "结算审核"]
+            list: ["二手房", "合同", "结算审核"]
           }
         },
         {
@@ -293,6 +337,20 @@ export default new Router({
           }
         },
         {
+          path: "receiptBill_simple",
+          component: receiptBill_simple,
+          meta: {
+            getParent: true
+          }
+        },
+        {
+          path: "receiptBillDetails",
+          component: receiptBillDetails,
+          meta: {
+            getParent: true
+          }
+        },
+        {
           path: "receiptResult",
           component: receiptResult
         },
@@ -301,16 +359,7 @@ export default new Router({
           component: contractList,
           meta: {
             root: true,
-            list: ["合同", "合同列表"]
-          }
-        },
-        // 票据管理
-        {
-          path: "paperSet",
-          component: paperSet,
-          meta: {
-            root: true,
-            list: ["财务", "票据管理"]
+            list: ["二手房", "合同", "合同列表"]
           }
         },
         // 签后
@@ -319,7 +368,7 @@ export default new Router({
           component: postReceive,
           meta: {
             root: true,
-            list: ["签后", "后期接收"]
+            list: ["二手房", "签后", "后期接收"]
           }
         },
         {
@@ -327,7 +376,7 @@ export default new Router({
           component: postManage,
           meta: {
             root: true,
-            list: ["签后", "后期管理"]
+            list: ["二手房", "签后", "后期管理"]
           }
         },
         {
@@ -335,7 +384,7 @@ export default new Router({
           component: postMonitor,
           meta: {
             root: true,
-            list: ["签后", "后期监控"]
+            list: ["二手房", "签后", "后期监控"]
           }
         },
         //新增合同
@@ -353,36 +402,40 @@ export default new Router({
           path: "contractPreview",
           component: contractPreview
         },
-        //分账记录
-        {
-          path: "routingRecord",
-          component: routingRecord,
-          meta: {
-            root: true,
-            list: ["财务", "分账记录"]
-          }
-        },
-        //打款记录
-        {
-          path: "debitRecord",
-          component: debitRecord,
-          meta: {
-            root: true,
-            list: ["财务", "打款记录"]
-          }
-        },
         //合同审核
         {
           path: "contractCheck",
           component: contractCheck,
           meta: {
             root: true,
-            list: ["合同", "合同审核"]
+            list: ["二手房", "合同", "合同审核"]
+          }
+        },
+        //合同主体审核
+        {
+          path: "signedCheck",
+          component: signedCheck,
+          meta: {
+            root: true,
+            list: ["二手房", "合同", "签后审核"]
+          }
+        },
+        //变更解约审核
+        {
+          path: "changeCheck",
+          component: changeCheck,
+          meta: {
+            root: true,
+            list: ["二手房", "合同", "变更审核"]
           }
         },
         {
-          path: "login",
-          component: Login
+          path: "cancelCheck",
+          component: cancelCheck,
+          meta: {
+            root: true,
+            list: ["二手房", "合同", "解约审核"]
+          }
         },
         //分账/打款详情
         {
@@ -397,7 +450,43 @@ export default new Router({
         {
           path: 'iframe',
           component: iframTest
-        }
+        },
+        //其他合同列表
+        {
+          path: "otherContractList",
+          component: otherContractList,
+          meta: {
+            root: true,
+            list: ["合同", "合同列表"]
+          }
+        },
+        //新增
+        {
+          path: "addOtherContract",
+          component: addOtherContract,
+        },
+        //详情
+        {
+          path: "otherContractDetail",
+          component: otherContractDetail,
+        },
       ]
-    }]
+    },
+    {
+      path: "/login",
+      component: Login
+    },
+    {
+      path: "/ledger",
+      component: ledger
+    },
+    {
+      path: "/error",
+      component: errorMsg
+    },
+    {
+      path: "/choseCont",
+      component: resolve => require(["@/pages/contract/contractList/choseCont"], resolve)
+    }
+  ]
 });

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+     <link rel="stylesheet" href="/datepicker.css"/>
+    <title>wh新代办</title>
+    <style>
+        body{
+            font-family: SimHei;
+        }
+        .alert-viwer{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            padding: 10px;
+            border-radius: 4px;
+            background: #fff;
+            z-index: 999;
+            box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+        .alert-viwer>textarea{
+
+            background: #fff;
+            border: 1px solid #dcdfe6;
+        }
+        .alert-viwer>p{
+            text-align: right;
+            margin: 6px 0 0;
+            padding: 0;
+            line-height: normal;
+        }
+        .alert-viwer>p>span{
+            display: inline-block;
+            background: #409eff;
+            padding: 6px 12px;
+            color: #FFFFFF;
+            border-radius: 4px;
+        }
+        .alert-viwer>p>span:last-of-type{
+            background: #fff;
+            color: #606266;
+            border: 1px solid #dcdfe6;
+        }
+        span[tag='input-auto']{
+            border-bottom: 1px solid gray;
+            padding: 2px 10px;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+        span[tag='input-auto'].input-before:before{
+            content:'请输入';
+            text-align: center;
+            color: #a1a1a1;
+        }
+        span[tag='input-auto'].input-title:before{
+            content:'请输入';
+            text-align: left;
+            color: #a1a1a1;
+            display: inline-block;
+            width: 665px;
+        }
+        span[tag='input-auto'].input-title1:before{
+            content:'请输入';
+            text-align: left;
+            color: #a1a1a1;
+            display: inline-block;
+            width: 590px;
+        }
+        .container{
+            position: relative;
+            font-size: 16px;
+            width: 840px;
+            box-sizing: border-box;
+            padding:0 40px;
+            margin: 0 auto;
+        }
+        .BODERRED{
+            border-color: red !important;
+        }
+        .WARNING{
+            color:red;
+        }
+        .fontsmall{
+            font-size: 12px;
+        }
+        .bold{
+            font-weight: bold;
+        }
+        .title-p{
+            text-align: center;
+            font-size:20px;
+            font-weight:bold;
+        }
+        p, div {
+            margin: 0px;
+            padding: 0px;
+            line-height: 1.8;
+        }
+        input{
+            border:0;
+            outline:none;
+            border-bottom:1px solid gray;
+            font-family: SimHei;
+        }
+        input[type="checkbox"]{
+            border:0px;
+        }
+        .sign-pos {
+            margin-bottom: 20px;
+        }
+        .sign-pos span {
+            display: inline-block;
+            width: 250px;
+        }
+        .sign-date p {
+            display: inline-block;
+            width: 248px;
+            padding-left: 50px;
+            box-sizing: border-box;
+        }
+        .sign-date p span:nth-child(2) {
+            margin: 0 30px;
+        }
+        .info-checkbox{
+            display: inline;
+            cursor: pointer;
+        }
+        .info-checkbox>p[type="check"]{
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border: 1px solid;
+            position: relative;
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+            margin: 0;
+        }
+        .info-checkbox>p[type="check"][checked='true']:before{
+            content:'';
+            position: absolute;
+            display: inline-block;
+            width: 100%;
+            height: 10px;
+            left: 0;
+            background-size: contain;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVQ4T72TsUvDQBjF33cYUhfFP0GIVO7S1cXJxU3sIqiLuHSyOIg4Cro4OBW3jJ10EhcRdHcw2901f0BWh04OmvskpZVYqjYEvPl9v3v3vneEiocqzuP/AY1GY9k5F2VZ1kyS5LWUAynlihDigZnnmblprb2bGhCG4TqAWwCzzNwyxkR5fgNAEARzvu8fGWPOAXyMB6uU2iaiLoAZ51zbWns10gwAUsotIcQNM9/XarXNOI7fRwIp5QERdYiInHOn1tqz4gVfTwjDsAOgzcxP/X5/I03TN6XUBRGdDAcutdbH4+6KGQil1CMRrQF4BtADsJ8PMHNkjGlN6sy3EIdZvBDRUkHc1Vrv5Zw/AbmgXq8vep4XA1gAcK213gXgfmrsxDUqpVaJ6FBrvQMg+63uU/eglIMyH6yyg0+YpmgRBNEBzgAAAABJRU5ErkJggg==");
+        }
+        .info-checkbox>p[type="check"][checked='false']:after{
+            content:'';
+            position: absolute;
+            display: inline-block;
+            width: 100%;
+            height: 10px;
+            background-size: contain;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABdklEQVQ4T42TvUrEQBSFz1kt1BewU8QnSJ5gu0mrsGDjRAt/UVBBWRtdsdgVBBdcFBHFZK0U+8TKwkIsEt/Ffq9M9se4GzVTDZM5X865dy5tpd8EeIlDv4z8i7ajGwCmaSt3D8QJBPUo9LZzMIzmBsQiIKs0AsuZLxOFah6IrdxbI5YW1uNn7zIBmGU7ugLwUCC1OPD3s5xYyr0gsdYVmzs9QNuJrhIsA1KJAv8oDemKIa3tKGzWu99+ABInyj0DsSVo7cdBs5Y+6xcPOOjF6UCMAChMGmCW+FdAEqeT1+zTbvprMxChe8FS+pzkRgIQOY5D/yCrsFkA2kpfgVwyf6YUxpMIkNMo8Hf/c0BLuXckdFYRRaQRh/5mGvLtoFQasj7H7gnM/d1GuY5Cf/lnG0ulIftz9BHgTJ6HBEkgK6Y8RLE4bI9MPPwnTrW4/ZQFfhx6C7SUfiI5m2cOOpDvYRK5puW47wK8fgTeTo5J7EW3lPZITH0B+X227Y6+aJ4AAAAASUVORK5CYII=");
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        input[type="number"]{
+            -moz-appearance: textfield;
+        }
+        .page1 {
+          break-before: page;
+          page-break-before: always;
+        }
+        /* @page {
+            size: 955px 1350px;
+        } */
+
+        /* 封面样式 */
+        .cover-box {
+          position: relative;
+        }
+        .cover-box img {
+          width: 100%;
+        }
+        .cover-box .cover-code {
+            position: absolute;
+          top: 58px;
+          right: -64px;
+          border: 0;
+          font-size: 20px;
+        }
+
+        /* 签约提示 第一第二页样式 */
+        .config-content {
+          margin-bottom: 100px;
+        }
+        .config-content h2 {
+            text-align: center;
+        }
+        .config-content p{
+            margin: 4px 0;
+        }
+        .config-content ul{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .config-content .font-strong{
+            font-weight: bold;
+        }
+        .config-content .font-underline{
+            text-decoration: underline;
+        }
+        .config-content .page-two .remarks{
+            overflow: hidden;
+            font-size: 16px;
+            line-height: 1.2;
+        }
+        /*确认表样式*/
+        .config-content .table-check{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .config-content .table-check ul.input-list>li{
+            text-align: right;
+            white-space: nowrap;
+        }
+        .config-content .table-check ul.input-list>li:after{
+            content:'';
+            display: inline-block;
+            margin-left: 4px;
+            width: 80px;
+            border-bottom: 1px solid #000000;
+        }
+        /*输入框伪类*/
+        .input-after:after{
+            content:'';
+            display: inline-block;
+            margin-left: 4px;
+            width: 80px;
+            border-bottom: 1px solid #000000;
+        }
+        i.white-space{
+            display: inline-block;
+            width: 40px;
+        }
+        p.dot-line{
+            border-bottom: 1px dashed;
+            padding-bottom: 20px;
+        }
+
+        /* 签约提示 第三页样式 */
+        .config-content .page-three p {
+            line-height: 1.2;
+        }
+        .page-three .text-indent-48 {
+            text-indent: 48px;
+        }
+        .page-three .table-style{
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .page-three .table-style tr td:first-child {
+            text-align: center;
+            width: 80px;
+        }
+        .page-three .input-100 input {
+            width: 100px;
+        }
+        .page-three .h-40 {
+            height: 40px;
+        }
+        .page-three .w-70 {
+            width: 70px;
+        }
+        .page-three .w-200 {
+            width: 200px;
+        }
+        .page-three .pl-10 {
+            padding-left: 10px;
+        }
+        .page-three .notice-line {
+            padding: 10px 0;
+            border-bottom: 1px dashed;
+        }
+        .sign-bottom {
+            overflow: hidden;
+        }
+        .sign-bottom >li {
+            margin: 10px;
+        }
+        .sign-bottom >li:first-child {
+            float: left;
+            margin-left: 50px;
+        }
+        .sign-bottom >li:last-child {
+            float: right;
+            margin-right: 200px;
+        }
+        .date-bottom {
+            padding-right: 210px;
+            text-align: right;
+        }
+        .date-bottom .mr-20 {
+            margin-right: 20px;
+        }
+        /* 旧封面 */
+        .cover-fm {
+        margin-top: 50px;
+        }
+        .cover-fm img{
+            width: 140px;
+        }
+        .fl-r {
+            float: right;
+            margin-right: 60px;
+            margin-top: 8px;
+            font-size: 24px;
+        }
+        .fl-r input {
+            border: 0;
+        }
+        .cover-fm .msg {
+            text-align: center;
+            color: #4C7619;
+            font-size: 80px;
+            font-weight: bold;
+            margin-top: 350px;
+        }
+        .cover-fm .msg p {
+            line-height: 1.3;
+        }
+        .pageone-table tr td {
+          height: 40px;
+          padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="alert-viwer" style="display: none;">
+            <textarea id="inputArea" cols="30" rows="4"></textarea>
+            <p class="control-btn">
+                <span>保存</span>
+                <span>取消</span>
+            </p>
+        </div>
+
+        <p class="title-p">存量房委托合同(代办)</p>
+        <p style="text-align:right;">合同编号:<input systemParam="code" readonly="readonly" type="text" class="text-limit" value="" tag="input" style="width:150px;margin-right:50px;           margin-top:20px;margin-bottom:20px;"/></p>
+        <p>甲方（卖方）：<span systemParam="ownerName" tag="input-auto"></span></p>
+        <p>证件号码：<span systemParam="ownerID" tag="input-auto"></span></p>
+        <p>地  址：<span systemParam="propertyAddr" tag="input-auto"></span></p>
+        <p>电  话：<span systemParam="ownerTel" tag="input-auto"></span></p>
+
+        <p style="margin-top:10px">乙方（买方）：<span systemParam="guestName" tag="input-auto"></span></p>
+        <p>证件号码：<span systemParam="guestID" tag="input-auto"></span></p>
+        <p>地  址：<span tag="input-auto" extendParam="val8" class="text-limit input-before"></span></p>
+        <p>电  话：<span systemParam="guestTel" tag="input-auto"></span></p>
+
+        <p style="margin-top:10px;position:relative;"><img class="SignatureLocation" style="position:absolute;left:130px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" />
+        丙方（中介方）：<span extendParam="val10" systemParam="companyNames" tag="input-auto" company="true"></span></p>
+        <p>地  址：<span extendParam="val11" tag="input-auto" class="text-limit input-before"></span></p>
+        <p>电  话：<span extendParam="val12" listen="number" max="11" class="text-limit input-before" tag="input-auto"></span></p>
+
+        <p style="text-indent:32px;margin-top:10px">
+            乙方购买甲方位于 <span systemParam="propertyAddr" tag="input-auto"></span>的房屋，房屋所有权证/不动产权证书编号：<span extendParam="val14" type="text" tag="input-auto" class="text-limit input-before"></span>，双方自行成交需办理房产交易相关手续，现委托丙方协助办理后续交易事宜，协议如下：
+        </p>
+        <div style="text-indent:32px;">
+            第一条、甲乙双方委托丙方办理
+            <div class="info-checkbox" name="handle"><p type="check"></p>房屋产权过户手续</div>
+            <div class="info-checkbox" name="handle"><p type="check"></p>住房按揭贷款手续</div>。（请在对应选项勾选“√”）
+        </div>
+        <p style="text-indent:32px;">
+            第二条、房产交易所涉及产权、房款及付款、房屋交接等相关交易事项，甲乙双方需另行签订房屋买卖合同，如双方怠于签署或未签署造成损失的由双方自行承担。三方明确，丙方对《房屋买卖合同》所产生的风险不负任何责任。
+        </p>
+        <p style="text-indent:32px;">
+            第三条、甲乙双方应按照丙方要求及时提供办理后期手续所需的真实、完整的证件与资料，并在手续办理过程中积极配合丙方的工作。具体时间为甲乙双方在本合同签订之日起<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val15"></span>日内提供所需资料（资料清单附后）给丙方，丙方在双方资料提供完整后<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val16"></span>日内陪同双方到相关机构办理手续。
+        </p>
+        <p style="text-indent:32px;">
+            第四条、如因甲、乙双方自身原因导致相关手续不能完成或不能按时完成，丙方对此不负任何责任，且对受委托的事项已发生的费用不予退还。
+        </p>
+        <div style="text-indent:32px;">
+            第五条、经三方协商，在签订本协议时，由
+            <div class="info-checkbox" name="pay"><p type="check"></p>甲方</div>
+            <div class="info-checkbox" name="pay"><p type="check"></p>乙方</div> 支付丙方服务费人民币<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val17"></span>元整。（请在对应选项勾选“√”）
+        </div>
+        <p style="text-indent:32px;">
+            第六条、本合同一式叁份，甲、乙、丙三方各执壹份，各份均具同等法律效力。
+        </p>
+
+        <p style="margin-top:20px;position:relative" class="sign">
+            <img class="SignatureLocation" style="position:absolute;left:550px;top:-20px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" />
+            <p class="sign-pos"><span>甲方（签字）：</span><span>乙方（签字）：</span><span>丙方（签字）：</span></p>
+            <div class="sign-date">
+                <p><span>年</span><span>月</span><span>日</span></p>
+                <p><span>年</span><span>月</span><span>日</span></p>
+                <p><span>年</span><span>月</span><span>日</span></p>
+            </div>
+        </p>
+
+        <!-- 第二页 -->
+        <p class="page1">附件：资料清单</p>
+        <div style="text-indent:20px;">甲方需提供资料：
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="owner" menu="01" more="true"><p type="check"></p> 夫妻双方身份证复印件</div>  <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" id="menu01" systemParam="true" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="owner" menu="02" more="true"><p type="check"></p> 夫妻双方户口本复印件</div>  <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" id="menu02" systemParam="true" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="owner" menu="03" more="true"><p type="check"></p> 结婚证复印件</div>  <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" id="menu03" systemParam="true" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="owner" menu="04" more="true"><p type="check"></p> 配偶或产权共有人同意转让证明</div>  <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" id="menu04" systemParam="true" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="owner" menu="05" more="true"><p type="check"></p> 房屋产权证</div>   <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" id="menu05" systemParam="true" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="owner" menu="06" more="true"><p type="check"></p> 国有土地使用证</div>   <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" id="menu06" systemParam="true" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="owner" menu="07" more="true"><p type="check"></p> 承租人同意转让证明</div>  <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" id="menu07" systemParam="true" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="owner" menu="08" more="true"><p type="check"></p> 离婚复印件或婚姻状况证明</div>  <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" id="menu08" systemParam="true" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;">
+              <div class="info-checkbox" name="owner" menu="09" more="true"><p type="check"></p> 其他</div>
+              <span tag="input-auto" listen="number" id="menu09" systemParam="true" class="text-limit input-before"></span>
+            </div>
+
+            <p style="text-indent:20px;">乙方需提供资料：</p>
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="guest" menu="10" more="true"><p type="check"></p> 身份证复印件</div>   <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" id="menu10" systemParam="true" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="guest" menu="11" more="true"><p type="check"></p> 户口本复印件</div>   <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" id="menu11" systemParam="true" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="guest" menu="12" more="true"><p type="check"></p> 经济收入证明</div>   <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" id="menu12" systemParam="true" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="guest" menu="13" more="true"><p type="check"></p> 流动人口婚姻证明复印件</div>    <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" systemParam="true" id="menu13" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;"> <div class="info-checkbox" name="guest" menu="14" more="true"><p type="check"></p> 计划生育许可证复印件</div>   <span style="float:right;margin-right:300px;">（<span tag="input-auto" listen="number" systemParam="true" id="menu14" class="text-limit input-before"></span>份）</span></div>
+
+            <div style="padding:5px 0 5px 20px;">
+              <div class="info-checkbox" name="guest" menu="15" more="true"><p type="check"></p> 其他</div>
+              <span tag="input-auto" listen="number" id="menu15" systemParam="true" class="text-limit input-before"></span></div>
+        </div>
+    </div>
+</body>
+ <script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+<script type="text/javascript" src="/js/bundle_db_wh20191210.js"></script>
+<!--<script>
+    (function () {
+       var scriptList = document.getElementsByTagName("script")
+       console.log(scriptList)
+       if(!scriptList[0].src){
+           var host='https://sign2.jjw.com'
+           var host_other="http://sign2.jjw.com:28879"
+           var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_db20190402.js","datepicker.css"]
+           for (let i = 0; i < addrList.length; i++) {
+           if(window.location.host==='localhost:8080'){
+               if(addrList[i].indexOf('bundle')>-1){
+                   // addrList[i]=host_other+'/'+addrList[i]
+                   addrList[i]="./new-wh-db.js"
+               }else{
+                   addrList[i]=host_other+'/'+addrList[i]
+               }
+           }else{
+               addrList[i]='/'+addrList[i]
+           }
+           if(addrList[i].indexOf('.css')>-1){
+               var hm = document.createElement("link");
+               hm.rel="stylesheet"
+               hm.href = addrList[i];
+               // var s = document.getElementsByTagName("link")[0];
+               // s.parentNode.insertBefore(hm,s);
+               document.head.appendChild(hm);
+           }else{
+               var hm = document.createElement("script");
+               addrList[i].includes('new-wh-db')&&(hm.type = 'module');
+               hm.src = addrList[i];
+               var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+               s.parentNode.insertBefore(hm,s);
+           }
+       }
+   }
+   })();
+</script>-->
+</html>

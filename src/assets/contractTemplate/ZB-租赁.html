@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <link rel="stylesheet" href="/datepicker.css"/>
+  <title>淄博租赁合同</title>
+  <style>
+    body{
+      font-family: SimHei;
+    }
+    p{
+      margin: 0px;
+      padding: 0px;
+      line-height: 1.8;
+    }
+    input{
+      border: 0;
+      outline: none;
+      border-bottom: 1px solid gray;
+      height: 16px;
+      padding-left: 10px;
+      box-sizing: border-box;
+      font-family: SimHei;
+      font-size: 16px;
+    }
+    input:disabled{
+      background-color: #fff;
+    }
+    input[type="checkbox"]{
+      border:0px;
+    }
+    /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+      -webkit-appearance: none !important;
+    }
+    input[type="number"]{-moz-appearance:textfield;}
+    ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .BODERRED{
+      border-color: red !important;
+    }
+    .modal{
+      position: relative;
+    }
+    .modal:before{
+      content: '';
+      z-index: 50;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+    .cw_content{
+      position: relative;
+      font-size: 16px;
+      width: 840px;
+      box-sizing: border-box;
+      padding:0 40px;
+      margin: 0 auto;
+    }
+    .fontBold{
+      font-weight: bold;
+    }
+    .cw_content .title{
+      font-size: 20px;
+      text-align: center;
+    }
+    .code{
+      padding-left: 500px;
+      box-sizing: border-box;
+      margin: 10px 0;
+    }
+    .cw_message{
+      /*padding: 5px 30px;*/
+    }
+    .cw_message>ul:nth-child(-n+5){
+      margin-bottom: 5px;
+    }
+    .cw_message>ul>li{
+      display: inline-block;
+      min-width: 45%;
+      line-height: 1.5;
+    }
+    .cw_agreement{
+      text-indent: 32px;
+    }
+    .nav{
+      position: absolute;
+      right: 0;
+      top: 0;
+      visibility: hidden;
+    }
+    .nav ul a{
+      text-decoration: none;
+      color: #000;
+    }
+
+    /* 胡劲草样式 */
+    .contanier {
+      width: 840px;
+      margin: 0 auto;
+      padding: 0px 40px;
+      box-sizing: border-box;
+    }
+    .paragraph[name='text-indent'] p{
+      text-indent: 32px;
+    }
+    .p-indent{
+      text-indent: 0 !important;
+    }
+    .contanier .color-red p{
+      color: red;
+    }
+    .red{
+      color:red;
+    }
+    .contanier .ulbox ul li,.htbox{
+      font-weight: bold;
+    }
+    .htbox{
+      margin-top: 20px;
+      clear: both;
+    }
+    .contanier .ulbox{
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .contanier .ulbox li.fl{
+      float: left;
+    }
+    .contanier .ulbox li{
+      float: left;
+      width: 50%;
+      margin-bottom: 10px;
+    }
+    .contanier .ulbox li input{
+      max-width: initial;
+      width: inherit;
+    }
+    .tablestyle{
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .tablestyle tr td {
+      height: 25px;
+    }
+    .tablestyle .item>td:first-child {
+      width: 45px;
+    }
+    .tablestyle .is-can span:first-child {
+      margin-right: 30px;
+    }
+    .tablestyle .w-100 td:first-child {
+      width: 100px;
+    }
+    .tablestyle .w-100 td:last-child {
+      width: 200px;
+    }
+    .textleft{
+      text-align: left;
+    }
+    .textcenter{
+      text-align: center;
+    }
+    .textright{
+      text-align: right;
+    }
+    .mt60{
+      margin-top: 60px;
+      margin-bottom: 10px;
+    }
+    .bold{
+      font-weight: bold;
+    }
+    .lingH18{
+      line-height:1.8;
+    }
+    .padL25{
+      padding-left:25px;
+    }
+    .info-checkbox{
+      display: inline;
+      cursor: pointer;
+      text-indent: 0px;
+      line-height: 1;
+    }
+    .info-checkbox>p[type="check"]{
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 1px solid gray;
+      position: relative;
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+      margin: 0;
+    }
+    .info-checkbox>p[type="check"][checked='true']:before{
+      content:'';
+      position: absolute;
+      left: 0;
+      display: inline-block;
+      width: 100%;
+      height: 10px;
+      background-size: contain;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVQ4T72TsUvDQBjF33cYUhfFP0GIVO7S1cXJxU3sIqiLuHSyOIg4Cro4OBW3jJ10EhcRdHcw2901f0BWh04OmvskpZVYqjYEvPl9v3v3vneEiocqzuP/AY1GY9k5F2VZ1kyS5LWUAynlihDigZnnmblprb2bGhCG4TqAWwCzzNwyxkR5fgNAEARzvu8fGWPOAXyMB6uU2iaiLoAZ51zbWns10gwAUsotIcQNM9/XarXNOI7fRwIp5QERdYiInHOn1tqz4gVfTwjDsAOgzcxP/X5/I03TN6XUBRGdDAcutdbH4+6KGQil1CMRrQF4BtADsJ8PMHNkjGlN6sy3EIdZvBDRUkHc1Vrv5Zw/AbmgXq8vep4XA1gAcK213gXgfmrsxDUqpVaJ6FBrvQMg+63uU/eglIMyH6yyg0+YpmgRBNEBzgAAAABJRU5ErkJggg==");
+    }
+    .info-checkbox>p[type="check"][checked='false']:after{
+      content:'';
+      position: absolute;
+      display: inline-block;
+      width: 100%;
+      height: 10px;
+      background-size: contain;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABdklEQVQ4T42TvUrEQBSFz1kt1BewU8QnSJ5gu0mrsGDjRAt/UVBBWRtdsdgVBBdcFBHFZK0U+8TKwkIsEt/Ffq9M9se4GzVTDZM5X865dy5tpd8EeIlDv4z8i7ajGwCmaSt3D8QJBPUo9LZzMIzmBsQiIKs0AsuZLxOFah6IrdxbI5YW1uNn7zIBmGU7ugLwUCC1OPD3s5xYyr0gsdYVmzs9QNuJrhIsA1KJAv8oDemKIa3tKGzWu99+ABInyj0DsSVo7cdBs5Y+6xcPOOjF6UCMAChMGmCW+FdAEqeT1+zTbvprMxChe8FS+pzkRgIQOY5D/yCrsFkA2kpfgVwyf6YUxpMIkNMo8Hf/c0BLuXckdFYRRaQRh/5mGvLtoFQasj7H7gnM/d1GuY5Cf/lnG0ulIftz9BHgTJ6HBEkgK6Y8RLE4bI9MPPwnTrW4/ZQFfhx6C7SUfiI5m2cOOpDvYRK5puW47wK8fgTeTo5J7EW3lPZITH0B+X227Y6+aJ4AAAAASUVORK5CYII=");
+    }
+    .page1 {
+      break-before: page;
+      page-break-before: always;
+    }
+    span[tag='input-auto']{
+      border-bottom: 1px solid gray;
+      padding: 2px 10px;
+      word-break: break-all;
+      word-wrap: break-word;
+    }
+    span[tag='input-auto'].input-before:before{
+      content:'请输入';
+      text-align: center;
+      color: #a1a1a1;
+    }
+    span[tag='input-auto'].input-before.input-select:before{
+      content:'请选择';
+      text-align: center;
+      color: #a1a1a1;
+    }
+    .alert-viwer{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      padding: 10px;
+      border-radius: 4px;
+      background: #fff;
+      z-index: 999;
+      box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    }
+    .alert-viwer>textarea{
+      background: #fff;
+      border: 1px solid #dcdfe6;
+    }
+    .alert-viwer>p{
+      text-align: right;
+      margin: 6px 0 0;
+      padding: 0;
+      line-height: normal;
+    }
+    .alert-viwer>p>span{
+      display: inline-block;
+      background: #409eff;
+      padding: 6px 12px;
+      color: #FFFFFF;
+      border-radius: 4px;
+    }
+    .alert-viwer>p>span:last-of-type{
+      background: #fff;
+      color: #606266;
+      border: 1px solid #dcdfe6;
+    }
+    .txt-size{
+      font-size: 14px;
+      font-weight: normal;
+    }
+    .sign span{
+      display: inline-block;
+      width: 25%;
+      margin-top: 40px;
+      text-indent: 0px;
+    }
+    .signDate{
+      margin-right: 100px;
+      text-align: right;
+    }
+    .signDate i{
+      width: 50px;
+      display: inline-block;
+    }
+    .sign {
+      margin: 10px 0;
+    }
+    .sign > ul:first-child {
+      margin-bottom: 15px;
+    }
+    .sign ul li {
+      width: 48%;
+      display: inline-block;
+    }
+    .signDate_next{
+      margin-right: 100px;
+      text-align: right;
+    }
+    .signDate_next i{
+      display: inline-block;
+      width: 100px;
+    }
+    @page {
+      size: 955px 1350px;
+    }
+  </style>
+</head>
+<body>
+<span id="submit" style="position: absolute;top: -1000px;z-index: 0;">click</span>
+<div class="cw_content container">
+  <div class="alert-viwer" style="display: none;">
+    <textarea id="inputArea" cols="30" rows="4"></textarea>
+    <p class="control-btn">
+      <span>保存</span>
+      <span>取消</span>
+    </p>
+  </div>
+  <div class="page_one">
+    <div class="title fontBold"><p>房屋租赁合同</p></div>
+    <div class="code fontBold"><span>合同编号：<input systemparam="code" tag="input" readonly="readonly" type="text" class="text-limit" style="width:150px"/></span></div>
+    <div class="cw_message">
+      <ul>
+        <li><span>出租方（以下简称甲方）：</span><span systemparam="ownerName" tag="input-auto"></span></li>
+        <li><span>证件号码: </span><span systemparam="ownerID" tag="input-auto"></span></li>
+<!--        <li><span>联系方式: </span><span systemparam="ownerTel" tag="input-auto"></span></li>-->
+      </ul>
+      <ul>
+        <li><span>承租方（以下简称乙方）：</span><span systemparam="guestName" tag="input-auto"></span></li>
+        <li><span>证件号码: </span><span systemparam="guestID" tag="input-auto"></span></li>
+<!--        <li><span>联系方式: </span><span systemparam="guestTel" tag="input-auto"></span></li>-->
+      </ul>
+      <ul>
+        <li style="position: relative;"><span>居间方（以下简称丙方）：</span><img class="SignatureLocation" style="position:absolute;left:103px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /><span>山东玖易房地产代理有限公司</span><!--<span systemParam="companyNames" company="true" extendParam="val1" class="text-limit input-before"  tag="input-auto"></span>--></li>
+        <li><span>电话：</span><span extendParam="val1" class="input-before" tag="input-auto" listen="phone"></span></li>
+      </ul>
+    </div>
+    <div>
+      <p>甲乙双方在平等、自愿的基础上，就甲方将房屋出租给乙方使用，乙方承租甲方房屋事宜，为明确双方权利义务，经协商一致，订立本合同。</p>
+      <p id="one" class="navTitle"><span class="fontBold">第一条</span> 甲方保证所出租的房屋符合国家对租赁房屋的有关规定。</p>
+      <p id="two" class="navTitle"><span class="fontBold">第二条</span> 甲方出租给乙方的房屋位于淄博市<span systemparam="propertyAddr" tag="input-auto"></span>出租,房屋面积共<span extendParam="val3" tag="input-auto" class="input-before" listen="number"></span>平方米。室内物品：<span extendParam="val4" class="input-before" tag="input-auto"></span></p>
+      <p id="three" class="navTitle"><span class="fontBold">第三条</span> 租赁期限、用途</p>
+      <p>1、该房屋租赁期共<span extendParam="val5" class="input-before" tag="input-auto" listen="number"></span>个月。自<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val6"/>至<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val7"/>止。</p>
+      <p>2、乙方向甲方承诺，租赁该房屋仅作为<span extendParam="val8" class="input-before" tag="input-auto"></span>使用。</p>
+      <p>3、租赁期满，甲方有权收回出租房屋，乙方应如期交还。乙方如要求续租，则必须在租赁期满1个月之前通知甲方，经甲方同意后，重新签订租赁合同。</p>
+      <p class="navTitle"><span class="fontBold">第四条</span> 租金及支付方式</p>
+      <p>1、该房屋每月租金为：￥<span extendParam="val9" systemparam="dealPrice" class="input-before" tag="input-auto" listen="number"></span>元，年租金为：￥<span extendParam="val10" class="input-before" tag="input-auto" listen="number"></span>。押金：￥<span extendParam="val11" class="input-before" tag="input-auto" listen="number"></span>。</p>
+      <p>2、房屋租金支付方式如下：<span extendParam="val12" class="input-before" tag="input-auto"></span></p>
+      <p class="navTitle"><span class="fontBold">第五条</span> 丙方代理费用为壹个月房租，计￥<span extendParam="val13" class="input-before" tag="input-auto" listen="number"></span>元整，由<input type="text" class="text-limit dropdown-item" list="甲,乙" style="width:30px" readonly="readonly" extendParam="val14" />方支付，于合同签订之日付给丙方。如发生违约现象由违约方全额支付中介服务费，如中介费是守约方支付，丙方不再退还此费用，由守约方向违约方主张此费用。</p>
+      <p class="navTitle"><span class="fontBold">第六条</span> 租赁期内：1、该房屋所属设施的维修责任除双方在本合同及补充条款中约定外，均由甲方负责（乙方使用不当除外）。租赁期内室内物品及人身安全由乙方负责。</p>
+      <p>2、租赁期内的水、电、物业、电梯、收视费、宽带等居住所产生的费用由乙方承担。在租赁期内由于乙方使用不当所造成的损失由乙方承担。</p>
+      <p class="navTitle"><span class="fontBold">第七条</span> 租赁期满乙方继续租赁的，应当在租赁期满1个月前书面通知甲方。如甲方在租期届满后仍要对外出租的，在同等条件下，乙方享有优先承租权。租赁期满合同自然终止。</p>
+      <p class="navTitle"><span class="fontBold">第八条</span> 房屋收回的验收</p>
+      <p>1、甲方应保证租赁房屋本身及附属设施、设备处于正常使用状态。</p>
+      <p>2、验收时双方共同参与，如对装修、器物等硬件设施、设备有异议应当场提出。当场难以检测判断的，应于当日内向对方说明。</p>
+      <p>3、乙方应于房屋租赁期满后，将承租房屋及附属设施、设备交还甲方。</p>
+      <p>4、乙方交还甲方房屋应当保持房屋及设施、设备的完好状态，不得留存物品或影响房屋的正常使用。对未经同意留存的物品，甲方有权处置。</p>
+      <p class="navTitle"><span class="fontBold">第九条</span> 违约责任处理规定</p>
+      <div style="position: relative;">
+        <span style="position: absolute;top: 0;left: 0;">1、</span>
+        <ul style="margin-left: 20px;">
+          <li>（1）未经甲方书面同意，将房屋转租、转借给他人使用的；</li>
+          <li>（2）未经甲方书面同意，拆改变动房屋结构或损坏房屋；</li>
+          <li>（3）改变本合同规定的租赁用途或利用该房屋进行违法活动的；</li>
+          <li>（4）拖欠房租累计1个月以上的。</li>
+        </ul>
+      </div>
+      <p>甲方有权单方面终止本协议，收回房屋。</p>
+      <p>2、在租赁期内，乙方未经甲方同意，中途擅自退租的，乙方应按合同总租金<span extendParam="val15" class="input-before" tag="input-auto" listen="number"></span>%的额度向甲方支付违约金。甲方未经乙方同意，中途擅自退租的，甲方应按合同总租金<span extendParam="val16" class="input-before" tag="input-auto" listen="number"></span>%的额度向乙方支付违约金。</p>
+      <p>3、租赁期满，乙方应如期交还该房屋并且把居住期间产生的费用结清。乙方逾期归还，则每逾期一日应向甲方支付原日租金<span extendParam="val17" class="input-before" tag="input-auto" listen="number"></span>倍的滞纳金。乙方还应承担因逾期造成的损失。</p>
+      <p class="navTitle"><span class="fontBold">第十条</span> 本合同在履行中若发生争议，由双方当事人协商或申请调解；协商或调解不成的，依法向有管辖权的人民法院提起诉讼。</p>
+      <p class="navTitle"><span class="fontBold">第十一条</span> 本合同一式三份，甲乙丙三方各执一份，具有同等法律效应。</p>
+      <div class="sign">
+        <ul>
+          <li>
+            <p>甲      方：</p>
+            <p>代 理 人：</p>
+          </li>
+          <li>
+            <p>乙     方：</p>
+            <p>代 理 人：</p>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <p style="position:relative;">丙方盖章：<img class="SignatureLocation" style="position:absolute;left:70px;top:-20px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /></p>
+            <p>经 办 人：</p>
+          </li>
+        </ul>
+        <p class="signDate">本合同签署日期：<i></i>年<i></i>月<i></i>日</p>
+      </div>
+    </div>
+  </div>
+  <div class="page1">
+    <div class="title fontBold"><p>收条</p></div>
+    <p style="text-indent: 32px;">今收到<span extendParam="val18" class="input-before" tag="input-auto"></span>租<span extendParam="val19" class="input-before" tag="input-auto"></span>名下房产<span extendParam="val20" class="input-before" tag="input-auto"></span>租房款为人民币<span extendParam="val21" class="input-before" tag="input-auto" listen="number"></span>元整。押金为人民币<span extendParam="val22" class="input-before" tag="input-auto" listen="number"></span>元（大写￥<span extendParam="val22_add" systemparam="true" tag="input-auto"></span>圆整）。</p>
+    <p class="signDate_next">甲方（出租方）：<i></i></p>
+    <p class="signDate_next" style="margin-bottom: 20px;">甲 方 代 理 人：<i></i></p>
+    <p class="signDate"><i></i>年<i></i>月<i></i>日</p>
+  </div>
+</div>
+</body>
+<script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+<script type="text/javascript" src="/js/bundle_zl_zb20200317.js"></script>
+<!--<script>
+  (function () {
+    var scriptList = document.getElementsByTagName("script")
+    console.log(scriptList)
+    if(!scriptList[0].src){
+      var host='https://sign2.jjw.com'
+      var host_other="http://sign2.jjw.com:28879"
+      var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_mm20190402.js","datepicker.css"]
+      for (let i = 0; i < addrList.length; i++) {
+        if(window.location.host==='localhost:8080'){
+          if(addrList[i].indexOf('bundle')>-1){
+            // addrList[i]=host_other+'/'+addrList[i]
+            addrList[i]='./ZB-ZL.js'
+          }else{
+            addrList[i]=host_other+'/'+addrList[i]
+          }
+        }else{
+          addrList[i]='/'+addrList[i]
+        }
+        if(addrList[i].indexOf('.css')>-1){
+          var hm = document.createElement("link");
+          hm.rel="stylesheet"
+          hm.href = addrList[i];
+          /*var s = document.getElementsByTagName("link")[0];
+          s.parentNode.insertBefore(hm,s);*/
+          document.head.appendChild(hm);
+        }else{
+          var hm = document.createElement("script");
+          addrList[i].includes('ZB-ZL')&&(hm.type = 'module');
+          hm.src = addrList[i];
+          var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+          s.parentNode.insertBefore(hm,s);
+        }
+      }
+    }
+  })();
+</script>-->
+</html>

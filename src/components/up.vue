@@ -12,6 +12,7 @@
   let result = null
   let publicPath = ''
   let loading = null
+  let timer=null
   export default {
     props: {
       id: {
@@ -54,6 +55,7 @@
         fileType: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'],
         currentNum: 0,//执行上传的次数
         canvasBlobState:false,//图片转成透明背景色是否已经执行过
+        fileLeng:0,
       }
     },
     mounted() {
@@ -61,14 +63,13 @@
       this.filePath = []
       this.$nextTick(() => {
         this.uploader = new plupload.Uploader({
-          runtimes: 'html5,flash,silverlight,html4',
+          runtimes: 'html5',
           browse_button: that.getId, //选择文件按钮
           multi_selection: that.more,
           drop_element: document.getElementById(that.getParentId),
-          /*flash_swf_url: 'lib/plupload-2.1.2/js/Moxie.swf',
-          silverlight_xap_url: 'lib/plupload-2.1.2/js/Moxie.xap',
-          url: 'http://oss.aliyuncs.com',*/
-
+          // flash_swf_url: 'http://sign2.jjw.com:28879/js/Moxie.swf',
+          // silverlight_xap_url: 'http://sign2.jjw.com:28879/js/Moxie.xap',
+          // url: 'http://oss.aliyuncs.com',
           filters: {
             mime_types: that.rules.length > 0 ? [{extensions: that.rules.join(',')}] : [],
             prevent_duplicates: true //不允许选取重复文件
@@ -78,7 +79,11 @@
           },
           init: {
             FilesAdded: function (up, files) {
+              this.fileLeng=up.files.length
               // 选择文件后执行
+              if(up.files.length===0){
+                return
+              }
               loading = that.$loading({
                 lock: true,
                 text: 'Loading',
@@ -95,13 +100,12 @@
                     picture.onload = function (e) {
                       var config = e.target
                       let {width, height} = config
-                      let mix = 1//默认图片缩放比例
+                      let mix = 0.5//默认图片缩放比例
                       let canvas=document.createElement('canvas')
                       let img=canvas.getContext('2d')
                       let imgData=null
                       canvas.width = width * mix
                       canvas.height = height * mix
-
                       img.drawImage(this, 0, 0, width * mix, height * mix)
                       imgData = img.getImageData(0, 0, width * mix, height * mix)
                       img.putImageData(that.sepiaFilter(imgData), 0, 0)
@@ -111,10 +115,49 @@
                         that.canvasBlobState=true
                         that.uploader.splice(0,1)
                         that.uploader.addFile(picture_qz, `${item.name.split('.')[0]}.png`)
-                      },'image/png', 0.5)
+                      },'image/png',0.5)
                     }
                   }
                   reader.readAsDataURL(item.getNative())
+                })
+              }else{
+                up.files.forEach((item,index)=>{
+                  if(item.type!=='image/png'&&item.type!=='image/bmp'){
+                    return
+                  }else if(item.size<=3*1024*1024){
+                    return
+                  }else{
+                    var reader = new FileReader()
+                    reader.onload = function () {
+                      var picture = new Image()
+                      picture.src = this.result
+                      picture.onload = function (e) {
+                        var config = e.target
+                        let {width, height} = config
+                        let mix = 1//默认图片缩放比例
+                        let canvas=document.createElement('canvas')
+                        let img=canvas.getContext('2d')
+                        canvas.width = width * mix
+                        canvas.height = height * mix
+                        img.drawImage(this, 0, 0, width * mix, height * mix)
+                        //压缩图片返回url
+                        if(item.type=='image/bmp'){
+                          canvas.toBlob(function (blob) {
+                            let picture_qz =new File([blob],`${item.name.split('.')[0]}.bmp`)
+                            that.uploader.removeFile(item)//这个触发了一次+开始触发的一次，每触发一次，就会调签名的那个接口吗？嗯 
+                            that.uploader.addFile(picture_qz, `${item.name.split('.')[0]}.bmp`)//这个触发了一次，这两个方法在什么时候调用，上传到oss之后，从uploader
+                          },'image/jpeg',0.2)
+                        }else{
+                         canvas.toBlob(function (blob) {
+                            let picture_qz =new File([blob],`${item.name.split('.')[0]}.png`)
+                            that.uploader.removeFile(item)
+                            that.uploader.addFile(picture_qz, `${item.name.split('.')[0]}.png`)
+                          },'image/jpeg',0.2)
+                        }                   
+                      }
+                    }
+                    reader.readAsDataURL(item.getNative())
+                  }
                 })
               }
               /*let fileType=get_suffix(files[0].name).toLowerCase();
@@ -141,7 +184,12 @@
               if(that.canvas){
                 (this.files.length===1&&that.canvasBlobState)&&that.up()
               }else{
-                that.up()
+                if(timer)clearTimeout(timer)
+                timer=setTimeout(()=>{
+                 if(this.fileLeng===uploader.files.length){
+                  that.up()
+                 }
+                },1500)                       
               }
             },
             UploadProgress: function (up, file) {
@@ -248,7 +296,6 @@
        * 上传操作
        */
       up: function () {
-        // console.log(uploader)
         let path = ''
         if(this.scane.id){
           let addrReg=/\\|\/|\@|\#|\%|\?|\？|\*|\"|\“|\”|\'|\‘|\’|\<|\>|\{|\}|\[|\]|\【|\】|\：|\:|\、|\^|\$|\&|\!|\~|\`|\|/g
@@ -259,6 +306,9 @@
             path = `contract/${this.scane.id}/${this.scane.path}`
             break;
           case 'zhuti':
+            path = `contract/${this.scane.id}/${this.scane.path}`
+            break;
+          case 'WTzhuti':
             path = `contract/${this.scane.id}/${this.scane.path}`
             break;
           case 'jiesuan':
@@ -312,15 +362,19 @@
               }
             }
           }
+          //这一串代码原来是放在，type外面的，后来我给包到type的判断去了
           this.getUrl(path, maxSize).then(res => {
-            result = JSON.parse(JSON.stringify(res))
-            set_upload_param(this.uploader, Object.assign({}, res), '');
+            result = JSON.parse(JSON.stringify(res));//这是啥 没用到啊,这是签名后，java返的数据，请求oss资源的时候我是指result这个变量没用到
+            // setTimeout(()=>{
+               set_upload_param(this.uploader, Object.assign({}, res), '');
+            // },3000)  
           })
+   
         }
       },
       getUrl: function (file, maxSize) {
         return new Promise((resolve, reject) => {
-          this.$ajax.get('/api/load/generateSignature', {dir: file, maxSize: maxSize}).then(res => {
+          this.$ajax.get('/api/load/generateSignature', {dir: file, maxSize: maxSize,aclNum:1}).then(res => {
             res = res.data
             if (res.status === 200) {
               resolve(res.data)

@@ -5,7 +5,7 @@
             <div class="cont-content text">
                 <p>签约日期：<span>{{dealBasicInfo.signDate}}</span></p>
                 <p>合同编号：<span style="color:#478DE3;font-weight:bold">{{dealBasicInfo.code}}</span></p>
-                <p>交易类型：<span>{{dealBasicInfo.contType}}</span></p>
+                <p>合同类型：<span>{{setTypeFn(dealBasicInfo.contType)}}</span></p>
                 <p>房屋总价：<span style="color:#FF9039;">{{dealBasicInfo.dealPrice}}元 <i>{{dealBasicInfo.dealPrice|moneyFormat}}</i></span></p>
                 <p>应收佣金：<span>{{dealBasicInfo.receivableCommission}}元</span></p>
             </div>
@@ -50,12 +50,16 @@
                     </div>
                 </div>
                 <div class="item">
-                    <div class="text-long">
-                        <span class="mark">产权地址：<span>{{dealBasicInfo.propertyRightAddr}}</span></span>
-                    </div>
-                    <div class="number">
+                    <div>
                         <span class="mark">权属证号：</span>
-                        <el-input size="small" v-model.trim="report.ownershipNumber" maxlength="45" :disabled="!saveBtnShow" class="quanshu" @input="inputOnly('ownershipNumber')"></el-input>
+                        <el-input size="small" v-model.trim="report.ownershipNumber" maxlength="45" :disabled="!saveBtnShow" class="quanshu w300" @input="inputOnly('ownershipNumber')"></el-input>
+                    </div>
+                    <div style="margin-right: 50px">
+                        <span class="mark">建成年代：</span>
+                        <span>{{yearFormatFn(dealBasicInfo.CompleteYear)}}</span>
+                    </div>
+                    <div class="text-long">
+                        <span class="mark">产权地址：<span>{{dealBasicInfo.propertyRightAddr?dealBasicInfo.propertyRightAddr:'-'}}</span></span>
                     </div>
                 </div>
                 <div class="item">
@@ -71,7 +75,7 @@
                         <span>建筑结构：</span>
                         <el-input size="small" v-model="report.buildingStructure" maxlength="10" :disabled="!saveBtnShow" class="jianzhu" @input="inputOnly('buildingStructure')"></el-input>
                     </div>
-                    <div class="position">
+                    <div class="position" style="text-align: right;">
                         <span>评估值：</span>
                         <el-input size="small" v-model="report.evaluationValue" :disabled="!saveBtnShow" @input="cutNumber('evaluationValue')"></el-input>
                         <i>万元</i>
@@ -82,7 +86,7 @@
         <div class="house-from resource">
             <div>
                 <p class="bold">客源方信息</p>
-                <div class="info text">
+                <div class="info" :class="recordVersion==2?'version-mark':''">
                     <p><span>店长：</span><el-input size="small" v-model.trim="report.guestShopOwnerName" maxlength="10" :disabled="!saveBtnShow" class="kezhang" @input="inputOnly('guestShopOwnerName')"></el-input></p>
                     <p style="margin:0 10px;" class="store"><span>门店：</span><el-input size="small" v-model.trim="report.guestStoreName" maxlength="20" :disabled="!saveBtnShow" class="kedian" @input="inputOnly('guestStoreName')"></el-input></p>
                     <p><span>联系电话：</span><el-input size="small" v-model.trim="report.guestShopOwnerMobile" :disabled="!saveBtnShow" oninput="if(value.length>11)value=value.slice(0,11)" class="kelian" @input="inputOnly('guestShopOwnerMobile')"></el-input></p>
@@ -101,21 +105,15 @@
             <div>
                 <p class="bold">买方信息</p>
                 <div class="guest msg info">
-                    <div class="text mai-mai">
-                        <p><span>姓名：</span><span style="width:130px;word-wrap:break-word;">{{firstBuyer.name}}</span></p>
-                        <p style="width:220px;"><span style="white-space:nowrap;">{{firstBuyer.cardType===1?"身份证":firstBuyer.cardType===2?"护照":"营业执照"}}：</span><span>{{firstBuyer.encryptionCode}}</span></p>
-                        <p><span>电话：</span><span>{{firstBuyer.mobile}}</span></p>
+                    <div class="text mai-mai" v-for="(item,i) in buyerArr" :key="i">
+                        <p><span>{{i==0?'姓名':'共有人'}}：</span><span style="width:135px;word-wrap:break-word;">{{item.name}}</span></p>
+                        <p><span>电话：</span><span>{{item.mobile}}</span></p>
+                        <p><span>{{item.cardType===1?"身份证":item.cardType===2?"护照":item.cardType===3?"营业执照":"军官证"}}：</span><span style="width:160px;word-wrap:break-word;">{{recordVersion==2?item.encryptionCode:'--'}}</span></p>
                     </div>
-                    <ul class="text gongyouren" v-if="buyerArr.length !== 1">
-                        <li v-for="(item,index) in buyerArr" :key="index">
-                            <p><span style="min-width:84px;">共有人姓名：</span><span style="min-width:260px;">{{item.name}}</span></p>
-                            <p><span style="min-width:42px;">电话：</span><span>{{item.mobile}}</span></p>
-                        </li>
-                    </ul>
                     <div class="input">
                         <p>
                             <span class="mark">付款方式：</span>
-                            <el-select size="small" v-model="report.buyerPaymentMethod" :disabled="!saveBtnShow" class="bank fukuan">
+                            <el-select size="small" v-model="report.buyerPaymentMethod" :disabled="loadType||!saveBtnShow" class="bank fukuan">
                                 <el-option v-for="item in dictionary['621']" :key="item.key" :label="item.value" :value="item.key"></el-option>
                             </el-select>
                         </p>
@@ -149,17 +147,11 @@
             <div>
                 <p class="bold">卖方信息</p>
                 <div class="owner msg info">
-                    <div class="text mai-mai">
-                        <p><span>姓名：</span><span style="width:130px;word-wrap:break-word;">{{firstSeller.name}}</span></p>
-                        <p style="width:220px;"><span style="white-space:nowrap;">{{firstSeller.cardType===1?"身份证":firstSeller.cardType===2?"护照":"营业执照"}}：</span><span>{{firstSeller.encryptionCode}}</span></p>
-                        <p><span>电话：</span><span>{{firstSeller.mobile}}</span></p>
+                    <div class="text mai-mai" v-for="(item,i) in sellerArr" :key="i">
+                        <p><span>{{i==0?'姓名':'共有人'}}：</span><span style="width:135px;word-wrap:break-word;">{{item.name}}</span></p>
+                        <p><span>电话：</span><span>{{item.mobile}}</span></p>
+                        <p><span>{{item.cardType===1?"身份证":item.cardType===2?"护照":item.cardType===3?"营业执照":"军官证"}}：</span><span style="width:160px;word-wrap:break-word;">{{recordVersion==2?item.encryptionCode:'--'}}</span></p>
                     </div>
-                    <ul class="text gongyouren" v-if="sellerArr.length !== 1">
-                        <li v-for="(item,index) in sellerArr" :key="index">
-                            <p><span style="min-width:84px;">共有人姓名：</span><span style="min-width:260px;">{{item.name}}</span></p>
-                            <p><span style="min-width:42px;">电话：</span><span>{{item.mobile}}</span></p>
-                        </li>
-                    </ul>
                     <div class="input">
                         <p style="margin-right:15px;">
                             <span style="min-width:126px;" class="mark">是否析产（继承）：</span>
@@ -188,7 +180,7 @@
                         <el-select size="small" class="w100" v-model="report.buyerAgentCardType" @change="cardTypeChange(1)" :disabled="!saveBtnShow" clearable>
                             <el-option v-for="item in dictionary['630']" :key="item.key" :label="item.value" :value="item.key"></el-option>
                         </el-select>
-                        <el-input size="small" :maxlength="report.buyerAgentCardType===1?18:report.buyerAgentCardType===2?9:report.buyerAgentCardType===3?20:18" onkeyup="value=value.replace(/\s+/g,'')" class="w200" v-model="report.buyerAgentCard" :disabled="!saveBtnShow"></el-input>
+                        <el-input size="small" :maxlength="report.buyerAgentCardType===1?18:report.buyerAgentCardType===2?30:report.buyerAgentCardType===3?20:18" onkeyup="value=value.replace(/\s+/g,'')" class="w200" v-model="report.buyerAgentCard" :disabled="!saveBtnShow"></el-input>
                     </p>
                     <p>
                         <span>电话：</span>
@@ -205,7 +197,7 @@
                         <el-select size="small" class="w100" v-model="report.sellerAgentCardType" @change="cardTypeChange(2)" :disabled="!saveBtnShow" clearable>
                             <el-option v-for="item in dictionary['630']" :key="item.key" :label="item.value" :value="item.key"></el-option>
                         </el-select>
-                        <el-input size="small" :maxlength="report.sellerAgentCardType===1?18:report.sellerAgentCardType===2?9:report.sellerAgentCardType===3?20:18" onkeyup="value=value.replace(/\s+/g,'')" class="w200" v-model="report.sellerAgentCard" :disabled="!saveBtnShow"></el-input>
+                        <el-input size="small" :maxlength="report.sellerAgentCardType===1?18:report.sellerAgentCardType===2?30:report.sellerAgentCardType===3?20:18" onkeyup="value=value.replace(/\s+/g,'')" class="w200" v-model="report.sellerAgentCard" :disabled="!saveBtnShow"></el-input>
                     </p>
                     <p>
                         <span>电话：</span>
@@ -254,7 +246,13 @@ export default {
         id: Number,
         contType: String,
         saveBtnShow: Boolean,
-        reportFlowShow: Boolean
+        reportFlowShow: Boolean,
+        defaultInfo: {
+            type: Object,
+            default: function() {
+                return {}
+            }
+        }
     },
     data() {
         return {
@@ -267,7 +265,8 @@ export default {
                 receivableCommission: "",
                 Square: "",
                 propertyRightAddr: "",
-                FloorAll: ""
+                FloorAll: "",
+                CompleteYear: ""
             },
             report: {
                 cardSituation: "",
@@ -329,21 +328,11 @@ export default {
                 { id: 13, name: "平安银行" },
                 { id: 14, name: "华夏银行" }
             ],
-            firstBuyer: {
-                name: "",
-                encryptionCode: "",
-                mobile: "",
-                cardType: ""
-            },
             buyerArr: [],
-            firstSeller: {
-                name: "",
-                encryptionCode: "",
-                mobile: "",
-                cardType: ""
-            },
             sellerArr: [],
-            noStageBank: true
+            noStageBank: true,
+            recordVersion: '', //合同页面版式
+            loadType: false //是否武汉全款贷款买卖
         }
     },
     created() {
@@ -354,44 +343,55 @@ export default {
         }
     },
     methods: {
-        getContractDetail() {
-            this.$ajax.get('/api/contract/detail',{id:this.id}).then(res => {
-                res = res.data
-                if(res.status === 200) {
-                    this.dealBasicInfo.signDate = res.data.signDate.substr(0, 10)
-                    this.dealBasicInfo.code = res.data.code
-                    this.dealBasicInfo.contType = res.data.contType.label
-                    this.dealBasicInfo.dealPrice = res.data.dealPrice
-                    this.dealBasicInfo.receivableCommission = res.data.receivableCommission
-                    this.dealBasicInfo.Square = res.data.houseInfo.Square
-                    this.dealBasicInfo.propertyRightAddr = res.data.propertyRightAddr
-                    this.dealBasicInfo.FloorAll = res.data.houseInfo.FloorAll
-                    this.report = res.data.dealReport ? JSON.parse(res.data.dealReport) : this.report
-                    if(!this.report.guestShopOwnerName) {
-                        this.report.guestShopOwnerName = res.data.guestInfo.ShopOwnerName
-                        this.report.guestStoreName = res.data.guestInfo.GuestStoreName
-                        this.report.guestShopOwnerMobile = res.data.guestInfo.ShopOwnerMobile
-                        this.report.houseShopOwnerName = res.data.houseInfo.ShopOwnerName
-                        this.report.houseStoreName = res.data.houseInfo.HouseStoreName
-                        this.report.houseShopOwnerMobile = res.data.houseInfo.ShopOwnerMobile   
-                    }
-                    this.buyerArr = res.data.contPersons.filter(item => item.personType.value === 2)
-                    this.sellerArr = res.data.contPersons.filter(item => item.personType.value === 1)
-                    this.firstBuyer.name = this.buyerArr[0].name
-                    this.firstBuyer.encryptionCode = this.buyerArr[0].encryptionCode
-                    this.firstBuyer.mobile = this.buyerArr[0].mobile
-                    this.firstBuyer.cardType = this.buyerArr[0].cardType
-                    this.firstSeller.name = this.sellerArr[0].name
-                    this.firstSeller.encryptionCode = this.sellerArr[0].encryptionCode
-                    this.firstSeller.mobile = this.sellerArr[0].mobile
-                    this.firstSeller.cardType = this.sellerArr[0].cardType
+        setTypeFn(val) {
+            if(this.loadType) {
+                if(this.report.buyerPaymentMethod === 1) {
+                    return `全款${val}`
+                } else {
+                    return `贷款${val}`
                 }
-            }).catch(error => {
-                this.$message({
-                    message: error,
-                    type: "error"
-                })
-            })
+            } else {
+                return val
+            }
+        },
+        yearFormatFn(val) {
+            if(val) {
+                if(val.includes('年')) {
+                    return val
+                } else {
+                    return val=='0'||val=='--' ? '--' : `${val}年`
+                }
+            } else {
+                return '--'
+            }
+        },
+        getContractDetail() {
+            let data = JSON.parse(JSON.stringify(this.defaultInfo))
+            this.dealBasicInfo.signDate = data.signDate.substr(0, 16)
+            this.dealBasicInfo.code = data.code
+            this.dealBasicInfo.contType = data.contType.label
+            this.dealBasicInfo.dealPrice = data.dealPrice
+            this.dealBasicInfo.receivableCommission = data.receivableCommission
+            this.dealBasicInfo.Square = data.houseInfo.Square
+            this.dealBasicInfo.CompleteYear = data.houseInfo.CompleteYear
+            this.dealBasicInfo.propertyRightAddr = data.propertyRightAddr
+            this.dealBasicInfo.FloorAll = data.houseInfo.FloorAll
+            this.report = data.dealReport ? JSON.parse(data.dealReport) : this.report
+            this.recordVersion = data.recordVersion
+            if(data.loanType) {
+                this.report.buyerPaymentMethod = data.loanType == 7 ? 1: 2
+            }
+            this.loadType = data.loanType ? true : false
+            if(!data.dealReport) {
+                this.report.guestShopOwnerName = this.recordVersion === 1 ? data.dealAgentShopowner : data.guestInfo.ShopOwnerName
+                this.report.guestStoreName = this.recordVersion === 1 ? data.dealAgentStoreName : data.guestInfo.GuestStoreName
+                this.report.guestShopOwnerMobile = this.recordVersion === 1 ? data.dealAgentShopownerMobile :data.guestInfo.ShopOwnerMobile
+                this.report.houseShopOwnerName = data.houseInfo.ShopOwnerName
+                this.report.houseStoreName = data.houseInfo.HouseStoreName
+                this.report.houseShopOwnerMobile = data.houseInfo.ShopOwnerMobile   
+            }
+            this.buyerArr = data.contPersons.filter(item => item.personType.value === 2)
+            this.sellerArr = data.contPersons.filter(item => item.personType.value === 1)
         },
         getFlowList() {
             this.$ajax.get('/api/contract/getTransFlowListByCity').then(res => {
@@ -421,87 +421,41 @@ export default {
             }
         },
         saveFn() {
-            if(this.report.cardSituation) {
-                if(this.report.mortgageSituation) {
-                    if(this.report.isEarlyRepayment) {
-                        if(this.report.ownershipNumber) {
-                            if(this.report.guestShopOwnerName) {
-                                if(this.report.guestStoreName) {
-                                    if(this.report.guestShopOwnerMobile) {
-
-                                    } else {
-                                        this.$message({message:"客源方联系电话不能为空"})
-                                        addRedBorder('kelian')
-                                        return
-                                    }
-                                } else {
-                                    this.$message({message:"客源方门店不能为空"})
-                                    addRedBorder('kedian')
-                                    return
-                                }
-                            } else {
-                                this.$message({message:"客源方店长不能为空"})
-                                addRedBorder('kezhang')
-                                return
-                            }
-                        } else {
-                            this.$message({message:"权属证号不能为空"})
-                            addRedBorder('quanshu')
-                            return
-                        }
-                    } else {
-                        this.$message({message:"是否提前还款不能为空"})
-                        addRedBorder('huankuan',2)
-                        return
-                    }
-                } else {
-                    this.$message({message:"抵押情况不能为空"})
-                    addRedBorder('diya',2)
+            let arr_basic = [
+                { val: this.report.cardSituation, className: 'liangzheng', msg: '两证情况', type: 2 },
+                { val: this.report.mortgageSituation, className: 'diya', msg: '抵押情况', type: 2 },
+                { val: this.report.isEarlyRepayment, className: 'huankuan', msg: '是否提前还款', type: 2 },
+                { val: this.report.ownershipNumber, className: 'quanshu', msg: '权属证号', type: 1 },
+            ]
+            let arr_cus = [
+                { val: this.report.guestShopOwnerName, className: 'kezhang', msg: '客源方店长', type: 1 },
+                { val: this.report.guestStoreName, className: 'kedian', msg: '客源方门店', type: 1 },
+                { val: this.report.guestShopOwnerMobile, className: 'kelian', msg: '客源方联系电话', type: 1 }
+            ]
+            let arr_hou = [
+                { val: this.report.houseShopOwnerName, className: 'fangzhang', msg: '房源方店长', type: 1 },
+                { val: this.report.houseStoreName, className: 'fangdian', msg: '房源方门店', type: 1 },
+                { val: this.report.houseShopOwnerMobile, className: 'fanglian', msg: '房源方联系电话', type: 1 }
+            ]
+            let arr_deal = [
+                { val: this.report.buyerPaymentMethod, className: 'fukuan', msg: '付款方式', type: 2 },
+                { val: this.report.transFlowName, className: 'liucheng', msg: '交易流程', type: 2 },
+                { val: this.report.isExtend, className: 'xichan', msg: '是否析产（继承）', type: 2 }
+            ]
+            let arr = []
+            if(this.recordVersion==2){ //复杂版
+                arr = [].concat(arr_basic,arr_cus,arr_hou,arr_deal)
+            } else { //温州基础版客源方信息非必填
+                arr = [].concat(arr_basic,arr_hou,arr_deal)
+            }
+            for(let i = 0; i < arr.length; i++) {
+                if(!arr[i].val) {
+                    this.$message(`${arr[i].msg}不能为空`)
+                    addRedBorder(arr[i].className,arr[i].type)
                     return
                 }
-            } else {
-                this.$message({message:"两证情况不能为空"})
-                addRedBorder('liangzheng',2)
-                return
             }
-            if(this.report.houseShopOwnerName) {
-                if(this.report.houseStoreName) {
-                    if(this.report.houseShopOwnerMobile) {
-                        if(this.report.buyerPaymentMethod) {
-                            if(this.report.transFlowName) {
-                                if(this.report.isExtend) {
-
-                                } else {
-                                    this.$message({message:"是否析产（继承）不能为空"})
-                                    addRedBorder('xichan',2)
-                                    return
-                                }
-                            } else {
-                                this.$message({message:"交易流程不能为空"})
-                                addRedBorder('liucheng',2)
-                                return
-                            }
-                        } else {
-                            this.$message({message:"付款方式不能为空"})
-                            addRedBorder('fukuan',2)
-                            return
-                        }
-                    } else {
-                        this.$message({message:"房源方联系电话不能为空"})
-                        addRedBorder('fanglian')
-                        return
-                    }
-                } else {
-                    this.$message({message:"房源方门店不能为空"})
-                    addRedBorder('fangdian')
-                    return
-                }
-            } else {
-                this.$message({message:"房源方店长不能为空"})
-                addRedBorder('fangzhang')
-                return
-            }
-            if(!checkPhone(this.report.guestShopOwnerMobile)) {
+            if(!checkPhone(this.report.guestShopOwnerMobile)&&this.recordVersion==2) {
                 this.$message({message:"请输入11位正确的客源方联系电话",type:"warning"})
                 return
             }
@@ -519,12 +473,6 @@ export default {
                             return
                         }
                     }
-                    // else if(type === 2) {
-                    //     if(!checkPassPort(val)) {
-                    //         this.$message({message:'买方代理人护照不正确',type:'warning'})
-                    //         return
-                    //     }
-                    // }
                     if(!this.report.buyerAgentName) {
                         this.$message("买方代理人姓名不能为空")
                         return
@@ -544,12 +492,6 @@ export default {
                             return
                         }
                     }
-                    // else if(type === 2) {
-                    //     if(!checkPassPort(val)) {
-                    //         this.$message({message:'卖方代理人护照不正确',type:'warning'})
-                    //         return
-                    //     }
-                    // }
                     if(!this.report.sellerAgentName) {
                         this.$message("卖方代理人姓名不能为空")
                         return
@@ -723,23 +665,19 @@ export default {
             color: @color-blank;
         }
         &.mai-mai {
-            p {
-                margin-right: 15px;
+            span {
+                display: inline-block;
             }
-            p:nth-child(odd) {
-                span:first-child {
-                    min-width: 42px;
-                }
+            p:first-child {
+                width: 202px;
+            }
+            p:nth-child(2) {
+                width: 160px;
             }
         }
     }
     .text-long {
         min-width: 373px;
-    }
-    .number {
-        .el-input {
-            min-width: 352px;
-        }
     }
     .square {
         min-width: 120px;
@@ -759,18 +697,6 @@ export default {
         }
         &.shui-fei {
             margin-left: 6px!important;
-        }
-    }
-    .gongyouren {
-        // display: flex;
-        flex-wrap: wrap;
-        margin-bottom: 10px;
-        max-width: 600px;
-        li {
-            display: flex;
-            &:first-child {
-                display: none;
-            }
         }
     }
 }
@@ -801,7 +727,6 @@ export default {
                 > span {
                     min-width: 70px;
                     line-height: 32px;
-                    text-align: right;
                     &.use {
                         min-width: 112px;
                     }
@@ -841,6 +766,12 @@ export default {
             span:first-child {
                 color: @color-6c;
             }
+            &.version-mark p::before {
+                content: "*";
+                color: red;
+                position: relative;
+                top: 3px;
+            }
         }
     }
 }
@@ -863,7 +794,7 @@ export default {
     .owner {
         > div {
             display: flex;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             > p {
                 display: flex;
             }

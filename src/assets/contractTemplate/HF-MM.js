@@ -65,6 +65,7 @@ let Obj={
       name:'yes1'
     },
     val91:'',
+    val92:'',
     val93:'method4',
     check14:{
       name:"check03"
@@ -253,10 +254,12 @@ let Obj={
           }
         }else {
           if(val.length===0){
-            errorArr2.push({
+            let _errorMsg={
               type:'input',
               name:item
-            })
+            }
+            document.querySelector(`*[extendparam=${item}]`).getAttribute('company')&&(_errorMsg.company=true)
+            errorArr2.push(_errorMsg)
             break
           }
         }
@@ -557,8 +560,9 @@ for(let readonlyItem in msg){
   if(readonlyItem==="companyNames"){
     if(msg[readonlyItem].length>0){
       let companyName = document.querySelector(`*[extendParam="val56"]`)
-      let companyNameTxt = msg[readonlyItem].join(',')
-      companyName.setAttribute('list',companyNameTxt)
+      let companyNameTxt = msg[readonlyItem][0]
+      companyName.innerHTML=companyNameTxt
+      companyName.classList.remove('input-before')
     }
   }
 
@@ -621,7 +625,7 @@ contractConfig.checkboxListener(function(obj,index){
         dom.removeAttribute('readonly')
         dom.removeAttribute('disabled')
         dom.removeAttribute('systemParam')
-      }) 
+      })
     }
   }
 },function(){})

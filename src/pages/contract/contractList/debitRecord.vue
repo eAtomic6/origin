@@ -96,43 +96,48 @@
       <p style="color:#666;margin-bottom:10px;">温馨提示：支付失败原因为“收款人户名和银行卡号信息不匹配”时，需要去公司设置里面重新修改此门店的银行账户信息</p>
       <el-table :data="tableData.list" ref="tableCom" :max-height="tableNumberCom" style="width: 100%" v-loading="loadingTable" @row-dblclick='toDetail' border>
 
-        <el-table-column label="分账门店" :formatter="nullFormatter" align="center" min-width="80">
+        <el-table-column label="分账门店" :formatter="nullFormatter" min-width="80">
           <template slot-scope="scope">
             <p>{{scope.row.outStoreName}}</p>
           </template>
         </el-table-column>
 
-        <el-table-column label="分账门店账户" :formatter="nullFormatter" align="center" min-width="120">
+        <el-table-column label="分账门店账户" :formatter="nullFormatter" min-width="120">
           <template slot-scope="scope">
             <p>{{scope.row.outBankCard}}</p>
           </template>
         </el-table-column>
 
-         <el-table-column label="收款门店" :formatter="nullFormatter" align="center" min-width="80">
+         <el-table-column label="收款门店" :formatter="nullFormatter" min-width="80">
           <template slot-scope="scope">
             <p>{{scope.row.inStoreName}}</p>
           </template>
         </el-table-column>
 
-        <el-table-column label="收款门店账户" :formatter="nullFormatter" align="center" min-width="120">
+        <el-table-column label="收款门店账户" :formatter="nullFormatter" min-width="120">
           <template slot-scope="scope">
             <p>{{scope.row.inBankCard}}</p>
           </template>
         </el-table-column>
 
-         <el-table-column label="分账金额（元）" :formatter="nullFormatter" align="center" min-width="80">
+         <el-table-column label="分账金额（元）" :formatter="nullFormatter" min-width="80">
           <template slot-scope="scope">
             <p>{{scope.row.accountAmount}} 元</p>
           </template>
         </el-table-column>
+        <el-table-column label="分账手续费（元）" :formatter="nullFormatter" min-width="80">
+          <template slot-scope="scope">
+            <p>{{scope.row.fee}} 元</p>
+          </template>
+        </el-table-column>
 
-        <el-table-column label="分账周期" align="center" min-width="100">
+        <el-table-column label="分账周期" min-width="100">
           <template slot-scope="scope">
             <p>{{scope.row.startTime | getDate}} ~ {{scope.row.endTime | getDate}}</p>
           </template>
         </el-table-column>
 
-        <el-table-column label="账户类型" :formatter="nullFormatter" align="center" min-width="80">
+        <el-table-column label="账户类型" :formatter="nullFormatter" min-width="80">
           <template slot-scope="scope">
             <p v-if="scope.row.type == 0">个人账户</p>
             <p v-else-if="scope.row.type == 1">企业账户</p>
@@ -140,19 +145,19 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="打款人" :formatter="nullFormatter" align="center" min-width="120">
+        <el-table-column label="打款人" :formatter="nullFormatter" min-width="120">
           <template slot-scope="scope">
             <p>{{scope.row.moneyOutDepName + ' - ' + scope.row.moneyOutByName}}</p>
           </template>
         </el-table-column>
 
-        <el-table-column label="打款日期" align="center" min-width="90">
+        <el-table-column label="打款日期" min-width="90">
           <template slot-scope="scope">
             <p>{{scope.row.moneyOutTime | getTime}}</p>
           </template>
         </el-table-column>
 
-        <el-table-column label="支付状态" align="center" min-width="80">
+        <el-table-column label="支付状态" min-width="80">
           <template slot-scope="scope">
             <p v-if="scope.row.status&&(scope.row.status.value === 1 || scope.row.status.value === 3)">{{scope.row.status.label}}</p>
             <p v-else-if="scope.row.status&&scope.row.status.value === 2" class="red">
@@ -165,7 +170,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="打款备注" align="center" min-width="90">
+        <el-table-column label="打款备注" min-width="90">
           <template slot-scope="scope">
               <span v-if="scope.row.remark&&(scope.row.remark).trim().length > 0">
                 <el-popover trigger="hover" placement="top">
@@ -181,7 +186,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" fixed="right" align="center" min-width="120">
+        <el-table-column label="操作" fixed="right" min-width="120">
           <template slot-scope="scope">
             <template v-if="scope.row.status && scope.row.status.value === 2 && power['sign-ht-fz-pay'].state&&scope.row.flag!=1">
               <el-button type="text" class="curPointer" @click="payAgain(scope.row)">重新打款</el-button>
@@ -554,6 +559,7 @@
             this.id = e.id,
             this.payremark=""//清空备注
             let param = {
+              plateType:0,
               storeId: e.inStoreId
             }
             this.$ajax.get("/api/separate/queryBank", param)
@@ -1230,9 +1236,9 @@
      text-align: right;
   }
 
-  .adjustbox{
-    box-shadow:0px 1px 6px 0px rgba(7,47,116,0.1);
-  }
+  // .adjustbox{
+  //   box-shadow:0px 1px 6px 0px rgba(7,47,116,0.1);
+  // }
 
   .adjust-form {
     margin-bottom: 10px;
@@ -1550,7 +1556,7 @@
     display: flex;
     align-items: center;
   }
-  
+
   .radiodiv{
     overflow: hidden;
     .innerdiv{
@@ -1572,11 +1578,11 @@
         span.blue:nth-child(1){
           width: 230px;
           margin-right: 30px;
-        
+
         }
-        
+
       }
-      
+
     }
     > .is-checked{
       .el-radio__label{

@@ -84,6 +84,13 @@
         .text-indent {
             text-indent: 30px;
         }
+        .sign-title{
+            padding: 5px 30px;
+        }
+        .sign-title>ul>li{
+            display: inline-block;
+            min-width: 300px;
+        }
         /* .hetong-no {
             border: none;
             width: 110px;
@@ -129,6 +136,11 @@
             text-align: center;
             color: #a1a1a1;
         }
+        span[tag='input-auto'].input-before.input-select:before{
+            content:'请选择';
+            text-align: center;
+            color: #a1a1a1;
+        }
         span[tag='input-readonly'].input-before:before{
             content:'';
             text-align: center;
@@ -171,6 +183,12 @@
             font-weight: normal;
             font-size: 14px;
         }
+        .zeropx {
+            text-indent: 0px;
+        }
+        /* @page {
+            size: 955px 1350px;
+        } */
     </style>
 </head>
 <body>
@@ -186,12 +204,24 @@
         <h2 class="center">居间服务合同</h2>
         <p class="title">合同编号：<input systemParam="code" type="text" tag="input" class="no-border" readonly="readonly" value="" /></p>
         <div>
-            <div class="sign-title">
-                <p class="bold">甲方（出卖人）：<span systemParam="ownerName" tag="input-auto" class="color-grey"></span></p>
-                <p class="bold">代理人：<input type="text" tag="input" class="text-limit" extendParam="val1_add" value="" style="width:665px;" /></p>
-                <p class="bold">乙方（买受人）：<span systemParam="guestName" tag="input-auto" class="color-grey"></span></p>
-                <p class="bold">代理人：<input type="text" tag="input" class="text-limit" extendParam="val2_add" value="" style="width:665px;" /></p>
-                <p class="bold" style="position:relative;"><img class="SignatureLocation" style="position:absolute;left:130px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" />丙方（居间人）：<input type="text" tag="input" maxlength="25" class="text-limit dropdown-item" extendParam="val3" style="width:600px;" value="" /></p>
+            <div class="sign-title bold">
+                <ul>
+                    <li><span>甲方（出卖人）：</span><span systemParam="ownerName" tag="input-auto" class="color-grey"></span></li>
+                    <li><span>证件号码：</span><span systemparam="ownerID" tag="input-auto"></span></li>
+                </ul>
+                <ul>
+                    <li><span>代理人：</span><span tag="input-auto" class="text-limit input-before" class="color-grey" extendParam="val1"></span></li>
+                    <li><span>证件号码：</span><span tag="input-auto" max="30" class="text-limit input-before" extendParam="val1_add"></span></li>
+                </ul>
+                <ul>
+                    <li><span>乙方（买受人）：</span><span systemParam="guestName" tag="input-auto" class="color-grey"></span></li>
+                    <li><span>证件号码：</span><span systemparam="guestID" tag="input-auto"></span></li>
+                </ul>
+                <ul>
+                    <li><span>代理人：</span><span tag="input-auto" class="text-limit input-before" class="color-grey" extendParam="val2"></span></li>
+                    <li><span>证件号码：</span><span tag="input-auto" max="30" class="text-limit input-before" extendParam="val2_add"></span></li>
+                </ul>
+                <p style="position:relative;"><img class="SignatureLocation" style="position:absolute;left:130px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /><span class="bold">丙方（居间人）：</span><span tag="input-auto" class="input-before input-select text-limit dropdown-item" systemparam="true" extendParam="val3"></span></p>
             </div>
             <div class="text-indent">
                 甲、乙、丙三方在自愿、平等和友好协商的基础上，就乙方购买甲方所有的武汉市<span systemParam="propertyAddr" extendParam="val4" class="text-limit" tag="input-auto"></span>房屋的居间事宜，达成如下协议，以资共同遵守。
@@ -229,7 +259,7 @@
             <div class="agreements">
                 <h4>第四条 权利义务</h4>
                 <ul class="text-indent">
-                    <li>1、甲方和乙方应积极配合丙方的居间活动，甲方应将房屋买卖所需的不动产权证书或房屋所有权证、土地使用权证及其他证明房屋权属状况的证明材料提供给丙方核验。甲方应将房屋买卖所需的房屋所有权证、土地使用权证、不动产权证书、购房合同、权属证明等房产交易相关证书、证件及材料原件交于丙方保管，甲乙双方同意在合同履行过程中，在合同解除前或法院判决合同解除前丙方有权不予退还保管的房屋所有权证及相关证件。
+                    <li>1、甲方和乙方应积极配合丙方的居间活动，甲方应将房屋买卖所需的不动产权证书或房屋所有权证、土地使用权证及其他证明房屋权属状况的证明材料提供给丙方核验。甲方应将房屋买卖所需的房屋所有权证、土地使用权证、不动产权证书、购房合同、权属证明等房产交易相关证书、证件及材料原件交于丙方保管，<div class="zeropx">甲乙双方同意在合同履行过程中，在合同解除前或法院判决合同解除前丙方有权不予退还保管的房屋所有权证及相关证件。</div>
                     </li>
                     <li>2、本合同签订当日甲方交人民币（大写）<span class="input-before" extendParam="val9" listen="chinese" max="12" tag="input-auto"></span>圆整给丙方作为交房物业保证金，在甲乙双方物业交接完毕后<span class="input-before" extendParam="val10" listen="number" tag="input-auto"></span>日内，由丙方打入甲方指定账户或以现金形式支付。
                     </li>
@@ -263,7 +293,7 @@
             <div class="sign bold">
                 <div>
                     <p><span>甲方（签章）：</span><input type="text" tag="input" noline="true" readonly="readonly" extendParam="val13" value="" /></p>
-                    <p><span>乙方（签章）：</span><input type="text" tag="input" noline="true" readonly="readonly" extendParam="val14" value="" /></p>  
+                    <p><span>乙方（签章）：</span><input type="text" tag="input" noline="true" readonly="readonly" extendParam="val14" value="" /></p>
                 </div>
                 <div>
                     <p><span>代理人（签章）：</span><input type="text" tag="input" noline="true" readonly="readonly" extendParam="val15" value="" /></p>
@@ -271,7 +301,7 @@
                 </div>
                 <div>
                     <p style="position:relative;"><img class="SignatureLocation" style="position:absolute;left:130px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /><span>丙方（盖章）：</span><input type="text" tag="input" noline="true" readonly="readonly" extendParam="val17" value="" /></p>
-                    <p><span>经办人（签字）：</span><input type="text" tag="input" noline="true" readonly="readonly" extendParam="val18" value="" /></p>  
+                    <p><span>经办人（签字）：</span><input type="text" tag="input" noline="true" readonly="readonly" extendParam="val18" value="" /></p>
                 </div>
             </div>
             <div class="sign-date center">本合同签署日期：<input type="number" tag="input" noline="true" readonly="readonly" extendParam="val19" value="" />年<input type="number" tag="input" noline="true" readonly="readonly" extendParam="val20" value="" />月<input type="number" tag="input" noline="true" readonly="readonly" extendParam="val21" value="" />日</div>
@@ -283,7 +313,7 @@
 <script type="text/javascript" src="/browser.min.js"></script>
 <script type="text/javascript" src="/datepicker.js"></script>
 <script type="text/javascript" src="/dropdown.js"></script>
-<script type="text/javascript" src="/js/bundle_jj20190409.js"></script>
+<script type="text/javascript" src="/js/bundle_jj20190814.js"></script>
 <!-- <script>
      (function () {
       var scriptList = document.getElementsByTagName("script")

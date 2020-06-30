@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="/datepicker.css"/>
+    <title>委托</title>
+    <style>
+        body {
+            font-family: SimHei;
+            font-size: 18px;
+            line-height: 1.9;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        p, ul, h1, h2, h3, h4 {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        input {
+            border: 0px;
+            border-bottom: 1px solid gray;
+            max-width: 137px;
+            outline: none;
+            font-size: 16px;
+            font-family: SimHei;
+        }
+        input[type="checkbox"]{
+            border:0px;
+        }
+        .BODERRED{
+            border-color: red !important;
+        }
+        /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+        input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+            -webkit-appearance: none !important;
+        }
+        input[type="number"]{-moz-appearance:textfield;}
+
+        input.text-long {
+            max-width: none;
+            width: 0px;
+            box-sizing: border-box;
+        }
+        .max70{
+            max-width: 70px;
+        }
+        .max80{
+            max-width: 80px;
+        }
+
+        label[for*="radio-"] {
+            font-weight: bold;
+        }
+
+        .container {
+            width: 840px;
+            margin: 0 auto;
+            padding: 0 40px;
+            box-sizing: border-box;
+        }
+
+        p.title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .textindent{
+            text-indent: 2em;
+        }
+        .son_title{
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .sign{
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .sign div{
+            width: 29%;
+            float: left;
+            padding: 10px;
+        }
+        .date{
+            text-align: right;
+        }
+        .date span{
+            margin-right: 30px;
+        }
+        span[tag='input-auto']{
+      border-bottom: 1px solid gray;
+      padding: 2px 10px;
+      word-break: break-all;
+      word-wrap: break-word;
+    }
+    span[tag='input-auto'].input-before:before{
+      content:'请输入';
+      text-align: center;
+      color: #a1a1a1;
+    }
+    .alert-viwer{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      padding: 10px;
+      border-radius: 4px;
+      background: #fff;
+      z-index: 999;
+      box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    }
+    .alert-viwer>textarea{
+      background: #fff;
+      border: 1px solid #dcdfe6;
+    }
+    .alert-viwer>p{
+      text-align: right;
+      margin: 6px 0 0;
+      padding: 0;
+      line-height: normal;
+    }
+    .alert-viwer>p>span{
+      display: inline-block;
+      background: #409eff;
+      padding: 6px 12px;
+      color: #FFFFFF;
+      border-radius: 4px;
+    }
+    .alert-viwer>p>span:last-of-type{
+      background: #fff;
+      color: #606266;
+      border: 1px solid #dcdfe6;
+    }
+    .info-checkbox{
+      display: inline;
+      cursor: pointer;
+    }
+    .info-checkbox>span{
+      font-weight: bold;
+    }
+    .info-checkbox>p[type="check"]{
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 1px solid;
+      position: relative;
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+    }
+    .info-checkbox>p[type="check"][checked='true']:before{
+      content:'';
+      left:0;
+      position: absolute;
+      display: inline-block;
+      width: 100%;
+      height: 10px;
+      background-size: contain;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVQ4T72TsUvDQBjF33cYUhfFP0GIVO7S1cXJxU3sIqiLuHSyOIg4Cro4OBW3jJ10EhcRdHcw2901f0BWh04OmvskpZVYqjYEvPl9v3v3vneEiocqzuP/AY1GY9k5F2VZ1kyS5LWUAynlihDigZnnmblprb2bGhCG4TqAWwCzzNwyxkR5fgNAEARzvu8fGWPOAXyMB6uU2iaiLoAZ51zbWns10gwAUsotIcQNM9/XarXNOI7fRwIp5QERdYiInHOn1tqz4gVfTwjDsAOgzcxP/X5/I03TN6XUBRGdDAcutdbH4+6KGQil1CMRrQF4BtADsJ8PMHNkjGlN6sy3EIdZvBDRUkHc1Vrv5Zw/AbmgXq8vep4XA1gAcK213gXgfmrsxDUqpVaJ6FBrvQMg+63uU/eglIMyH6yyg0+YpmgRBNEBzgAAAABJRU5ErkJggg==");
+    }
+    .info-checkbox>p[type="check"][checked='false']:after{
+      content:'';
+      position: absolute;
+      display: inline-block;
+      width: 100%;
+      height: 10px;
+      background-size: contain;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABdklEQVQ4T42TvUrEQBSFz1kt1BewU8QnSJ5gu0mrsGDjRAt/UVBBWRtdsdgVBBdcFBHFZK0U+8TKwkIsEt/Ffq9M9se4GzVTDZM5X865dy5tpd8EeIlDv4z8i7ajGwCmaSt3D8QJBPUo9LZzMIzmBsQiIKs0AsuZLxOFah6IrdxbI5YW1uNn7zIBmGU7ugLwUCC1OPD3s5xYyr0gsdYVmzs9QNuJrhIsA1KJAv8oDemKIa3tKGzWu99+ABInyj0DsSVo7cdBs5Y+6xcPOOjF6UCMAChMGmCW+FdAEqeT1+zTbvprMxChe8FS+pzkRgIQOY5D/yCrsFkA2kpfgVwyf6YUxpMIkNMo8Hf/c0BLuXckdFYRRaQRh/5mGvLtoFQasj7H7gnM/d1GuY5Cf/lnG0ulIftz9BHgTJ6HBEkgK6Y8RLE4bI9MPPwnTrW4/ZQFfhx6C7SUfiI5m2cOOpDvYRK5puW47wK8fgTeTo5J7EW3lPZITH0B+X227Y6+aJ4AAAAASUVORK5CYII=");
+    }
+    .hetong-no {
+      margin: 5px 0 5px 450px;
+    }
+    </style>
+</head>
+<body>
+<span id="submit" style="position: absolute;top: -1000px;z-index: 0;">click</span>
+<div class="container">
+    <p class="title">按揭贷款、产权过户委托合同</p>
+    <p class="hetong-no">合同编号：<input systemParam="code"  extendParam="val8"  class="text-limit" type="text" unselectable="on" readonly="readonly" style="border: none;" tag="input" value="" />（委）</p>
+    <ul class="signature">
+        <li>
+            <p><span>甲方（出卖方）：</span><span systemParam="ownerName"  class="text-limit" tag="input-auto" extendParam="val1" readonly="readonly" style="max-width:none;border:none"></span></p>
+        </li>
+        <li>
+            <p><span>乙方（买受人）：</span><span systemParam="guestName"  class="text-limit" extendParam="val2" tag="input-auto" readonly="readonly" style="max-width:none;border:none"></span></p>
+        </li>
+        <li>
+            <p style="position: relative;"><span>丙方 ：</span><img class="SignatureLocation" style="position:absolute;left:68px;top:10px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /><span systemParam="companyNames"  class="text-limit" extendParam="val3" tag="input-auto" readonly="readonly"></span></p>
+        </li>
+    </ul>
+    <div class="textindent">
+        甲乙双方签订了位于<span systemParam="propertyAddr"  class="text-limit" extendParam="val4" tag="input-auto" readonly="readonly"></span>房屋的买卖合同，现甲乙双方委托丙方协助办理房产交易后期衍生事宜，经协商一致订立以下合同条款，甲乙丙三方共同遵照执行：
+    </div>
+    <div class="textindent">
+        <p class="son_title">一、服务事项</p>
+        <p>甲乙双方委托丙方协助办理下列<input extendParam="val5"  readonly="readonly" inputmethod="handle" style="text-align: center;"  list="1,2,,1，2" placeholder="请选择" class=" input-before input-select  dropdown-item" />项服务。 </p>
+        <p>1、协助办理按揭贷款手续</p>
+        <p>2、协助办理产权过户手续。</p>
+    </div>
+    <div class="textindent">
+        <p class="son_title">二、服务费支付时间及标准</p>
+        <ul>
+            <li> 1、甲乙双方委托丙方协助办理按揭贷款手续，<div class="info-checkbox" name="zhizhao4"><p type="check"></p><span>甲方</span></div><div class="info-checkbox" name="zhizhao4"><p type="check"></p><span>乙方</span></div>应当于本合同签订当日支付丙方服务费人民币<span extendParam="val6" listen="number"  tag="input-auto" class="input-before"></span>元整。 </li>
+            <li> 2、甲乙双方委托丙方协助办理产权过户手续，<div class="info-checkbox" name="zhizhao5"><p type="check"></p><span>甲方</span></div><div class="info-checkbox" name="zhizhao5"><p type="check"></p><span>乙方</span></div>应当于本合同签订当日支付丙方服务费人民币<span extendParam="val7" listen="number"  tag="input-auto" class="input-before"></span>元整。</li>
+        </ul>
+    </div>
+    <div class="textindent">
+        <p class="son_title"> 三、权利义务</p>
+        <p>1、丙方应积极协助办理按揭贷款及产权过户相关事宜；</p>
+        <p>2、甲乙双方应积极配合办理贷款及产权过户事宜，按贷款机构及房产等部门要求提供全部证件和资料，并保证证件和资料真实、合法、有效。</p>
+        <p>3、丙方未提供服务的，退还已收取的服务费，不再承担其他任何责任。</p>
+        <p>4、因房屋买卖合同解除导致本合同不能履行的，丙方已收取的服务费不予退还。</p>
+        <p>5、因甲乙双方原因按揭贷款或过户手续不能办理，丙方已收取的服务费不予退还。</p>
+    </div>
+    <div class="textindent">
+            <p class="son_title">四、免责事由</p>
+            <p>1、申请贷款的条件及所需要的资料由贷款机构决定，丙方提供的贷款相关信息仅供参考，不作为贷款批复的依据。产权过户缴纳的相关税费由税务等部门决定，丙方提供的税费计算仅供参考，不作为产权过户缴纳税费的依据。</p>
+            <p>2、丙方只负责协助办理本合同约定的相关手续，不承担不能办理或不能如期办理的责任。</p>
+            <p>3、甲乙双方应按本协议约定支付服务费，如未支付服务费，丙方有权不予办理相关手续。</p>
+    </div>
+    <div class="textindent">
+            <p class="son_title">五、保密事项</p>
+            <p>甲乙丙三方均应充分保守本合同所涉及的商业秘密，任何一方不得对外提供或泄露本合同所约定的内容。</p>
+    </div>
+    <div class="textindent">
+            <p class="son_title">六、其他事项</p>
+            <p> 1、丙方履行本合同时，预约甲乙双方到相关部门办理手续的通知方式为：电话、短信、信函、电子通讯形式（如微信、电子邮件等），其中任何一种方式的采用都视为向甲乙双方进行了预约，甲乙双方应按约定赴约。电话联系按本合同甲乙双方提供的电话号码联络，信函发送按本合同甲乙双方提供的住所发出，电子通讯形式发送至甲乙双方提供或告知的账号，丙方按上述方法发出预约后，即视为已向甲乙双方通知。</p>
+            <p>2、本合同未尽事宜，甲乙丙三方协商后可订立补充协议，补充协议与本合同具有同等效力。</p>
+            <p>3、因本合同产生的争议，甲乙丙三方协商解决；协商不成的，任何一方可向丙方所在地人民法院起诉</p>
+            <p>4、本合同一式四份，甲乙双方各持一份，丙方持两份，自三方签字盖章之日起生效。</p>
+    </div>
+    <div class="sign">
+        <div>
+            <p>甲    方：</p>
+            <p>身份证号：</p>
+            <p>电话号码：</p>
+            <p>住址：</p>
+        </div>
+        <div>
+                <p>乙    方：</p>
+                <p>身份证号：</p>
+                <p>电话号码：</p>
+                <p>住址：</p>
+        </div>
+        <div>
+            <p style="position: relative;">丙    方（盖章）：<img class="SignatureLocation" style="position:absolute;left:68px;top:58px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /></p>
+        </div>
+    </div>
+    <div class="date">
+            合同签订日期： <span></span>   年 <span></span> 月  <span></span>日
+    </div>
+    <span id="submit" style="display: none;">click</span>
+</div>
+<div class="alert-viwer" style="display: none;">
+        <textarea id="inputArea" cols="30" rows="4"></textarea>
+        <p class="control-btn">
+          <span>保存</span>
+          <span>取消</span>
+        </p>
+      </div>
+</body>
+<script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+ <script type="text/javascript" src="/js/bundle_wt20191111.js"></script>
+<script>
+    //  (function () {
+    //   var scriptList = document.getElementsByTagName("script")
+    //   console.log(scriptList)
+    //   if(!scriptList[0].src){
+    //     var host='https://sign2.jjw.com'
+    //     var host_other="http://sign2.jjw.com:28879"
+    //     var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_dj20190402.js","datepicker.css"]
+    //     for (let i = 0; i < addrList.length; i++) {
+    //       if(window.location.host==='localhost:8080'){
+    //         if(addrList[i].indexOf('bundle')>-1){
+    //         //   addrList[i]=host_other+'/'+addrList[i]
+    //           addrList[i]='./WT.js'
+    //         }else{
+    //           addrList[i]=host_other+'/'+addrList[i]
+    //         }
+    //       }else{
+    //         addrList[i]='/'+addrList[i]
+    //       }
+    //       if(addrList[i].indexOf('.css')>-1){
+    //       var hm = document.createElement("link");
+    //       hm.rel="stylesheet"
+    //       hm.href = addrList[i];
+    //       /*var s = document.getElementsByTagName("link")[0];
+    //       s.parentNode.insertBefore(hm,s);*/
+    //       document.head.appendChild(hm);
+    //     }else{
+    //       var hm = document.createElement("script");
+    //       addrList[i].includes('WT')&&(hm.type = 'module');
+    //       hm.src = addrList[i];
+    //       var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+    //       s.parentNode.insertBefore(hm,s);
+    //     }
+    //     }
+    //   }
+    // })();
+</script>
+</html>

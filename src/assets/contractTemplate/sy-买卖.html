@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <link rel="stylesheet" href="/datepicker.css"/>
+  <title>十堰买卖合同</title>
+  <style>
+    body{
+      font-family: SimHei;
+    }
+    p{
+      margin: 0px;
+      padding: 0px;
+      line-height: 2;
+    }
+    input{
+      border: 0;
+      outline: none;
+      border-bottom: 1px solid gray;
+      height: 16px;
+      padding-left: 10px;
+      box-sizing: border-box;
+      font-family: SimHei;
+    }
+    input:disabled{
+      background-color: #fff;
+    }
+    input[type="checkbox"]{
+      border:0px;
+    }
+    /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+      -webkit-appearance: none !important;
+    }
+    input[type="number"]{-moz-appearance:textfield;}
+    ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .BODERRED{
+      border-color: red !important;
+    }
+    .modal{
+      position: relative;
+    }
+    .modal:before{
+      content: '';
+      z-index: 50;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+    .cw_content{
+      position: relative;
+      font-size: 16px;
+      width: 840px;
+      box-sizing: border-box;
+      padding:0 40px;
+      margin: 0 auto;
+    }
+    .cw_content .title{
+      font-size: 20px;
+      text-align: center;
+    }
+    .cw_message{
+      padding: 15px 30px;
+    }
+    .cw_message>ul{
+      margin-bottom: 10px;
+    }
+    .cw_message>ul>li{
+      display: inline-block;
+      min-width: 260px;
+      line-height: 2;
+    }
+    .cw_agreement{
+      text-indent: 32px;
+    }
+
+    .table-style{
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .table-style tr td {
+      height: 25px;
+    }
+    .table-three td {
+      padding: 5px;
+    }
+    .table-date span:first-child {
+      margin-right: 100px;
+    }
+    .table-date span:nth-child(n+2) {
+      margin: 0 30px;
+    }
+    .textcenter{
+      text-align: center;
+    }
+    .mt60{
+      margin-top: 60px;
+      margin-bottom: 10px;
+    }
+    .bold{
+      font-weight: bold;
+    }
+    .lh-18{
+      line-height:2;
+    }
+    .info-checkbox{
+      display: inline;
+      cursor: pointer;
+      text-indent: 0px;
+      line-height: 1;
+    }
+    .info-checkbox>p[type="check"]{
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 1px solid gray;
+      position: relative;
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+      margin: 0;
+    }
+    .info-checkbox>p[type="check"][checked='true']:before{
+      content:'';
+      position: absolute;
+      left: 0;
+      display: inline-block;
+      width: 100%;
+      height: 10px;
+      background-size: contain;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVQ4T72TsUvDQBjF33cYUhfFP0GIVO7S1cXJxU3sIqiLuHSyOIg4Cro4OBW3jJ10EhcRdHcw2901f0BWh04OmvskpZVYqjYEvPl9v3v3vneEiocqzuP/AY1GY9k5F2VZ1kyS5LWUAynlihDigZnnmblprb2bGhCG4TqAWwCzzNwyxkR5fgNAEARzvu8fGWPOAXyMB6uU2iaiLoAZ51zbWns10gwAUsotIcQNM9/XarXNOI7fRwIp5QERdYiInHOn1tqz4gVfTwjDsAOgzcxP/X5/I03TN6XUBRGdDAcutdbH4+6KGQil1CMRrQF4BtADsJ8PMHNkjGlN6sy3EIdZvBDRUkHc1Vrv5Zw/AbmgXq8vep4XA1gAcK213gXgfmrsxDUqpVaJ6FBrvQMg+63uU/eglIMyH6yyg0+YpmgRBNEBzgAAAABJRU5ErkJggg==");
+    }
+    .info-checkbox>p[type="check"][checked='false']:after{
+      content:'';
+      position: absolute;
+      display: inline-block;
+      width: 100%;
+      height: 10px;
+      background-size: contain;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABdklEQVQ4T42TvUrEQBSFz1kt1BewU8QnSJ5gu0mrsGDjRAt/UVBBWRtdsdgVBBdcFBHFZK0U+8TKwkIsEt/Ffq9M9se4GzVTDZM5X865dy5tpd8EeIlDv4z8i7ajGwCmaSt3D8QJBPUo9LZzMIzmBsQiIKs0AsuZLxOFah6IrdxbI5YW1uNn7zIBmGU7ugLwUCC1OPD3s5xYyr0gsdYVmzs9QNuJrhIsA1KJAv8oDemKIa3tKGzWu99+ABInyj0DsSVo7cdBs5Y+6xcPOOjF6UCMAChMGmCW+FdAEqeT1+zTbvprMxChe8FS+pzkRgIQOY5D/yCrsFkA2kpfgVwyf6YUxpMIkNMo8Hf/c0BLuXckdFYRRaQRh/5mGvLtoFQasj7H7gnM/d1GuY5Cf/lnG0ulIftz9BHgTJ6HBEkgK6Y8RLE4bI9MPPwnTrW4/ZQFfhx6C7SUfiI5m2cOOpDvYRK5puW47wK8fgTeTo5J7EW3lPZITH0B+X227Y6+aJ4AAAAASUVORK5CYII=");
+    }
+    span[tag='input-auto']{
+      border-bottom: 1px solid gray;
+      padding: 2px 10px;
+      word-break: break-all;
+      word-wrap: break-word;
+    }
+    span[tag='input-auto'].input-before:before{
+      content:'请输入';
+      text-align: center;
+      color: #a1a1a1;
+    }
+    span[tag='input-auto'].input-before.input-select:before{
+      content:'请选择';
+      text-align: center;
+      color: #a1a1a1;
+    }
+    .alert-viwer{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      padding: 10px;
+      border-radius: 4px;
+      background: #fff;
+      z-index: 999;
+      box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    }
+    .alert-viwer>textarea{
+      background: #fff;
+      border: 1px solid #dcdfe6;
+    }
+    .alert-viwer>p{
+      text-align: right;
+      margin: 6px 0 0;
+      padding: 0;
+      line-height: normal;
+    }
+    .alert-viwer>p>span{
+      display: inline-block;
+      background: #409eff;
+      padding: 6px 12px;
+      color: #FFFFFF;
+      border-radius: 4px;
+    }
+    .alert-viwer>p>span:last-of-type{
+      background: #fff;
+      color: #606266;
+      border: 1px solid #dcdfe6;
+    }
+    .sign-pos {
+      margin: 20px 0;
+    }
+    .sign-pos > p {
+      display: inline-block;
+      width: 230px;
+    }
+    .ulbox {
+      overflow: hidden;
+      margin-top: 50px;
+    }
+    .ulbox li {
+      float: left;
+      box-sizing: border-box;
+      width: 50%;
+      margin-bottom: 10px;
+    }
+    .ulbox li span {
+      display: inline-block;
+      border-bottom: 1px solid gray;
+    }
+    .signTime{
+      padding: 10px 0 10px 340px;
+    }
+    .signTime span{
+      display: inline-block;
+      border-bottom: 1px solid gray;
+    }
+    .other span{
+      display: inline-block;
+      width: 750px;
+      height: 25px;
+      border-bottom: 1px solid gray;
+    }
+    .coverStyle{
+      text-align: center;
+      font-size: 70px;
+      font-weight: bold;
+      padding-top: 400px;
+    }
+    .coverStyle p{
+      line-height: 1;
+    }
+    .page1 {
+      break-before: page;
+      page-break-before: always;
+    }
+    @page {
+      size: 955px 1350px;
+    }
+  </style>
+</head>
+<body>
+<span id="submit" style="position: absolute;top: -1000px;z-index: 0;">click</span>
+<div class="cw_content container">
+  <div class="alert-viwer" style="display: none;">
+    <textarea id="inputArea" cols="30" rows="4"></textarea>
+    <p class="control-btn">
+      <span>保存</span>
+      <span>取消</span>
+    </p>
+  </div>
+  <!-- 封面 -->
+  <div class="cover-fm" style="display: none;">
+    <div class="coverStyle">
+      <p>存量房买卖合同</p>
+    </div>
+  </div>
+  <!-- 封面结束 -->
+  <div class="page1">
+    <div class="title bold"><p>存量房买卖合同</p></div>
+    <div class="bold" style="text-align: right;margin-bottom: 30px;"><span>合同编号：<span systemparam="code" tag="input-auto"></span></span></div>
+    <div class="note">
+      <p>1、本合同文本适用于存量房买卖。存量房，即二手房，是指通过办理转移登记取得房屋所有权证的房屋。</p>
+      <p>2、签订本合同前，出卖人应当向买受人出示房屋所有权证、土地使用权证及其他有关证书和证明文件。</p>
+      <p>3、出卖人承诺对本合同房屋信息的真实性承担法律责任。买受人对本合同房屋及房屋权属资料已实际验看过，并对相关情况已充分了解，自愿购买。</p>
+    </div>
+    <div class="cw_message">
+      <ul>
+        <li><span>房屋出卖人：</span><span systemparam="ownerName" tag="input-auto"></span></li>
+        <!-- <li><span>证件号码：</span><span systemparam="ownerID" tag="input-auto"></span></li> -->
+      </ul>
+      <ul>
+        <li><span>共有权人：</span><span systemparam="ownerNames" tag="input-auto"></span></li>
+        <!-- <li><span>证件号码：</span><span systemparam="ownerIDs" tag="input-auto"></span></li> -->
+      </ul>
+      <ul>
+        <li><span>代理人：</span><span tag="input-auto" class="text-limit input-before" extendParam="val5"></span></li>
+        <!-- <li><span>证件号码：</span><span tag="input-auto" max="30" class="text-limit input-before" extendParam="val6"></span></li> -->
+      </ul>
+      <ul>
+        <li><span>房屋买受人：</span><span systemparam="guestName" tag="input-auto"></span></li>
+        <!-- <li><span>身份证/护照/工商注册号：</span><span systemparam="guestID" tag="input-auto"></span></li> -->
+      </ul>
+      <ul>
+        <li><span>共同买受人：</span><span systemparam="guestNames" tag="input-auto"></span></li>
+        <!-- <li><span>证件号码：</span><span systemparam="guestIDs" tag="input-auto"></span></li> -->
+      </ul>
+      <ul>
+        <li><span>代理人：</span><span tag="input-auto" class="text-limit input-before" extendParam="val11"></span></li>
+        <!-- <li><span>证件号码：</span><span tag="input-auto" max="30" class="text-limit input-before" extendParam="val12"></span></li> -->
+      </ul>
+    </div>
+    <div class="cw_agreement">
+      <p>根据《中华人民共和国合同法》、《中华人民共和国城市房地产管理法》、《中华人民共和国物权法》及其他有关法律、法规的规定，买卖双方在平等、自愿、协商一致的基础上就存量房屋买卖事宜达成如下协议：</p>
+
+      <p id="one" class="navTitle bold">第一条、房屋基本情况 </p>
+      <div class="lh-18">出卖人所售房屋坐落为<span systemparam="propertyAddr" tag="input-auto" extendParam="val14"></span>。<div class="info-checkbox" name="houseUse"><p type="check"></p>房屋产权证</div><div class="info-checkbox" name="houseUse"><p type="check"></p>合同房备案确认单</div>所载建筑面积为<span tag="input-auto" systemparam="square"></span>平方米。<div class="info-checkbox" name="houseUsing"><p type="check"></p>该房屋</div>已取得房屋所有权证/不动产权证书，证号为：<span tag="input-auto" class="text-limit input-before" extendParam="val16"></span>；该房屋占用的建设用地，土地性质：<span tag="input-auto" class="text-limit input-before" extendParam="val17"></span>；国有土地使用证/不动产权证书号：<span tag="input-auto" class="text-limit input-before" extendParam="val18"></span>，填发单位：<span tag="input-auto" class="text-limit input-before" extendParam="val19"></span>。<div class="info-checkbox" name="houseUsing"><p type="check"></p>该房屋</div>未取得房屋所有权证，购房合同编号为<span tag="input-auto" class="text-limit input-before" extendParam="val20"></span>，出卖人保证本合同项下房屋可以在所在区局规定的正常时间内办理出卖人名下不动产权证书，办证费用由<div class="info-checkbox" name="bear"><p type="check"></p>出卖人承担</div><div class="info-checkbox" name="bear"><p type="check"></p>买受人承担</div>。</div>
+
+      <p id="two" class="navTitle bold">第二条、房屋权属情况</p>
+      <div class="lh-18">（一）该房屋性质为：<div class="info-checkbox" name="Housingnature"><p type="check"></p>商品房</div>；<div class="info-checkbox" name="Housingnature"><p type="check"></p>已购公有住房</div>；<div class="info-checkbox" name="Housingnature"><p type="check"></p>购房合同满5年的经济适用房</div>。</div>
+      <div class="lh-18">（二）该房屋的抵押登记情况为：</div>
+      <div class="lh-18"><div class="info-checkbox" name="Mortgage"><p type="check"></p>该房屋未设定抵押</div>；出卖人承诺该房屋未在任何机构设定抵押，也未以该房屋向他人提供抵押担保。</div>
+      <div class="lh-18"><div class="info-checkbox" name="Mortgage"><p type="check"></p>该房屋已经设定抵押</div>，抵押权人为：<span class="input-before" tag="input-auto" extendParam="val21"></span>，出卖人应按以下第<input type="text" class="text-limit dropdown-item" list="1,2,3" style="width:30px" readonly="readonly" extendParam="val22" inputmethod="val22" />方式提前结清贷款并注销抵押登记：</div>
+      <div class="lh-18">（1）委托担保公司结清贷款：出卖人应在签订本合同后<span tag="input-auto" class="input-before" extendParam="val23" listen="number"></span>日内委托第三方办理结清贷款手续，且出卖人最迟应于<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val24"/>前办理完毕解除抵押登记手续。</div>
+      <div class="lh-18">（2）出卖人现金结清贷款：出卖人应于<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val25"/>前向该房屋的原贷款机构提交一次性还清剩余贷款的申请，且出卖人最迟应于<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val26"/>前办理完毕解除抵押登记手续。</div>
+      <div class="lh-18">（3）由买受人出资提前结清贷款，买受人应当于<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val27"/>前支付出卖人<span class="input-before" tag="input-auto" extendParam="val28" listen="number"></span>元整，用于提前结清贷款。</div>
+      <div class="lh-18">（三）该房屋的租赁情况为：<div class="info-checkbox" name="lease"><p type="check"></p>出卖人未将该房屋出租</div>。<div class="info-checkbox" name="lease"><p type="check"></p>出卖人已将该房屋出租</div>。出卖人承诺已经在出售前三个月书面通知了承租人，承租人已放弃优先购买权，如因此导致合同无法履行或因此导致买受人损失的，由出卖人承担违约责任。</div>
+      <div class="lh-18">（四）出卖人应在签订本合同后<span class="input-before" tag="input-auto" extendParam="val29" listen="number"></span>日内将房屋不动产权证书/房屋所有权证、土地使用权证原件及其他权属证明文件交付居间方保管，用于办理房产交易相关手续。</div>
+      <div class="lh-18"></div>
+
+      <p id="three" class="navTitle bold">第三条、成交方式</p>
+      <div class="lh-18">出卖人与买受人通过<span  systemparam="companyNames" company="true" extendParam="val30" class="input-before text-limit" tag="input-auto"></span>居间介绍成交。</div>
+
+      <p id="four" class="navTitle bold">第四条、房产转让价格</p>
+      <div class="lh-18">（一）该房产转让价格为按套转让，转让价格为人民币<span class="input-before" tag="input-auto" extendParam="val31" listen="number"></span>元（大写<span tag="input-auto" extendParam="val31_add" systempatam="true"></span>圆整）。此转让价：</div>
+      <div class="lh-18">1、 <div class="info-checkbox" name="Transferprice"><p type="check"></p>包含该房屋家具</div>、家电、装饰装修及配套设施设备（以列明的家私清单为准），出卖人应当保证自本合同签订之日起至该房屋验收交接完成，对各项房屋附属设施设备及其装饰装修保持良好的状况。<div class="info-checkbox" name="Transferprice"><p type="check"></p>不包含该房屋家具</div>、家电、装饰装修及配套设施设备。</div>
+      <div class="lh-18">2、 <div class="info-checkbox" name="Parkingspace"><p type="check"></p>包含车位</div>/<div class="info-checkbox" name="Parkingspace"><p type="check"></p>不包含</div>，<div class="info-checkbox" name="Parkinguse"><p type="check"></p>使用权</div> <div class="info-checkbox" name="Parkinguse"><p type="check"></p>所有权</div>，车位号为：<span class="input-before" tag="input-auto" extendParam="val32"></span>，买卖双方在办理房屋过户手续当天一并办理车位过户或使用权变更手续，税费由<input type="text" class="text-limit dropdown-item" list="甲,乙" style="width:30px" readonly="readonly" extendParam="val33" />方全部承担。</div>
+      <div class="lh-18">（二）若该房屋在交易时暂未取得房屋所有权证或不动产权证书的，后期房屋登记机构颁发的不动产权证书所记载的房屋地址、面积（无论增加或减少）等信息与买卖双方已签署的合同中记载不一致的，买卖双方一致同意放弃异议的权利，并按照双方共同签署的合同继续履行，不因此追究他方的任何责任。或双方协商以如下方式解决：<span class="input-before" tag="input-auto" extendParam="val34"></span>。</div>
+
+      <p class="navTitle bold" id="five">第五条、付款约定</p>
+      <div class="lh-18">（一）定金人民币<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val35" listen="number"></span>元（大写<span type="text" tag="input-auto" extendParam="val35_add" systemparam="true"></span>圆整），买受人应于<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val36"/>将定金支付给出卖人。</div>
+      <div class="lh-18">（二）买受人首付款人民币<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val37" listen="number"></span>元（大写<span type="text" tag="input-auto" extendParam="val37_add" systemparam="true"></span>圆整），以下列第<input type="text" class="text-limit dropdown-item" list="1,2" style="width:30px" readonly="readonly" extendParam="val38" inputmethod="val38" />种方式支付：</div>
+      <div class="lh-18">（1）买受人于过户当日，在见到已是乙方名下不动产权收件单当日，将首付款（不包含定金）人民币<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val39" listen="number"></span>元（大写<span type="text" tag="input-auto" extendParam="val39_add" systemparam="true"></span>圆整）支付出卖人。</div>
+      <div class="lh-18">（2）买受人应于<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val40"/>前，将首付款（不包含定金）人民币<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val41" listen="number"></span>元（大写<span type="text" tag="input-auto" extendParam="val41_add" systemparam="true"></span>圆整）支付给出卖人或支付给出卖人用于提前结清贷款，剩余首付款人民币<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val42" listen="number"></span>元（大写<span type="text" tag="input-auto" extendParam="val42_add" systemparam="true"></span>圆整）买受人应在<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val43"/>支付出卖人。</div>
+      <div class="lh-18">（三）尾款人民币<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val44" listen="number"></span>元（大写<span type="text" tag="input-auto" extendParam="val44_add" systemparam="true"></span>圆整），出卖人同意买受人向银行申请<div class="info-checkbox" name="loan"><p type="check"></p>商业贷款</div>　<div class="info-checkbox" name="loan"><p type="check"></p>公积金贷款</div>　<div class="info-checkbox" name="loan"><p type="check"></p>组合贷款方式</div>支付 <div class="info-checkbox" name="loan"><p type="check"></p></div><span type="text" tag="input-auto" class="text-limit input-before" extendParam="val45" listen="number"></span>日内现金直接付款；</div>
+      <div class="lh-18">买卖双方应于<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val46"/>前往贷款机构办理贷款申请手续，与贷款银行和住房公积金中心签订借款合同，递交相关文件并支付相关费用。贷款金额及放款时间以银行审批为准。买受人因自身原因未获得贷款机构批准的（包括贷款未获得批准和未按照前述拟贷款金额足额批准的），则转让房款的不足部分，约定按以下第<input type="text" class="text-limit dropdown-item" list="1,2" style="width:30px" readonly="readonly" extendParam="val47" inputmethod="val47" />种方式办理：</div>
+      <div class="lh-18">（1）买受人自行筹齐剩余房价款，在房屋权属转移登记当日见不动产收件单时以<div class="info-checkbox" name="Transfer"><p type="check"></p>【自行划转】</div><div class="info-checkbox" name="Transfer"><p type="check"></p>【居间方代划转】</div>的方式支付给出卖人；</div>
+      <div class="lh-18">（2）出卖人同意买受人继续向其他贷款机构申请贷款直到贷款获得批准（但最多不得超过<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val48" listen="number"></span>家贷款机构），买卖双方应提交贷款机构所需全部资料；</div>
+      <div class="lh-18">（四）交房保证金：买卖双方一致同意，买受人从本协议约定的购房款中留存人民币<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val49" listen="number"></span>元（大写<span type="text" tag="input-auto" extendParam="val49_add" systemparam="true"></span>圆整）作为交房保证金；买受人应当在办理房屋交付、物业交割手续，签署交房确认书后当日支付出卖人。</div>
+
+      <p class="navTitle bold" id="six">第六条、房屋产权及具体状况的承诺</p>
+      <div class="lh-18">（一）出卖人应当保证该房屋没有产权纠纷，未被限制转让。出卖人承诺其配偶和该房屋的共有权人均知晓并同意本次房屋交易，认可本合同及其他相关文件的约定，且无他人对该房屋享有优先购买权；买受人承诺其配偶和该房屋的共同买受人均知晓并同意本次房屋交易，且认可本合同及其他相关文件的约定。如因一方违反前述承诺，导致合同无法正常履行的，由违反承诺方按照房屋成交总价款的20%赔偿守约方的损失。本条款为独立条款，即使本合同及其他文件因一方违反前述承诺，依法被变更、撤销、解除、终止或认定无效的，本条约定依然有效，守约方仍可依据本条款追究违反承诺方的法律责任。</div>
+      <div class="lh-18">（二）出卖人确认，该房屋在其持有期间，在房屋本体结构内<div class="info-checkbox" name="structure"><p type="check"></p>是</div>/<div class="info-checkbox" name="structure"><p type="check"></p>否</div>发生过非正常死亡事件（包括但不限于自杀、他杀、从该房屋内坠出死亡、意外死亡等）。如果出卖人在签署本合同前就前述事项隐瞒真实情况的，双方确认：因出卖人之欺诈行为，使得买受人在违背真实意思的基础上订立本合同，买受人有权依法要求撤销房屋买卖合同及相关协议。出卖人另应承担如下责任：</div>
+      <div class="lh-18">1、出卖人应当在买受人提出请求后十个工作日内返还买受人全部房款；未如期返还的，出卖人应当按日计算向买受人支付房屋成交总价万分之五的滞纳金。</div>
+      <div class="lh-18">2、出卖人应当赔偿买受人因此所受的损失，包括但不限于：就已收取的房款按照银行同期贷款利率赔偿买受人利息损失、赔偿买受人为购房支出的税费、贷款费用等实际支出、买受人已向居间方交纳的全部费用、房屋价格上涨的差价损失、买受人实际支出的装修、物业、使用费用等。</div>
+      <div class="lh-18">（三）出卖人确认该房屋主体结构内（不含公共区域：如公共管道、外墙、屋顶等）<div class="info-checkbox" name="structure1"><p type="check"></p>是</div>/<div class="info-checkbox" name="structure1"><p type="check"></p>否</div>存在漏水（“漏水”指房屋顶部、墙面、室内管道或地面发生的渗水或漏水现象）的情况。若该房屋主体结构内存在漏水情况，出卖人应当在交付房屋之前完成修复。如出卖人未予修复，买受人在房屋交付后自行维修的，出卖人应当承担全部维修费用；因维修房屋影响买受人使用的，出卖人另应当赔付买受人因此所受的实际损失。但买受人使用不当，导致该房屋主体结构内发生漏水的不在本条款所约定之范围内。</div>
+
+      <p class="navTitle bold" id="seven">第七条 、房产过户</p>
+      <div class="lh-18">（一）买卖双方同意在<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val50"></span>，共同去房屋登记机构申请办理房屋所有权转移登记手续，买受人应在取得不动产权后<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val51" listen="number"></span>个工作日内办理按揭贷款的抵押登记。</div>
+      <div class="lh-18">（二）若买卖双方在合同履行过程中发现房屋被查封，双方同意按照以下第<input type="text" class="text-limit dropdown-item" list="1,2" style="width:30px" readonly="readonly" extendParam="val99" inputmethod="val99" />种方式解决：</div>
+      <div class="lh-18">（1）买受人有权解除合同并要求出卖人按本合同第十条承担违约责任。</div>
+      <div class="lh-18">（2）出卖人承诺在<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val52" listen="number"></span>个工作日内解除房屋查封或限制转让情形，如出卖人不能在规定的时间内解除查封或限制转让情形，则买受人有权解除合同，并要求出卖人按合同第十条规定承担违约责任。</div>
+      <div class="lh-18">（三）税费相关规定</div>
+      <div class="lh-18">1、出卖人确认，交易房屋情况为：</div>
+      <div class="lh-18">（1）交易房屋：<div class="info-checkbox" name="Housingsituation"><p type="check"></p>所有权证未满两年</div><div class="info-checkbox" name="Housingsituation"><p type="check"></p>所有权证满二年未满五年</div><div class="info-checkbox" name="Housingsituation"><p type="check"></p>所有权证满五年</div>；</div>
+      <div class="lh-18">（2）交易房屋<div class="info-checkbox" name="Housingsituation1"><p type="check"></p>是</div>/<div class="info-checkbox" name="Housingsituation1"><p type="check"></p>否</div>为本市行政区域内出卖人家庭名下唯一住房；</div>
+      <div class="lh-18">（3）交易房屋<div class="info-checkbox" name="Housingsituation2"><p type="check"></p>是</div>/<div class="info-checkbox" name="Housingsituation2"><p type="check"></p>否</div>为继承所得；交易房屋<div class="info-checkbox" name="Housingsituation3"><p type="check"></p>是</div>/<div class="info-checkbox" name="Housingsituation3"><p type="check"></p>否</div>为赠与所得。</div>
+      <div class="lh-18">2、房屋所有权转移登记时所涉及的税费，买卖双方同意按照以下第<input type="text" class="text-limit dropdown-item" list="1,2,3" style="width:30px" readonly="readonly" extendParam="val53" />种方式承担，并由承担方直接向主管机关缴纳：</div>
+      <div class="lh-18">（1）全部由买受人承担。</div>
+      <div class="lh-18">（2）全部由出卖人承担。</div>
+      <div class="lh-18">（3）买卖双方按国家规定承担各自税费。</div>
+      <div class="lh-18">本合同履行过程中因政策原因须缴纳新的税费种类的，由政策规定的缴纳方缴纳；因政策原因使原有税费金额增加的，由本合同约定的税费承担方足额缴纳。若房产实际状况与出卖人在合同中确认的情况不符导致交易房屋税费增加的，由出卖人全额承担。办理房屋权属过户等相关业务产生的税（费）项、税（费）率、税（费）额均以税务部门、房地产交易市场等相关部门出具的单据为准，居间方提供的购房预算仅供参考，不作为缴纳上述相关费用的依据。</div>
+      <div class="lh-18">3、本合同履行过程中，买卖双方应按照国家及房屋所在地的相关规定缴纳各项税、费。一方不按法律、法规规定缴纳相关税费导致交易不能继续进行的，应当向对方支付相当于房价款20％的违约金。</div>
+
+      <p class="navTitle bold" id="eight">第八条、房产交付</p>
+      <div class="lh-18">（一）出卖人应当按照下列第<input type="text" class="text-limit dropdown-item" list="1,2,3" style="width:30px" readonly="readonly" extendParam="val54" inputmethod="val54" />条约定将该房屋交付给买受人。</div>
+      <div class="lh-18">（1）办理完毕该房屋所有权转移登记手续后<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val55" listen="number"></span>个工作日内将该房屋交付给买受人；</div>
+      <div class="lh-18">（2）出卖人收到买受人全部首付款后<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val56" listen="number"></span>个工作日内将该房屋交付给买受人</div>
+      <div class="lh-18">（3）出卖人收到全部购房款（不含交房保证金）后<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val57" listen="number"></span>个工作日内将该房屋交付给买受人；</div>
+      <div class="lh-18">（二）该房屋交付时，应当履行下列第1、2、3项手续：</div>
+      <div class="lh-18">1、出卖人与买受人共同对该房屋附属设施设备、装饰装修、相关物品清单等具体情况进行验收，记录水、电、气表的读数，并交接家私清单所列物品；</div>
+      <div class="lh-18">2、买卖双方在房屋附属设施设备、装饰装修、相关物品清单上签字；</div>
+      <div class="lh-18">3、移交该房屋房门钥匙</div>
+      <div class="lh-18">（三）在房屋交付以前发生的物业管理费、供暖、水、电、燃气、有线电视、电信及其他：<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val58"></span>费用由出卖人承担，交付以后（含当日）发生的费用由买受人承担。</div>
+
+      <p class="navTitle bold" id="nine">第九条、户口迁移</p>
+      <div class="lh-18">出卖人应当在<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val59"></span>办理原有户口迁出手续。如因出卖人原因未按期将户口迁出的，自逾期之日起出卖人应当按日计算向买受人支付房屋总价款万分之五的违约金。</div>
+      <p class="navTitle bold" id="ten">第十条、违约责任</p>
+      <div class="lh-18">（一）买卖双方任何一方逾期履行本合同约定义务的，每逾期一日，违约方应按日计算向守约方支付房屋总价款万分之五的违约金。</div>
+      <div class="lh-18">（二）出卖人若出现下列情形之一的，出卖人构成根本违约，买受人有权以书面通知的方式解除房屋买卖合同，并有权要求出卖人双倍返还定金或要求支付房屋总价款20%的违约金，同时要求出卖人退还已收其他购房款：</div>
+      <div class="lh-18">1、出卖人提供的该房屋所有权证、原购房合同、车位权属证明等相关产权证明手续不真实、不完整、无效，导致买受人无法取得房屋所有权或车位所有权、使用权；</div>
+      <div class="lh-18">2、该房屋被查封或限制转让；</div>
+      <div class="lh-18">3、逾期履行本合同约定的义务超过十五日的；</div>
+      <div class="lh-18">4、拒绝或因自身原因无法将该房屋出售给买受人或者擅自提高房屋交易价格的；</div>
+      <div class="lh-18">5、将该房屋出售给第三方的；</div>
+      <div class="lh-18">6、其他根本违约情形。</div>
+      <div class="lh-18">（三）买受人若出现下列情形之一的，买受人构成根本违约，出卖人有权以书面通知的方式解除房屋买卖合同，并有权没收买受人的定金或要求买受人支付房屋总价款20%的违约金：</div>
+      <div class="lh-18">1、提供的证件等购房所需的资料不完整、不真实或无效，导致无法办理房屋所有权转移登记手续的；</div>
+      <div class="lh-18">2、拒绝购买该房屋或未按约支付房款的；</div>
+      <div class="lh-18">3、逾期履行本合同约定的义务超过十五日的；</div>
+      <div class="lh-18">4、其他根本违约情形。</div>
+      <div class="lh-18">（四）在本合同履行期间，如出台新的限购政策且该限购政策导致本合同无法继续履行的，各方互不承担违约责任，后续事宜及已交付的款项和已发生的费用由各方友好协商解决。</div>
+      <div class="lh-18">（五）买卖双方在合同履行过程中，因任何一方违约，守约方以诉讼形式向违约方主张权利的，违约方须承担守约方所支出的诉讼费、保全费、执行费、律师代理费及交通费等相关费用。</div>
+      <p class="navTitle bold" id="eleven">第十一条、不可抗力及居间人责任</p>
+      <div class="lh-18">如因不可抗力或其他法定原因致使合同不能履行的，买卖双方经协商可解除合同，并互不承担违约责任，房屋毁损灭失的风险责任自该房屋 <div class="info-checkbox" name="Ownershiptransfer"><p type="check"></p>所有权转移</div> <div class="info-checkbox" name="Ownershiptransfer"><p type="check"></p>转移占有之日起</div>转移给买受人。</div>
+      <div class="lh-18">甲乙双方认可并同意：本次交易的居间人，仅为居于交易双方当事人之间起介绍、协助作用的中间人，依法只承担居间人的法律责任和后果。</div>
+      <p class="navTitle bold" id="twelve">第十二条、其他</p>
+      <div class="lh-18">1、如单方违约导致本合同不能履行的，由违约方赔偿守约方支付的居间服务费。</div>
+      <div class="lh-18">2、买卖双方在签订本合同前的任何声明、承诺应当以书面为准，如与本合同约定不符的，以本合同约定为准，本合同未尽事宜，由买卖双方另行商定，并签订补充条款，合同备注条款内容与前述条款内容不一致的，以备注条款为准：<span tag="input-auto" class="text-limit input-before" extendParam="val60"></span></div>
+      <p class="navTitle bold" id="thirteen">第十三条、争议解决</p>
+      <div class="lh-18">本合同发生争议，由买卖双方协商解决，协商不成的，按下列第<input type="text" class="text-limit dropdown-item" list="1,2" style="width:30px" readonly="readonly" extendParam="val61" inputmethod="val61" />种方式解决：</div>
+      <div class="lh-18">（1）提交<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val62"></span>仲裁委员会仲裁；</div>
+      <div class="lh-18">（2）依法向房屋所在地人民法院起诉。</div>
+      <p class="navTitle bold" id="fourteen">第十四条、生效要件</p>
+      <div class="lh-18">本合同自买卖双方签字之日起生效，双方各自保证其委托代理真实有效。本合同一式四份，出卖人、买受人、居间方、房地产管理部门各一份。</div>
+
+      <div class="ulbox">
+        <ul>
+          <li style="padding-left: 6px; position:relative">
+            出卖人(签章)：
+            <span style="width:210px;"></span>
+            <img style="position:absolute; left:170px; top:-20px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFwmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIiB4bXA6Q3JlYXRlRGF0ZT0iMjAyMC0wNi0xMFQxMTowOToxMiswODowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAyMC0wNi0xMFQxMTowOToxMiswODowMCIgeG1wOk1vZGlmeURhdGU9IjIwMjAtMDYtMTBUMTE6MDk6MTIrMDg6MDAiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6YTc2ZjAwNGMtYjNlYy1kMDQ5LWIyZTUtNTk2NzdlZmM5ZjY1IiB4bXBNTTpEb2N1bWVudElEPSJhZG9iZTpkb2NpZDpwaG90b3Nob3A6YjI1MGQ4OTktZjc1Mi1iZTRlLWI1NjAtOTRlMGRiNDk0NDMzIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MzMzNWY4MTEtYWI2ZC0zODQ2LWIwNDktMDUwYzc3YjE1NDQ4IiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyI+IDx4bXBNTTpIaXN0b3J5PiA8cmRmOlNlcT4gPHJkZjpsaSBzdEV2dDphY3Rpb249ImNyZWF0ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6MzMzNWY4MTEtYWI2ZC0zODQ2LWIwNDktMDUwYzc3YjE1NDQ4IiBzdEV2dDp3aGVuPSIyMDIwLTA2LTEwVDExOjA5OjEyKzA4OjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDphNzZmMDA0Yy1iM2VjLWQwNDktYjJlNS01OTY3N2VmYzlmNjUiIHN0RXZ0OndoZW49IjIwMjAtMDYtMTBUMTE6MDk6MTIrMDg6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPC9yZGY6U2VxPiA8L3htcE1NOkhpc3Rvcnk+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+NFHNswAAABVJREFUGJVj/P//PwM+wIRXdtgoAAAYYwMNqG/jSgAAAABJRU5ErkJggg==" />
+          </li>
+          <li style="padding-left: 6px; position:relative">
+            买受人(签章)：
+            <span style="width:210px;"></span>
+            <img style="position:absolute; left:170px; top:-20px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjlFM0Q1N0IwNTY4QTExRTlCQjk5QzFERThFNTBEOUZCIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjlFM0Q1N0IxNTY4QTExRTlCQjk5QzFERThFNTBEOUZCIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OUUzRDU3QUU1NjhBMTFFOUJCOTlDMURFOEU1MEQ5RkIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6OUUzRDU3QUY1NjhBMTFFOUJCOTlDMURFOEU1MEQ5RkIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz66bpDAAAAAGklEQVR42mL8//8/AzGAiYFIMKqQOgoBAgwA1RIDEWq+kVwAAAAASUVORK5CYII=" />
+          </li>
+        </ul>
+        <ul>
+          <li>【法定代表人】：<span style="width:200px;"></span></li>
+          <li>【法定代表人】：<span style="width:200px;"></span></li>
+        </ul>
+        <ul>
+          <li>【委托代理人】(签章)：<span style="width:152px;"></span></li>
+          <li>【委托代理人】(签章)：<span style="width:152px;"></span></li>
+        </ul>
+      </div>
+      <div class="signTime">合同签订时间：<span style="width:70px;"></span>年<span style="width:70px;"></span>月<span style="width:70px;"></span>日</div>
+    </div>
+
+    <div class="page1">
+      <div>关于装饰、装修、家具、家电等附属设施清单的约定：<div class="info-checkbox"><p type="check" nocheck="true"></p>有</div>/<div class="info-checkbox"><p type="check" nocheck="true"></p>无</div>（若家私清单与合同约定不符的，以家私清单为准）</div>
+      <p>以下附属设施随房屋一并转移并交付给买受人：</p>
+      <table border="1" class="table-style textcenter">
+        <tr>
+          <td rowspan="3">装饰装修</td>
+          <td colspan="9" style="text-align: left;padding-left: 10px;">以下装饰、装修及附属设施保持原状：</td>
+        </tr>
+        <tr>
+          <td colspan="9" style="text-align: left;padding-left: 10px;"><div class="info-checkbox"><p type="check" nocheck="true"></p>卫浴设施设备</div>/<div class="info-checkbox"><p type="check" nocheck="true"></p>整体橱柜</div>/<div class="info-checkbox"><p type="check" nocheck="true"></p>地板</div>/<div class="info-checkbox"><p type="check" nocheck="true"></p>墙壁</div>/<div class="info-checkbox"><p type="check" nocheck="true"></p>门、窗</div>/<div class="info-checkbox"><p type="check" nocheck="true"></p>热水器</div>/<div class="info-checkbox"><p type="check" nocheck="true"></p>暖气片</div></td>
+        </tr>
+        <tr>
+          <td colspan="9" style="text-align: left;padding-left: 10px;">其他：</td>
+        </tr>
+        <tr>
+          <td rowspan="3">家具</td>
+          <td>名称</td>
+          <td>品牌</td>
+          <td>数量</td>
+          <td>名称</td>
+          <td>品牌</td>
+          <td>数量</td>
+          <td>名称</td>
+          <td>品牌</td>
+          <td>数量</td>
+        </tr>
+        <tr>
+          <td>床</td>
+          <td></td>
+          <td></td>
+          <td>沙发</td>
+          <td></td>
+          <td></td>
+          <td>衣柜</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="9" style="text-align: left;padding-left: 10px;">其他：</td>
+        </tr>
+        <tr>
+          <td rowspan="4">家电</td>
+          <td>名称</td>
+          <td>品牌</td>
+          <td>数量</td>
+          <td>名称</td>
+          <td>品牌</td>
+          <td>数量</td>
+          <td>名称</td>
+          <td>品牌</td>
+          <td>数量</td>
+        </tr>
+        <tr>
+          <td>电视机</td>
+          <td></td>
+          <td></td>
+          <td>空调</td>
+          <td></td>
+          <td></td>
+          <td>冰箱</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>洗衣机</td>
+          <td></td>
+          <td></td>
+          <td>油烟机</td>
+          <td></td>
+          <td></td>
+          <td>灶台</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="9" style="text-align: left;padding-left: 10px;">其他：</td>
+        </tr>
+      </table>
+      <div class="other">
+        <span>其他约定：<div class="info-checkbox"><p type="check" nocheck="true"></p>有</div>/<div class="info-checkbox"><p type="check" nocheck="true"></p>无</div></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+<script type="text/javascript" src="/js/bundle_mm_sy20200518.js"></script>
+<!-- <script>
+  (function () {
+    var scriptList = document.getElementsByTagName("script")
+    console.log(scriptList)
+    if(!scriptList[0].src){
+      var host='https://sign2.jjw.com'
+      var host_other="http://sign2.jjw.com:28879"
+      var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_mm20190402.js","datepicker.css"]
+      for (let i = 0; i < addrList.length; i++) {
+        if(window.location.host==='localhost:8080'){
+          if(addrList[i].indexOf('bundle')>-1){
+            // addrList[i]=host_other+'/'+addrList[i]
+            addrList[i]='./sy-mm.js'
+          }else{
+            addrList[i]=host_other+'/'+addrList[i]
+          }
+        }else{
+          addrList[i]='/'+addrList[i]
+        }
+        if(addrList[i].indexOf('.css')>-1){
+          var hm = document.createElement("link");
+          hm.rel="stylesheet"
+          hm.href = addrList[i];
+          /*var s = document.getElementsByTagName("link")[0];
+          s.parentNode.insertBefore(hm,s);*/
+          document.head.appendChild(hm);
+        }else{
+          var hm = document.createElement("script");
+          addrList[i].includes('sy-mm')&&(hm.type = 'module');
+          hm.src = addrList[i];
+          var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+          s.parentNode.insertBefore(hm,s);
+        }
+      }
+    }
+  })();
+</script> -->
+</html>

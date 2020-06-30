@@ -45,7 +45,6 @@ Vue.directive('focus', {
 })
 Vue.directive('loadmore', {
   bind(el, binding) {
-
     // 获取element-ui定义好的scroll盒子
     const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap');
 
@@ -90,9 +89,6 @@ router.beforeEach((to, from, next) => {
   let pathList = localStorage.getItem('router')
   store.commit('setPath', pathList ? JSON.parse(pathList) : [])
 
-  // let userMsg = null
-  // (sessionStorage.getItem('userMsg'))&&(userMsg=JSON.parse(sessionStorage.getItem('userMsg')))
-  // console.log(store.state.user)
   //vuex状态管理和本地缓存配合--全局管理用户信息
   if (!store.state.user && to.path !== '/login') {
     // debugger
@@ -109,17 +105,16 @@ router.beforeEach((to, from, next) => {
       })
     }
   }
+
+  //获取当前列表的搜索条件，并查询
   let sessionQuery = Object.create(null)
   sessionStorage.getItem('sessionQuery') && (sessionQuery = JSON.parse(sessionStorage.getItem('sessionQuery')))
-  // debugger
   promiseArr.push(new Promise((resolve, reject) => {
-    // debugger
     if (sessionQuery && (to.fullPath === sessionQuery.path) && (from.fullPath === sessionQuery.nxetPage)) {
       if (sessionQuery.methods === 'get' || !sessionQuery.methods) {
         api.get(`/api${sessionQuery.url}`, sessionQuery.query).then(res => {
           res = res.data
           if (res.status === 200) {
-            // debugger
             store.commit('setDataList', {
               route: sessionQuery.path,
               data: res.data
@@ -163,11 +158,12 @@ router.beforeEach((to, from, next) => {
     }
   }))
 
+  //设置面包屑List的初始状态值
   promiseArr.push(new Promise((resolve, reject) => {
     // debugger
     if (to.matched.some(record => record.meta.root)) {
       if (to.path === '/moneyCheck') {
-        to.meta.list = parseInt(to.query.type) === 1 ? ['财务', '收款审核'] : ['财务', '付款审核']
+        to.meta.list = parseInt(to.query.type) === 1 ? ["二手房",'财务', '收款审核'] : ["二手房",'财务', '付款审核']
       }
       let arr = TOOL.getRouter(to.meta.list, to.fullPath)
       store.commit('setPath', arr)

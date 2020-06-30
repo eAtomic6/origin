@@ -5,7 +5,7 @@
       <div class="content">
         <div class="input-group">
           <label>关键字:</label>
-          <el-tooltip content="合同编号/房源编号/客源编号/物业地址/业主/客户/手机号" placement="top">
+          <el-tooltip content="合同编号/纸质合同编号/房源编号/客源编号/物业地址/业主/客户/手机号" placement="top">
             <el-input class="w200" :clearable="true" size="small" v-model="searchForm.keyword" placeholder="请输入"></el-input>
           </el-tooltip>
         </div>
@@ -96,6 +96,17 @@
             </el-option>
           </el-select>
         </div>
+        <div class="input-group">
+          <label>签约方式:</label>
+          <el-select :clearable="true" size="small" v-model="searchForm.recordType" placeholder="请选择">
+            <el-option
+              v-for="item in dictionary['64']"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key">
+            </el-option>
+          </el-select>
+        </div>
       </div>
     </ScreeningTop>
     <div class="view-context" :class="[power['sign-cw-rec-export'].state?'':'other']">
@@ -106,50 +117,75 @@
         </p>
       </div>
       <el-table ref="tableCom" :max-height="tableNumberCom" :class="[showScroll?'info-scrollbar':'']" border :data="list" style="width: 100%" header-row-class-name="theader-bg">
-        <el-table-column min-width="200" align="center" label="合同信息" prop="cityName" :formatter="nullFormatter">
+        <el-table-column min-width="200" label="合同信息" prop="cityName" :formatter="nullFormatter">
           <template slot-scope="scope">
             <ul class="contract-msglist">
               <li>合同:<span class="span-cursor" @click="toLink(scope.row,'cont')">{{scope.row.code}}</span></li>
+              <li class="code-paper" v-if="scope.row.recordType.value===2">纸质合同编号:<span @click="toLink(scope.row,'cont')">{{scope.row.pCode|getLabel}}</span></li>
               <li>房源:<span>{{scope.row.houseinfoCode}}</span><span>{{scope.row.showOwnerName}}</span></li>
               <li>客源:<span>{{scope.row.guestinfoCode}}</span><span>{{scope.row.showCustName}}</span></li>
             </ul>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="合同类型" prop="contType" :formatter="nullFormatter"></el-table-column>
-        <el-table-column align="center" label="款类" prop="collectionType">
+        <el-table-column label="合同类型" prop="contractTypeName" :formatter="nullFormatter"></el-table-column>
+        <el-table-column label="签约方式" prop="recordType.label" :formatter="nullFormatter"></el-table-column>
+        <!--<el-table-column label="款类" prop="collectionType">
           <template slot-scope="scope">
             佣金
           </template>
+        </el-table-column>-->
+        <el-table-column min-width="160" label="物业地址">
+          <template slot-scope="scope">
+            <span v-if="scope.row.propertyAddr.length===0">--</span>
+            <template v-else>
+              <p>{{scope.row.propertyAddr.split(' ')[0]}}</p>
+              <p>{{scope.row.propertyAddr.split(' ')[1]}}</p>
+            </template>
+          </template>
         </el-table-column>
-        <el-table-column align="center" min-width="160" label="物业地址" prop="propertyAddr">
-          <!--<template slot-scope="scope">
-            &#45;&#45;
-          </template>-->
-        </el-table-column>
-        <el-table-column align="center" min-width="160" label="成交经纪人" prop="broker">
+        <el-table-column min-width="160" label="成交经纪人" prop="broker">
           <template slot-scope="scope">
             {{scope.row.dealAgentStoreName}}
             <p>{{scope.row.dealAgentName}}</p>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="应收款（元）" prop="receivableCommission" :formatter="nullFormatter"></el-table-column>
-        <el-table-column align="center" label="已收款（元）" prop="receivedCommission" :formatter="nullFormatter"></el-table-column>
-        <el-table-column align="center" label="待收款（元）" prop="waitingForPay" :formatter="nullFormatter">
-          <!--<template slot-scope="scope">
-            {{scope.row.receivableCommission-scope.row.receivedCommission|moneyFormatter}}
-          </template>-->
-        </el-table-column>
-        <el-table-column align="center" min-width="160" label="签约时间" prop="operation time">
+        <!--<el-table-column label="应收款（元）" prop="receivableCommission" :formatter="nullFormatter"></el-table-column>
+        <el-table-column label="已收款（元）" prop="receivedCommission" :formatter="nullFormatter"></el-table-column>
+        <el-table-column label="待收款（元）" prop="waitingForPay" :formatter="nullFormatter"></el-table-column>-->
+        <el-table-column label="实收/应收（佣金）">
           <template slot-scope="scope">
-            {{scope.row.signTime|formatDate}}
+            {{scope.row.receivedCommission|formatNull}}/{{scope.row.receivableCommission|formatNull}}
           </template>
         </el-table-column>
-        <el-table-column align="center" min-width="160" label="收款时间" prop="operation time">
+        <el-table-column label="待收款佣金（元）" prop="waitingForPay" :formatter="nullFormatter"></el-table-column>
+        <el-table-column label="实收/应收（交易服务费）" min-width="100">
+          <template slot-scope="scope">
+            <span>{{scope.row.serviceMoney|formatNull}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="实收/应收（成交违约金）" min-width="100">
+          <template slot-scope="scope">
+            {{scope.row.penalMoney|formatNull}}
+          </template>
+        </el-table-column>
+        <el-table-column label="实收/应收（意向违约金）" min-width="100">
+          <template slot-scope="scope">
+            {{scope.row.intentionMoney|formatNull}}
+          </template>
+        </el-table-column>
+        <el-table-column min-width="80" label="线上手续费（元）" prop="xsFee" :formatter="nullFormatter"></el-table-column>
+        <el-table-column min-width="80" label="线下手续费（元）" prop="xxFee" :formatter="nullFormatter"></el-table-column>
+        <el-table-column min-width="160" label="签约时间" prop="operation time">
+          <template slot-scope="scope">
+            {{scope.row.signTime|formatTime(false)}}
+          </template>
+        </el-table-column>
+        <el-table-column min-width="160" label="收款时间" prop="operation time">
           <template slot-scope="scope">
             {{scope.row.lastCollectCommissionTime|formatTime}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="收款状态" prop="receiveAmountState" :formatter="nullFormatter">
+        <el-table-column label="收款状态" prop="receiveAmountState" :formatter="nullFormatter">
           <template slot-scope="scope">
             {{scope.row.receivableCommission-scope.row.receivedCommission>0?scope.row.receivableCommission-scope.row.receivedCommission===scope.row.receivableCommission?'未收':'部分':'收齐'}}
           </template>
@@ -183,7 +219,8 @@
         dictionary:{
           '10': '',
           '55': '',
-          '53': ''
+          '53': '',
+          '64': '',
         },
         drop_MoneyType:[],
         searchForm: {
@@ -196,7 +233,8 @@
           signTime: '',
           collectionTime: '',
           cooperation: '',
-          keyword: ''
+          keyword: '',
+          recordType: '',
         },
         list: [],
         //分页
@@ -266,17 +304,24 @@
     methods: {
       getExcel:function () {
         this.getData('search')
-        let param = Object.assign({},this.searchForm)
-        if(Object.prototype.toString.call(param.signTime)==='[object Array]'&&param.signTime.length>0){
+
+        let param=Object.assign({},this.searchForm)
+        if(typeof param.signTime==='object'&&Object.prototype.toString.call(param.signTime)==='[object Array]'&&param.signTime.length>0){
           param.beginDate = this.$tool.dateFormat(param.signTime[0])
           param.endDate = this.$tool.dateFormat(param.signTime[1])
-          delete param.signTime
         }
-        if(Object.prototype.toString.call(param.collectionTime)==='[object Array]'&&param.collectionTime.length>0){
+        if(typeof param.collectionTime==='object'&&Object.prototype.toString.call(param.collectionTime)==='[object Array]'&&param.collectionTime.length>0){
           param.beginProDate = this.$tool.dateFormat(param.collectionTime[0])
           param.endProDate = this.$tool.dateFormat(param.collectionTime[1])
-          delete param.collectionTime
         }
+
+        // delete param.moneyType
+        param.contTypes = param.contType.join(',')
+        param.pageNum=this.currentPage
+        param.pageSize=this.pageSize
+        delete param.signTime
+        delete param.collectionTime
+        delete param.contType
         this.excelCreate('/input/RceivablesExcel',param)
       },
       noScroll:function (payload) {
@@ -413,7 +458,7 @@
           margin-right: 10px;
         }
       }
-      &:first-of-type{
+      &:first-of-type,&.code-paper{
         > span {
           &:first-of-type {
             color: @color-blue;
@@ -461,6 +506,9 @@
     /deep/ .theader-bg{
       >th{
         background-color: @bg-th;
+        .cell{
+          white-space: normal !important;
+        }
       }
     }
   }

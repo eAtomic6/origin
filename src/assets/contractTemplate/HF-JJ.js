@@ -12,8 +12,6 @@ let obj = {
 let Obj1 = {
     val3:'',
     val5:'',
-    val6:'',
-    val8:'',
     val10:''
 }
 let errorArr=[]
@@ -33,10 +31,12 @@ function submit() {
         document.querySelector(`span[extendparam=${item}]`).classList.remove('BODERRED')
     }
     if(Obj1[item].length===0){
-        errorArr.push({
+      let _errorMsg={
         type:'input',
         name:item
-        })
+      }
+      document.querySelector(`*[extendparam=${item}]`).getAttribute('company')&&(_errorMsg.company=true)
+        errorArr.push(_errorMsg)
         break
     }
     }
@@ -124,8 +124,8 @@ for(let readonlyItem in msg){
     if(readonlyItem==="companyNames"){
         if(msg[readonlyItem].length>0){
             let companyName = document.querySelector(`*[extendParam="val3"]`)
-            let companyNameTxt = msg[readonlyItem].join(',')
-            companyName.setAttribute('list',companyNameTxt)
+            let companyNameTxt = msg[readonlyItem][0]
+            companyName.innerHTML=companyNameTxt
         }
     }
     if(onlyReadDom.length>0){
@@ -139,12 +139,26 @@ for(let readonlyItem in msg){
                 }else{
                     element.innerHTML = msg['ownerName']
                 }
+            }else if(readonlyItem==='ownerID'){
+                if(msg['ownerIDs']){
+                    let names = msg['ownerID']+'、'+msg['ownerIDs']
+                    element.innerHTML = names
+                }else{
+                    element.innerHTML = msg['ownerID']
+                }
             }else if(readonlyItem==='guestName'){
                 if(msg['guestNames']){
                     let names = msg['guestName']+'、'+msg['guestNames']
                     element.innerHTML = names
                 }else{
                     element.innerHTML = msg['guestName']
+                }
+            }else if(readonlyItem==='guestID'){
+                if(msg['guestIDs']){
+                    let names = msg['guestID']+'、'+msg['guestIDs']
+                    element.innerHTML = names
+                }else{
+                    element.innerHTML = msg['guestID']
                 }
             }else if(readonlyItem==='propertyAddr'){
                 if(element.getAttribute("extendParam")==="val4"){

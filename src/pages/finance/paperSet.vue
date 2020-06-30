@@ -3,7 +3,7 @@
     <ScreeningTop @propResetFormFn="reset" @propQueryFn="getData('search')">
       <el-form :inline="true" ref="propForm" :model="propForm" class="prop-form" size="small">
         <el-form-item label="关键字" prop="keyword">
-          <el-tooltip content="开票人员/合同编号/票据编号/物业地址" placement="top">
+          <el-tooltip content="开票人员/合同编号/纸质合同编号/票据编号/物业地址" placement="top">
             <el-input class="w200" v-model="propForm.keyword" placeholder="请输入" clearable></el-input>
           </el-tooltip>
         </el-form-item>
@@ -101,6 +101,58 @@
               :value="item.key"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item
+          label="签约方式"
+          prop="state">
+          <el-select
+            v-model="propForm.recordType"
+            class="w180">
+            <el-option
+              v-for="item in dictionary['64']"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="收款方式"
+          prop="state">
+          <el-select
+            v-model="propForm.payway"
+            class="w180">
+            <el-option
+              v-for="item in dictionary['69']"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="业绩状态"
+          prop="state">
+          <el-select
+            v-model="propForm.achievementExamineState"
+            class="w180">
+            <el-option
+              v-for="item in dictionary['54']"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="申诉状态"
+          prop="state">
+          <el-select
+            v-model="propForm.appealStatus"
+            class="w180">
+            <el-option
+              v-for="item in dictionary['63']"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key"></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
     </ScreeningTop>
     <!-- 列表 -->
@@ -111,55 +163,75 @@
       </div>
       <el-table ref="tableCom" border :max-height="tableNumberCom" :data="tableData.list" @select="getColumns" @select-all="getColumns" class="paper-table"
                 v-loading="loadingList">
-        <el-table-column type="selection" align="center" fixed v-if="power['sign-cw-bill-mulprinttally'].state"></el-table-column>
-        <el-table-column align="center" label="序号" min-width="60">
+        <el-table-column type="selection" fixed v-if="power['sign-cw-bill-mulprinttally'].state"></el-table-column>
+        <el-table-column label="序号" min-width="60">
           <template slot-scope="scope">
-            <p class="tc">{{scope.$index + 1}}</p>
+            <p>{{scope.$index + 1}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="合同编号" align="center" min-width="120">
+        <el-table-column label="合同编号" min-width="120">
           <template slot-scope="scope">
             <span class="blue" @click="cellOpera('contract',scope.row)">{{scope.row.contNo}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="票据编号" align="center" min-width="120">
+        <el-table-column label="票据编号" min-width="120">
           <template slot-scope="scope">
             <span class="blue" @click="cellOpera('paper',scope.row)">{{scope.row.billCode}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="收款ID" align="center" min-width="120">
+        <el-table-column label="收款ID" min-width="120">
           <template slot-scope="scope">
             <span class="blue" @click="cellOpera('bill',scope.row)">{{scope.row.proceedsCode}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="物业地址" align="center" min-width="160">
+        <el-table-column label="纸质合同编号" min-width="160">
+          <template slot-scope="scope">
+            <span class="blue" @click="cellOpera('contract',scope.row)">{{nullFormatFn(scope.row.paperCode)}}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="cName" label="客户姓名" align="center" min-width="80">
+        <el-table-column prop="recordType.label" label="签约方式" min-width="80" :formatter="nullFormatter">
         </el-table-column>
-        <el-table-column prop="state" label="票据状态" align="center" min-width="80" :formatter="nullFormatter">
+        <el-table-column prop="result.label" label="业绩状态" min-width="80" :formatter="nullFormatter">
         </el-table-column>
-        <el-table-column label="收款人" align="center" min-width="120">
+        <el-table-column prop="appealStatus.label" label="申诉状态" min-width="80" :formatter="nullFormatter">
+        </el-table-column>
+        <el-table-column label="物业地址" min-width="160">
+          <template slot-scope="scope">
+            <span v-if="scope.row.address.length===0">--</span>
+            <template v-else>
+              <p>{{scope.row.address.split(' ')[0]}}</p>
+              <p>{{scope.row.address.split(' ')[1]}}</p>
+            </template>
+          </template>
+        </el-table-column>
+        <el-table-column prop="cName" label="客户姓名" min-width="80">
+        </el-table-column>
+        <el-table-column prop="state" label="票据状态" min-width="80" :formatter="nullFormatter">
+        </el-table-column>
+        <el-table-column label="收款人" min-width="120">
           <template slot-scope="scope">
             <p>{{nullFormatFn(scope.row.payeeStoreName)}}</p>
             <p>{{nullFormatFn(scope.row.payeeName)}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="开票人员" align="center" min-width="120">
+        <el-table-column prop="payway.label" label="收款方式" min-width="160" :formatter="nullFormatter">
+        </el-table-column>
+        <el-table-column label="开票人员" min-width="120">
           <template slot-scope="scope">
             <p>{{nullFormatFn(scope.row.drawerDepName)}}</p>
             <p>{{nullFormatFn(scope.row.drawerName)}}</p>
           </template>
         </el-table-column>
-        <el-table-column prop="drawerDepName" label="门店" align="center" min-width="80">
+        <el-table-column prop="drawerDepName" label="门店" min-width="80">
         </el-table-column>
-        <el-table-column prop="amount" label="开票金额（元）" align="center" min-width="80">
+        <el-table-column prop="amount" label="开票金额（元）" min-width="80">
         </el-table-column>
-        <el-table-column label="开票日期" align="center" min-width="90">
+        <el-table-column label="开票日期" min-width="90">
           <template slot-scope="scope">
             {{dateFormat(scope.row.createTime)}}
           </template>
         </el-table-column>
-        <el-table-column label="打印次数" align="center" min-width="60">
+        <el-table-column label="打印次数" min-width="60">
           <template slot-scope="scope">
             <span style="cursor: pointer;color:#409EFF;" @click="getPrintRecord(scope.row)">{{scope.row.printTimes}}</span>
           </template>
@@ -175,22 +247,22 @@
             {{dateFormat(scope.row.printTime)}}
           </template>
         </el-table-column>-->
-        <el-table-column label="回收日期" align="center" min-width="90">
+        <el-table-column label="回收日期" min-width="90">
           <template slot-scope="scope">
             {{dateFormat(scope.row.recycleTime)}}
           </template>
         </el-table-column>
-        <el-table-column label="核销日期" align="center" min-width="90">
+        <el-table-column label="核销日期" min-width="90">
           <template slot-scope="scope">
             {{dateFormat(scope.row.cavTime)}}
           </template>
         </el-table-column>
-        <el-table-column label="作废日期" align="center" min-width="90">
+        <el-table-column label="作废日期" min-width="90">
           <template slot-scope="scope">
             {{dateFormat(scope.row.invalidTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="invalidReason" label="作废原因" align="center" min-width="90">
+        <el-table-column prop="invalidReason" label="作废原因" min-width="90">
           <template slot-scope="scope">
             <el-popover
               placement="top-start"
@@ -203,14 +275,14 @@
             <!-- <p class="norwap">{{scope.row.invalidReason}}</p> -->
           </template>
         </el-table-column>
-        <el-table-column label="操作人/时间" align="center" min-width="120">
+        <el-table-column label="操作人/时间" min-width="120">
           <template slot-scope="scope">
             <p>{{nullFormatFn(scope.row.updateByStoreName)}}</p>
             <p>{{nullFormatFn(scope.row.updateByName)}}</p>
             <p>{{dateFormat(scope.row.updateTime)}}</p>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" class-name="cell-operation" label="操作" align="center" min-width="120">
+        <el-table-column fixed="right" class-name="cell-operation" label="操作" min-width="120">
           <template slot-scope="scope">
             <!-- 已开票 -->
             <template v-if="scope.row.state.value===2">
@@ -218,12 +290,8 @@
                  v-if="power['sign-cw-bill-invoice'].state">打印客户联</p>
               <p class="operation-text" @click="btnOpera(scope.row,5,'book')"
                  v-if="power['sign-cw-bill-printtally'].state">打印记账联</p>
-              <el-button type="text" @click="btnOpera(scope.row,1)" v-if="power['sign-cw-bill-delete'].state">核销
-              </el-button>
-              <el-button type="text" @click="btnOpera(scope.row,2)" v-if="power['sign-cw-bill-trash'].state">回收
-              </el-button>
-              <el-button type="text" @click="btnOpera(scope.row,3)" v-if="power['sign-cw-bill-void'].state">作废
-              </el-button>
+              <p><el-button type="text" @click="btnOpera(scope.row,3)" v-if="power['sign-cw-bill-void'].state">作废
+              </el-button></p>
               <!-- <template v-else></template> -->
             </template>
             <!-- 已作废 -->
@@ -235,7 +303,12 @@
               </el-button>
               <!-- <template v-else></template> -->
             </template>
-            <!-- 已回收 和 已核销 -->
+            <!-- 已回收 -->
+            <template v-else-if="scope.row.state.value===5">
+              <el-button type="text" @click="btnOpera(scope.row,1)" v-if="power['sign-cw-bill-delete'].state">核销
+              </el-button>
+            </template>
+            <!-- 已核销 -->
             <template v-else>--</template>
           </template>
         </el-table-column>
@@ -331,6 +404,10 @@
           dateType: 1,
           timeRange: '',
           cooperation: '',
+          recordType: '',
+          payway: '',
+          achievementExamineState:'',
+          appealStatus:'',
         },
         // 筛选下拉
         rules: {
@@ -351,6 +428,10 @@
         dictionary: {
           '33': '',
           '53': '合作方式',
+          '64': '',
+          '69': '',
+          '63': '',
+          '54': '',
         },
         dictionaryData: [],
         // 作废弹层输入框
@@ -629,7 +710,7 @@
             this.noPower(this.power['sign-com-htdetail'].name);
             return false
           }
-          this.setPath(this.getPath.concat({name: '合同详情'}));
+          /*this.setPath(this.getPath.concat({name: '合同详情'}));
           this.$router.push({
             path: "/contractDetails",
             query: {
@@ -637,7 +718,15 @@
               code: row.contNo,//合同编号
               contType: row.contType,//合同类型
             }
-          });
+          });*/
+          let param = {
+            contType: row.contType,
+            contId: row.contId,
+            contCode: row.contNo,
+            operaType: 'cont',
+            power: this.power['sign-com-htdetail']
+          }
+          this.msgOpera(param)
         } else if (type === 'paper') {
           if (!this.power['sign-cw-bill-detail'].state) {
             this.noPower(this.power['sign-cw-bill-detail'].name);

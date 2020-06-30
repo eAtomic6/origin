@@ -6,19 +6,19 @@
                 <span>数据列表</span>
             </p>
             <el-table :data="tableData" ref='onetable' border   @row-click="rowClick" class='onetable' :row-class-name='tableStyle' highlight-current-row>
-                <el-table-column align="center" width="100px" label="序号" type="index"></el-table-column>
-                <el-table-column align="center" label="款类(大类)" prop="name"></el-table-column>
+                <el-table-column  width="100px" label="序号" type="index"></el-table-column>
+                <el-table-column  label="款类(大类)" prop="name"></el-table-column>
             </el-table>
         </div>
         <div class="commission gap">
             <p class="title">
                 <span>{{this.bigName}}</span>
-                 <el-button type="primary" class='paper-btn' round size="medium"  v-show="power['sign-set-kl-add'].state==true && !isSF" @click='operation(null,1)'>新增</el-button> 
+                 <el-button type="primary" class='paper-btn' round size="medium"  v-show="power['sign-set-kl-add'].state==true" @click='operation(null,1)'>新增</el-button> 
             </p>
             <el-table :data="moneyTypes" border>
-                <el-table-column align="center" label="序号" type="index"></el-table-column>
-                <el-table-column align="center" label="款类(小类)" prop="name"></el-table-column>
-                <el-table-column align="center" label="描述" prop="remark">
+                <el-table-column  label="序号" type="index"></el-table-column>
+                <el-table-column  label="款类(小类)" prop="name"></el-table-column>
+                <el-table-column  label="描述" prop="remark">
                     <template slot-scope="scope">
                         <span v-if="scope.row.remark.length>24">
                         <el-popover trigger="hover"  width="160" placement="top">
@@ -34,11 +34,11 @@
                         <span v-else>-</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="收付配置" prop="accountType.label"></el-table-column>
-                <el-table-column align="center" label="操作" :formatter="nullFormatter">
+                <el-table-column  label="收付配置" prop="accountType.label"></el-table-column>
+                <el-table-column  label="操作" :formatter="nullFormatter">
                     <template slot-scope="scope">
-                        <div v-if="bigName =='代收代付' || !power['sign-set-kl-edit'].state">--</div>
-                        <div v-else>
+                        <!-- <div v-if="bigName =='代收代付' || !power['sign-set-kl-edit'].state">--</div> -->
+                        <div>
                             <el-button type="text" size="medium" v-if="power['sign-set-kl-edit'].state"  @click='operation(scope.row,2)'>编辑</el-button>
                         </div>
                     </template>
@@ -87,7 +87,7 @@
                 smallId:'',
                 addDialog:false,
                 bigId:'',
-                isSF:false,
+                // isSF:false,
                 inputMax:200,
                 bigName:'',
                 dictionary: {
@@ -127,7 +127,6 @@
         },
         methods: {
             initList(){
-                //  if(this.power['sign-set-kl-query'].state){
                     this.$ajax.get('api/setting/moneyType/list',{id:this.bigId},).then((res)=>{
                     if(res.status==200){
                         if(this.bigId==''){
@@ -140,9 +139,6 @@
                         }
                     }
                 })
-                // }else{
-                //          this.noPower(this.power['sign-set-kl-query'].name)
-                // }
             },
             tableRowClassName({row, rowIndex}){
                 row.index = rowIndex;
@@ -248,15 +244,6 @@
             rowClick(row, event, column) {
                 this.bigName=row.name
                 var paperBtn=document.getElementsByClassName('paper-btn')
-                if(row.name=='代收代付'){
-                    this.isSF=true
-                    paperBtn[0].disabled=true
-                    paperBtn[0].classList.add('grey')
-                }else{
-                     paperBtn[0].disabled=false
-                     this.isSF=false
-                     paperBtn[0].classList.remove('grey')
-                }
                 this.$refs.onetable.$el.classList.remove('onetable')
                 this.addForm.parentId=row.id
                 this.bigId=row.id

@@ -3,7 +3,7 @@
     <div class="paper-info-child">
       <div v-if="printType!=='book'" class="paper-border">
         <div class="paper-tit">专用收款收据</div>
-        <div class="paper-number">交款单位：{{comName}}<span class="red">{{comText[0]}}</span></div>
+        <div class="paper-number"><span>交款单位：{{comName}}</span><span>收款方式：{{comPayway}}</span><span class="red">{{comText[0]}}</span></div>
         <ul class="paper-ul">
           <li class="w1"><span class="cl-1 mr-10">合同编号：</span>{{comNumber}}</li>
           <li><span class="cl-1 mr-10">收款日期：</span>{{comCollectionTime}}</li>
@@ -73,7 +73,7 @@
       <div class="paper-dashed" v-if="printType==='all'"></div>
       <div v-if="printType!=='client'" class="paper-border">
         <div class="paper-tit">专用收款收据</div>
-        <div class="paper-number">交款单位：{{comName}}<span class="red">{{printType==='all'?comText[1]:comText[0]}}</span></div>
+        <div class="paper-number"><span>交款单位：{{comName}}</span><span>收款方式：{{comPayway}}</span><span class="red">{{printType==='all'?comText[1]:comText[0]}}</span></div>
         <ul class="paper-ul">
           <li class="w1"><span class="cl-1 mr-10">合同编号：</span>{{comNumber}}</li>
           <li><span class="cl-1 mr-10">收款日期：</span>{{comCollectionTime}}</li>
@@ -126,6 +126,34 @@
         <div class="paper-ov">
           <div class="fl"><span class="fb mr-10 ml-28">备注：</span><span>{{comRules}}</span></div>
         </div>
+        <!-- 门店实收分成 -->
+        <!-- 2.4.6需求 去掉门店实收分成 -->
+        <!-- <div class="dep-receipt" v-if="storeReceiveList.length>0">
+          <p>门店实收分成</p>
+          <table class="paper-table-main">
+            <tr>
+              <td>大区</td>
+              <td>片区</td>
+              <td>门店</td>
+              <td>金额</td>
+            </tr>
+            <tr v-for="(item,index) in storeReceiveList" v-if="index<storeReceiveList.length-1">
+              <td>{{item.managerName|nullFilter}}</td>
+              <td>{{item.amaldarName|nullFilter}}</td>
+              <td>{{item.shopkeeperName|nullFilter}}</td>
+              <td>{{item.amount==='-'?item.amount:`￥${item.amount}`}}</td>
+            </tr>
+            <tr>
+              <td>
+                手续费合计
+              </td>
+              <td>-</td>
+              <td>-</td>
+              <td>￥{{storeReceiveList.slice(-1)[0].fee}}</td>
+            </tr>
+          </table>
+        </div> -->
+        <!---->
         <div class="pr">
           <div class="paper-ov3">
             <div class="fl fb">收款单位（加盖财务专用章）：</div>
@@ -142,8 +170,6 @@
 </template>
 
 <script>
-  import src from './../assets/img/seal.png'
-
   const o = {
     a: '二手买卖佣金',
     b: '低佣买卖佣金'
@@ -151,7 +177,8 @@
   export default {
     data() {
       return {
-        failImg: require('@/assets/img/fail.png')
+        failImg: require('@/assets/img/fail.png'),
+        sign_status:require('@/assets/img/sign_jjw.jpg')
       }
     },
     props: {
@@ -236,7 +263,22 @@
       paperFail: {//票据预览时，是否显示作废标记
         type: Boolean,
         default: false
-      }
+      },
+      payway: {//收款方式
+        type: String,
+        default: ''
+      },
+      signatureType:{//武汉专用，是否使用本地静态签章图片
+        type:Number,
+        default: 2
+      },
+      // 2.4.6需求去掉门店分成
+      // storeReceiveList:{
+      //   type:Array,
+      //   default(){
+      //     return []
+      //   }
+      // }
     },
     computed: {
       comText() {
@@ -285,10 +327,15 @@
         }
       },
       comImgSrc() {
-        if (this.imgSrc === '') {
-          return ''
-        } else {
-          return this.imgSrc
+        switch (this.signatureType) {
+          case 2:
+            if (this.imgSrc === '') {
+              return ''
+            } else {
+              return this.imgSrc
+            }
+          case 1:
+            return this.sign_status
         }
       },
       comMoney() {
@@ -301,11 +348,12 @@
         return this.defaultFn(this.create)
       },
       comRules() {
-        if (this.rules == o.a || this.rules == o.b) {
+        /*if (this.rules == o.a || this.rules == o.b) {
           return '买卖'
         } else {
           return this.defaultFn(this.rules)
-        }
+        }*/
+        return this.defaultFn(this.rules)
       },
       comPayerType() {
         return this.defaultFn(this.payerType)
@@ -319,6 +367,9 @@
         } else {
           return this.methodAndAmount
         }
+      },
+      comPayway:function () {
+        return this.payway
       }
     },
     methods: {
@@ -329,6 +380,15 @@
           return e
         }
       }
+    },
+    filters: {
+      nullFilter:function (val) {
+        if (!val) {
+          return '--'
+        } else {
+          return val
+        }
+      }
     }
   }
 </script>
@@ -337,7 +397,7 @@
     // /deep/.red{
     //   display: none;
     // }
-    /deep/ .paper-info-child {
+    /*/deep/ .paper-info-child {
       margin: 0 4.7mm;
       font-size: 12px;
       margin-top: 10mm \9;
@@ -346,18 +406,49 @@
       margin-left: 1mm \0;
       margin-right: 1mm \9;
       margin-right: 1mm \9;
-    }
+    }*/
 
     /deep/ .paper-info-child .paper-table-main {
       font-size: 12px;
     }
 
-    @page {
+    /*@page {
       size: auto;
       margin: 0mm;
-    }
+    }*/
   }
 
+  .dep-receipt{
+    border-top: 1px solid #D7D7D7;
+    margin-top: 15px;
+    >p{
+      margin: 10px 0;
+      font-weight: bold;
+    }
+    table{
+      width: 100%;
+      text-align: center;
+      border-spacing: 0px;
+      border: 1px solid #D7D7D7;
+      td{
+        border-left: 1px solid #D7D7D7;
+        border-bottom: 1px solid #D7D7D7;
+      }
+      tr{
+        >td:first-of-type{
+          border-left: 0px;
+        }
+        &:first-of-type{
+          background-color: #F2F2F2;
+        }
+        &:last-of-type{
+          td{
+            border-bottom: 0px;
+          }
+        }
+      }
+    }
+  }
   .red {
     color: #FF3E3E;
     font-weight: normal;
@@ -438,6 +529,11 @@
     padding-top: 10px;
     // text-align: center;
     font-weight: 400;
+    >span{
+      &:first-of-type{
+        margin-right: 30px;
+      }
+    }
   }
 
   .paper-ul {

@@ -132,7 +132,7 @@
   .select-tree {
     width: 100%;
     max-height: 300px;
-    overflow-y: scroll;
+    overflow-y: auto;
     .select-option{
       display: flex;
       margin-bottom: @margin-10;

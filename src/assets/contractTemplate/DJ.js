@@ -20,7 +20,7 @@
     }
 
     let Obj5 = {   //校验
-        val5:'',
+      val5:'',
         val7:'',
         val13:'',
         check1:{
@@ -107,10 +107,14 @@
            // obj[item]=iframe.document.querySelector(`input[extendparam=${item}]`).value
            // iframe.document.querySelector(`input[extendparam=${item}]`).classList.remove('BODERRED')
            if(obj[item].length===0){
-             errorArr1.push({
+             var _errorMsg={
                type:'input',
                name:item
-             })
+             }
+             if(item==='val5'){
+               _errorMsg.company=true
+             }
+             errorArr1.push(_errorMsg)
              break
            }
          }
@@ -118,7 +122,7 @@
        sessionStorage.setItem('templateError',JSON.stringify(errorArr1))
        console.log(errorArr1)
        return errorArr1
-     } 
+     }
     // document.querySelector('#submit').addEventListener('click',submit)
     //初始化时间控件
     Calendar.create({
@@ -325,9 +329,9 @@
         }
         if(readonlyItem==="companyNames"){
             if(msg[readonlyItem].length>0){
-                let companyName = document.querySelector(`input[extendParam="val5"]`)
-                let companyNameTxt = msg[readonlyItem].join(',')
-                companyName.setAttribute('list',companyNameTxt)
+                let companyName = document.querySelector(`*[extendParam="val5"]`)
+                let companyNameTxt = msg[readonlyItem][0]
+                companyName.innerHTML=companyNameTxt
             }
         }
         if(onlyReadDom.length>0){

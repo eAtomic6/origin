@@ -18,7 +18,7 @@
 					</el-table>
 				</el-tab-pane>
 				<!-- 业主分类账 -->
-				<el-tab-pane label="业主分类账" name="second">
+				<el-tab-pane label="业主分类账" name="second" v-if="flowType===1">
 					<el-table :data="gridData2" border :row-class-name="rowClass" height="450">
 						<el-table-column prop="moneyTypeDetail" label="款类"></el-table-column>
 						<el-table-column prop="receive" label="收款（元）"> </el-table-column>
@@ -151,6 +151,11 @@ export default {
     contId: {
       type: Number,
       default: 0
+    },
+    //委托合同为8，其他类型为1
+    flowType: {
+      type: Number,
+      default: 1,
     }
   },
   data() {
@@ -172,21 +177,15 @@ export default {
       this.$emit("closeRunningWater");
     },
     handleClick(tab) {
-      //console.log(tab.name);
       //分类账
       if (tab.name === "first") {
-        // let param = {
-        //   contractCode: "Z181111001"
-        // };
-        // this.$ajax.get("/api/flows/account", param).then(res => {
-
-        // });
         this.getFlowwater();
       } else if (tab.name === "second" || tab.name === "third") {
         //业主分类账
         let param = {
           contractCode: this.contCode,
-          type: tab.name === "second" ? 2 : 1
+          type: tab.name === "second" ? 2 : 1,
+          contractType:this.flowType
         };
         this.$ajax.get("/api/flows/account", param).then(res => {
           res = res.data;
@@ -208,9 +207,10 @@ export default {
             this.gridData2 = list;
           }
         });
-      } else if (tab.name === "fourth") {
+      } else if (tab.name === "fourth") {//分类流水账
         let param = {
-          contractCode: this.contCode
+          contractCode: this.contCode,
+          contractType:this.flowType
         };
         this.$ajax.get("/api/flows/waterAccount", param).then(res => {
           res = res.data;
@@ -232,9 +232,10 @@ export default {
             this.gridData4 = list;
           }
         });
-      }else if (tab.name === "fifth") {
+      }else if (tab.name === "fifth") {//流水账
         let param = {
-          contractCode: this.contCode
+          contractCode: this.contCode,
+          contractType:this.flowType
 				};
 				this.$ajax.get("/api/flows/water", param).then(res => {
 					 res = res.data;
@@ -243,9 +244,10 @@ export default {
 						this.gridData5=res.data
 					}
 				})
-			}else if(tab.name==='sixth'){
+			}else if(tab.name==='sixth'){//票据
 				let param = {
-          contractId: this.contId
+          contractId: this.contId,
+          type: this.flowType
 				};
 				this.$ajax.get("/api/flows/bill", param).then(res => {
 					 res = res.data;
@@ -259,7 +261,8 @@ export default {
     //流水明细
     getFlowwater() {
       let param = {
-        contractCode: this.contCode
+        contractCode: this.contCode,
+        contractType:this.flowType
       };
       this.$ajax.get("/api/flows/account", param).then(res => {
         res = res.data;
@@ -303,7 +306,7 @@ export default {
   }
   /deep/.el-dialog {
     width: 800px;
-    height: 580px;
+    height: 590px;
     overflow-y: auto;
   }
   /deep/.el-dialog__body {

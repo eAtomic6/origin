@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <link rel="stylesheet" href="/datepicker.css"/>
+  <title>芜湖买卖合同</title>
+  <style>
+      body{
+        font-family: SimHei;
+      }
+      p{
+        margin: 0px;
+        padding: 0px;
+        line-height: 2;
+      }
+      input{
+        border: 0;
+        outline: none;
+        border-bottom: 1px solid gray;
+        height: 16px;
+        padding-left: 10px;
+        box-sizing: border-box;
+        font-family: SimHei;
+      }
+      input:disabled{
+        background-color: #fff;
+      }
+      input[type="checkbox"]{
+        border:0px;
+      }
+      /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+      input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+         -webkit-appearance: none !important;
+      }
+      input[type="number"]{-moz-appearance:textfield;}
+      ul{
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .BODERRED{
+        border-color: red !important;
+      }
+      .modal{
+        position: relative;
+      }
+      .modal:before{
+        content: '';
+        z-index: 50;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+      .cw_content{
+        position: relative;
+        font-size: 16px;
+        width: 840px;
+        box-sizing: border-box;
+        padding:0 40px;
+        margin: 0 auto;
+      }
+      .cw_content .title{
+        font-size: 20px;
+        text-align: center;
+      }
+      .cw_message{
+        padding: 15px 30px;
+      }
+      .cw_message>ul{
+        margin-bottom: 10px;
+      }
+      .cw_message>ul>li{
+        display: inline-block;
+        min-width: 260px;
+        line-height: 2;
+      }
+      .cw_agreement{
+        text-indent: 32px;
+      }
+
+      .table-style{
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      .table-style tr td {
+        height: 25px;
+      }
+      .table-three td {
+        padding: 5px;
+      }
+      .table-date span:first-child {
+        margin-right: 100px;
+      }
+      .table-date span:nth-child(n+2) {
+        margin: 0 30px;
+      }
+      .textcenter{
+        text-align: center;
+      }
+      .mt60{
+        margin-top: 60px;
+        margin-bottom: 10px;
+      }
+      .bold{
+        font-weight: bold;
+      }
+      .lh-18{
+        line-height:2;
+      }
+      .info-checkbox{
+        display: inline;
+        cursor: pointer;
+        text-indent: 0px;
+        line-height: 1;
+      }
+      .info-checkbox>p[type="check"]{
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border: 1px solid gray;
+        position: relative;
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+        margin: 0;
+      }
+      .info-checkbox>p[type="check"][checked='true']:before{
+        content:'';
+        position: absolute;
+        left: 0;
+        display: inline-block;
+        width: 100%;
+        height: 10px;
+        background-size: contain;
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVQ4T72TsUvDQBjF33cYUhfFP0GIVO7S1cXJxU3sIqiLuHSyOIg4Cro4OBW3jJ10EhcRdHcw2901f0BWh04OmvskpZVYqjYEvPl9v3v3vneEiocqzuP/AY1GY9k5F2VZ1kyS5LWUAynlihDigZnnmblprb2bGhCG4TqAWwCzzNwyxkR5fgNAEARzvu8fGWPOAXyMB6uU2iaiLoAZ51zbWns10gwAUsotIcQNM9/XarXNOI7fRwIp5QERdYiInHOn1tqz4gVfTwjDsAOgzcxP/X5/I03TN6XUBRGdDAcutdbH4+6KGQil1CMRrQF4BtADsJ8PMHNkjGlN6sy3EIdZvBDRUkHc1Vrv5Zw/AbmgXq8vep4XA1gAcK213gXgfmrsxDUqpVaJ6FBrvQMg+63uU/eglIMyH6yyg0+YpmgRBNEBzgAAAABJRU5ErkJggg==");
+      }
+      .info-checkbox>p[type="check"][checked='false']:after{
+        content:'';
+        position: absolute;
+        display: inline-block;
+        width: 100%;
+        height: 10px;
+        background-size: contain;
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABdklEQVQ4T42TvUrEQBSFz1kt1BewU8QnSJ5gu0mrsGDjRAt/UVBBWRtdsdgVBBdcFBHFZK0U+8TKwkIsEt/Ffq9M9se4GzVTDZM5X865dy5tpd8EeIlDv4z8i7ajGwCmaSt3D8QJBPUo9LZzMIzmBsQiIKs0AsuZLxOFah6IrdxbI5YW1uNn7zIBmGU7ugLwUCC1OPD3s5xYyr0gsdYVmzs9QNuJrhIsA1KJAv8oDemKIa3tKGzWu99+ABInyj0DsSVo7cdBs5Y+6xcPOOjF6UCMAChMGmCW+FdAEqeT1+zTbvprMxChe8FS+pzkRgIQOY5D/yCrsFkA2kpfgVwyf6YUxpMIkNMo8Hf/c0BLuXckdFYRRaQRh/5mGvLtoFQasj7H7gnM/d1GuY5Cf/lnG0ulIftz9BHgTJ6HBEkgK6Y8RLE4bI9MPPwnTrW4/ZQFfhx6C7SUfiI5m2cOOpDvYRK5puW47wK8fgTeTo5J7EW3lPZITH0B+X227Y6+aJ4AAAAASUVORK5CYII=");
+      }
+      span[tag='input-auto']{
+        border-bottom: 1px solid gray;
+        padding: 2px 10px;
+        word-break: break-all;
+        word-wrap: break-word;
+      }
+      span[tag='input-auto'].input-before:before{
+        content:'请输入';
+        text-align: center;
+        color: #a1a1a1;
+      }
+      span[tag='input-auto'].input-before.input-select:before{
+        content:'请选择';
+        text-align: center;
+        color: #a1a1a1;
+      }
+      .alert-viwer{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        padding: 10px;
+        border-radius: 4px;
+        background: #fff;
+        z-index: 999;
+        box-shadow: 0 1px 3px rgba(0,0,0,.3);
+      }
+      .alert-viwer>textarea{
+        background: #fff;
+        border: 1px solid #dcdfe6;
+      }
+      .alert-viwer>p{
+        text-align: right;
+        margin: 6px 0 0;
+        padding: 0;
+        line-height: normal;
+      }
+      .alert-viwer>p>span{
+        display: inline-block;
+        background: #409eff;
+        padding: 6px 12px;
+        color: #FFFFFF;
+        border-radius: 4px;
+      }
+      .alert-viwer>p>span:last-of-type{
+        background: #fff;
+        color: #606266;
+        border: 1px solid #dcdfe6;
+      }
+      .sign-pos {
+        margin: 20px 0;
+      }
+      .sign-pos > p {
+        display: inline-block;
+        width: 230px;
+      }
+
+      .page1 {
+        break-before: page;
+        page-break-before: always;
+      }
+      @page {
+        size: 955px 1350px;
+      }
+  </style>
+</head>
+<body>
+    <span id="submit" style="position: absolute;top: -1000px;z-index: 0;">click</span>
+    <div class="cw_content container">
+      <div class="alert-viwer" style="display: none;">
+          <textarea id="inputArea" cols="30" rows="4"></textarea>
+          <p class="control-btn">
+              <span>保存</span>
+              <span>取消</span>
+          </p>
+      </div>
+      <div>
+        <div class="title bold"><p>房屋买卖合同</p><p>说明</p></div>
+        <div class="bold" style="text-align: right;margin-bottom: 30px;"><span>合同编号：<input systemparam="code" tag="input" readonly="readonly" type="text" class="text-limit" style="width:150px"/></span></div>
+        <div class="note">
+          <p>1、本合同文本仅供已取得房地产权证（或房屋所有权证或商品房已经签约并且在房地局已经备案、有房产相关发票）的房屋买卖时当事人双方约定使用。本合同一律用碳素墨水填写，涂改无效，空格部位未填写的视为没有约定。</p>
+          <p>2、房屋买卖行为是民事法律行为，涉及的标的额度较大，专业性强，法律规范较多，双方签订合同时，应当慎重，力求具体、全面、严密。</p>
+          <p>3、买卖共有房屋，出卖人须经其他共有人同意或有公证出具的公证委托书。</p>
+          <p>4、国有企业出售房地产，须经县级以上政府主管部门批准；股份制企业出售房地产，须经董事会批准；集体企业出售房地产，须经职代会批准。</p>
+          <p>5、买卖已出租的房屋，出卖人应当在合理的期限内通知承租人，承租人在同等条件下享有优先购买权。</p>
+          <p>6、买卖已抵押的房屋，出卖人应当事先告知抵押权人，并就归还借款等有关事项协商一致，取得抵押权人的书面同意。同时，应当将抵押情况如实告知买受人。</p>
+          <p>7、房屋交付后，买卖双方应当及时持《房地产权证》或《房屋所有权证》、《房屋买卖合同》、当事人身份证件，以及相关证明材料向芜湖市房地产市场管理处申请办理房地产交易手续、产权登记手续。委托他人或委托中介机构代理的，应带签署委托书（须公证），由受委托人携带上述材料及委托书（协议）申请办理。</p>
+        </div>
+        <div class="cw_message">
+          <ul>
+            <li><span>出卖人（甲方）：</span><span systemparam="ownerName" tag="input-auto"></span></li>
+            <li><span>证件号码：</span><span systemparam="ownerID" tag="input-auto"></span></li>
+          </ul>
+          <ul>
+            <li><span>房产共有权人：</span><span systemparam="ownerNames" tag="input-auto"></span></li>
+            <li><span>证件号码：</span><span systemparam="ownerIDs" tag="input-auto"></span></li>
+          </ul>
+          <ul>
+            <li><span>代理人：</span><span tag="input-auto" class="text-limit input-before" extendParam="val5"></span></li>
+            <li><span>证件号码：</span><span tag="input-auto" max="30" class="text-limit input-before" extendParam="val6"></span></li>
+          </ul>
+          <ul>
+            <li><span>买受人（乙方）：</span><span systemparam="guestName" tag="input-auto"></span></li>
+            <li><span>身份证/护照/工商注册号：</span><span systemparam="guestID" tag="input-auto"></span></li>
+          </ul>
+          <ul>
+            <li><span>房产共有权人：</span><span systemparam="guestNames" tag="input-auto"></span></li>
+            <li><span>证件号码：</span><span systemparam="guestIDs" tag="input-auto"></span></li>
+          </ul>
+          <ul>
+            <li><span>代理人：</span><span tag="input-auto" class="text-limit input-before" extendParam="val11"></span></li>
+            <li><span>证件号码：</span><span tag="input-auto" max="30" class="text-limit input-before" extendParam="val12"></span></li>
+          </ul>
+          <ul>
+            <li><span>居间方（丙方）：</span><span tag="input-auto" company="true" class="input-before text-limit" systemparam="companyNames" extendParam="val13"></span></li>
+            <li>电话：0553-5626666</li>
+          </ul>
+        </div>
+        <div class="cw_agreement">
+          <p>根据《中华人民共和国合同法》、《中华人民共和国城市房地产管理法》、《中华人民共和国物权法》等有关法律、法规的规定，出卖人和买受人在平等、自愿、公平、协商一致的基础上就存量房屋买卖事宜达成如下协议：</p>
+
+          <p id="one" class="navTitle bold">第一条、房屋基本情况 </p>
+          <div class="lh-18">(一) 甲方所售房屋(以下简称该房屋)为<div class="info-checkbox" name="houseType"><p type="check"></p>楼房</div><div class="info-checkbox" name="houseType"><p type="check"></p>平房</div>，坐落于：芜湖市<span systemparam="propertyAddr" tag="input-auto" extendParam="val25"></span>。该房屋所在楼栋建筑总层数为<span tag="input-auto" class="text-limit input-before" extendParam="val26"></span>层，该房屋所在楼层为：<span tag="input-auto" class="text-limit input-before" extendParam="val30"></span>层，产权证明所载建筑面积共：<span tag="input-auto" systemparam="square"></span>平方米。</div>
+          <div class="lh-18">(二) 该房屋规划设计用途为：<div class="info-checkbox" name="houseUse"><p type="check"></p>住宅</div><div class="info-checkbox" name="houseUse"><p type="check"></p>公寓</div><div class="info-checkbox" name="houseUse"><p type="check"></p>别墅</div><div class="info-checkbox" name="houseUse"><p type="check"></p>办公</div><div class="info-checkbox" name="houseUse"><p type="check"></p>商业</div><div class="info-checkbox" name="houseUse"><p type="check"></p>工业</div><div class="info-checkbox" name="houseUse"><p type="check"></p>其他</div>：<span tag="input-auto" class="text-limit input-before" extendParam="val32"></span>。</div>
+          <div class="lh-18">该房屋附属设施设备、装饰装修、相关物品清单等具体情况见补充协议。</div>
+
+          <p id="two" class="navTitle bold">第二条、房屋权属情况及具体状况的承诺</p>
+          <p class="bold">房屋权属情况及承诺</p>
+          <div class="lh-18">（一）该房屋所有权证证号为：<span tag="input-auto" class="text-limit input-before" extendParam="val35"></span>。</div>
+          <div class="lh-18">（二）甲方确认该房屋性质为下列选项中第<input type="text" class="text-limit dropdown-item" list="1,2,3" style="width:30px" readonly="readonly" extendParam="val36" />种情形：</div>
+          <p>1、商品房；</p>
+          <p>2、可上市交易的回迁房；</p>
+          <p>3、其他房屋。</p>
+          <div class="lh-18">（三）甲方确认该房屋的抵押情况为：<input type="text" class="text-limit dropdown-item" list="1,2" style="width:30px" readonly="readonly" extendParam="val38" />：</div>
+          <p>1、该房屋未设定抵押；</p>
+          <p>2、该房屋已经设定抵押,且抵押权人同意出售。</p>
+          <div class="lh-18">（四）甲方确认该房屋的租赁情况为：<input type="text" class="text-limit dropdown-item" list="1,2" style="width:30px" readonly="readonly" extendParam="val40" />：</div>
+          <p>1、甲方未将该房屋出租；</p>
+          <p>2、甲方已将该房屋出租,且承租人已放弃优先购买权。</p>
+          <div class="lh-18">（五）甲方承诺该房屋未曾发生过非正常死亡、严重刑事案件等情况，如隐瞒事实真相出售此房，乙方有权要求甲方退还所有购房款项和定金，并有权要求甲方补偿乙方所造成的一切损失。</div>
+          <p class="bold">房屋产权具体情况及说明</p>
+          <div class="lh-18">（一）乙方自愿购买甲方出售的完全产权，乙方确认配偶和该房屋的共同买受人知晓并同意本次房屋交易。</div>
+          <div class="lh-18">（二）甲方应当保证该房屋没有产权纠纷,未被限制转让。甲方承诺其配偶和该房屋的共有权人均知晓并同意本次房屋交易,认可本合同及其他相关文件的约定,且无他人对该房屋享有优先购买权;买受人承诺其配偶和该房屋的共同买受人均知晓并同意本次房屋交易,且认可本合同及其他相关文件的约定。如因一方违反前述承诺,导致该房屋不能办理产权登记或发生债权债务纠纷的,由违反承诺方按照房屋成交总价款的20%赔偿守约方的损失。</div>
+          <p style="text-decoration:underline;">本条款为独立条款,即使本合同及其他文件因一方违反前述承诺,依法被变更、撤销、解除、终止或认定无效的, 本条约定依然有效,守约方仍可依据本条款追究违反承诺方的法律责任。</p>
+
+          <p id="three" class="navTitle bold">第三条、成交价格</p>
+          <div class="lh-18">甲、乙双方同意此房交易房屋价款及装饰装修、配套设施合价价款为人民币(小写)<span tag="input-auto" systemParam="dealPrice"></span>元(大写<span tag="input-auto" systemParam="dealPriceUpper"></span>圆)整。</div>
+
+          <p id="four" class="navTitle bold">第四条、付款方式及付款时间</p>
+          <p>1、本合同签字盖章后，乙方当即支付给甲方购房定金为人民币(小写)<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val43"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val43_add"></span>圆)整。</p>
+          <p>2、甲、乙双方向丙方提供办理银行贷款的必要材料，并积极配合办理。</p>
+          <p>3、甲方<input type="text" class="text-limit dropdown-item" list="有,无" style="width:30px" readonly="readonly" extendParam="val45" />抵押（有/无），以下列第<input type="text" class="text-limit dropdown-item" list="a,b,c,d" style="width:30px" extendParam="val46" readonly="readonly" inputmethod="pay"/>种方式支付：</p>
+          <div class="lh-18" name="pay">a、甲、乙双方同意在签完此合同后<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val48"></span>日内，向芜湖市惠居住房金融有限公司提交资金托管或者放弃资金托管相关材料通过后，本合同经甲乙双方协商一致同意通过后期交易中采用<input type="text" class="text-limit dropdown-item" list="资金监管,放弃资金监管" style="width:110px" readonly="readonly" extendParam="val49" /><!--<span tag="input-auto" class="text-limit input-before" extendParam="val49"></span>-->(资金监管/放弃资金监管)，乙方贷款，甲、乙双方需向银行提供乙方按揭贷款所需要的必须材料，甲方应在<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val50"></span>日内，自行去银行还清贷款并办理解除抵押相关手续，办理过户手续当日，乙方即时一次性付清首付款<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val51"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val51_add"></span>圆整)（含已打入惠居公司资金托管账户的首付款以及购房定金）给甲方，甲方应拿出<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val52"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val52_add"></span>圆整)作为交房保证金放于丙方，丙方出具收条，待房屋交付无误后，丙方收回收条，并立即退还保证金给甲方。</div>
+          <div class="lh-18" name="pay">b、甲、乙双方同意在签完此合同后<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val53"></span>日内，向芜湖市惠居住房金融有限公司提交资金托管或者放弃资金托管相关材料通过后，本合同经甲乙双方协商一致同意通过后期交易中采用<input type="text" class="text-limit dropdown-item" list="资金监管,放弃资金监管" style="width:110px" readonly="readonly" extendParam="val54" /><!--<span tag="input-auto" class="text-limit input-before" extendParam="val54"></span>-->(资金监管/放弃资金监管)，乙方贷款，甲、乙双方需向银行提供乙方按揭贷款所需要的必须材料，乙方在乙方贷款审批通过后<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val55"></span>日内，付首付款<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val56"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val56_add"></span>圆整)（含定金）；甲方应在收到首付款后<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val57"></span>日内去银行办理解除抵押相关手续；此首付款用于甲方偿还该房银行贷款，且甲方不得以任何理由将此款他用；丙方协助甲、乙双方办理产权转移登记手续，办理过户手续当日，乙方当时即付清剩余首付款<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val58"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val58_add"></span>圆整)，甲方应拿出<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val59"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val59_add"></span>圆整)作为交房保证金放于丙方，丙方出具收条，待房屋交付无误后，丙方收回收条，并立即退还保证金给甲方。</div>
+          <div class="lh-18" name="pay">c、甲、乙双方同意在签完此合同后<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val60"></span>日内，向芜湖市惠居住房金融有限公司提交资金托管或者放弃资金托管相关材料通过后，本合同经甲乙双方协商一致同意通过后期交易中采用<input type="text" class="text-limit dropdown-item" list="资金监管,放弃资金监管" style="width:110px" readonly="readonly" extendParam="val61" /><!--<span tag="input-auto" class="text-limit input-before" extendParam="val61"></span>-->(资金监管/放弃资金监管)，甲方在<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val62"></span>日内，甲方自行去银行还清贷款并办理解除抵押相关手续，办理过户手续当日，乙方即时一次性付清购房款<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val63"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val63_add"></span>圆整)（含已打入惠居公司资金托管账户的首付款以及购房定金）给甲方，甲方应拿出<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val64"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val64_add"></span>圆整)作为交房保证金放于丙方，丙方出具收条，待房屋交付无误后，丙方收回收条，并立即退还保证金给甲方。</div>
+          <div class="lh-18" name="pay">d、甲、乙双方同意在签完此合同后<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val65"></span>日内，向芜湖市惠居住房金融有限公司提交资金托管或者放弃资金托管相关材料通过后，本合同经甲乙双方协商一致同意通过后期交易中采用<input type="text" class="text-limit dropdown-item" list="资金监管,放弃资金监管" style="width:110px" readonly="readonly" extendParam="val66" /><!--<span tag="input-auto" class="text-limit input-before" extendParam="val66"></span>-->(资金监管/放弃资金监管)，乙方在<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val67"></span>日内，付首付款<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val68"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val68_add"></span>圆整)（含定金）；甲方应在<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val69"></span>日内去银行办理解除抵押相关手续；此首付款用于甲方偿还该房银行贷款，且甲方不得以任何理由将此款他用；丙方协助甲、乙双方办理产权转移登记手续，办理过户手续当日，乙方当时即付清剩余购房款<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val70"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val70_add"></span>圆整)，甲方应拿出<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val71"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val71_add"></span>圆整)作为交房保证金放于丙方，丙方出具收条，待房屋交付无误后，丙方收回收条，并立即退还保证金给甲方。</div>
+          <p>4、关于银行放款和垫资</p>
+          <p>a、银行放款</p>
+          <div class="lh-18">银行贷款<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val72"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val72_add"></span>圆整)，在甲、乙双方办理过户提交手续后，根据房管局规定时间取得房地产证（不动产权证）和他项权证，银行收到他项权证后根据客户贷款的批贷顺序依次发放贷款到甲方提供的账户中，乙方即支付完所有购房款；</div>
+          <p>b、垫资</p>
+          <div class="lh-18">银行贷款<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val73"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val73_add"></span>圆整)需要<span tag="input-auto" class="text-limit input-before" extendParam="val74"></span>方垫资，由<span tag="input-auto" class="text-limit input-before" extendParam="val75"></span>方承担垫资费，垫资费为<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val76"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val76_add"></span>圆整)。垫资时间<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val78"></span>，垫资当时，乙方开具借条给垫资方，另甲方在收到此款当时应将下款存折或银行卡以及密码交予垫资方，且交予后不能到银行更改存折或银行卡的一切信息，垫资方取出该款后，归还该存折或银行卡给甲方，乙方借条自动作废。</div>
+
+          <p class="navTitle bold" id="five">第五条、房屋的交付</p>
+          <p>（一）出卖人应当按照下列第<input type="text" class="text-limit dropdown-item" list="1,2" style="width:30px" readonly="readonly" extendParam="val80" inputmethod="delivery" />项约定将该房屋交付给买受人。</p>
+          <p name="delivery">1、出卖人收到全部购房款(不含物业交割保证金和户口迁出保证金)后<span tag="input-auto" listen="number" class="text-limit input-before" extendParam="val81"></span>个工作日内交付给买受人；</p>
+          <p name="delivery">2、按照本项约定时间或约定条件<span tag="input-auto" class="text-limit input-before" extendParam="val82"></span>将该房屋交付给买受人。</p>
+          <p>（二）该房屋交付时,应当履行下列第 <span style="text-decoration: underline;">1、2、3</span> 项手续</p>
+          <p>1、出卖人与买受人共同对该房屋附属设施设备、装饰装修、相关物品清单等具体情况进行验收,记录水、电、气表的读数,并交接给乙方补充协议；</p>
+          <p>2、买卖双方在房屋附属设施设备、装饰装修、相关物品清单上签字；</p>
+          <p>3、移交该房屋房门钥匙。</p>
+          <p>（三）在房屋交付日以前发生的物业管理费、水、电、燃气、有线电视、电信等其他费用由出卖人承担,交付日以后(含当日)发生的费用由买受人承担。出卖人同意其缴纳的该房屋专项维修资金(公共维修基金)的账面余额无偿转移至买受人名下。</p>
+          <p>（四）该房出售后，如与甲方有关的纠纷、债务等，一律由甲方承担责任。</p>
+          <p>（五）乙方承诺继续履行甲方原先与房屋所在区域物业管理企业签订的物业管理合同，将房屋委托该物业管理企业统一管理，遵守房屋使用公约，并重新办理物业管理合同签约手续。</p>
+
+          <p class="navTitle bold" id="six">第六条、关于办理产权和相关税费承担的约定</p>
+          <p class="bold">产权转移登记的约定</p>
+          <div class="lh-18">甲、乙双方应在<span type="text" tag="input-auto" class="text-limit input-before" extendParam="val85"></span>向芜湖市房地产市场管理处申请办理房地产交易手续与房地产登记手续。在办理上述手续时，双方须积极给予配合，若因一方故意拖延或不及时提供相关材料，给对方造成损失的，视为违约。甲乙双方提供资料应真实有效，否则由此引起的一切责任、纠纷及债务等与丙方无关，任一方提供材料无效，视为违约，责任自行承担。</div>
+          <p class="bold">相关税费承担的约定</p>
+          <div class="lh-18">（一）办理上述手续时所产生的存量房交易手续费及办理不动产权证相关费用，由<span tag="input-auto" class="text-limit dropdown-item" list="甲,乙" systemParam="true" style="width:50px" extendParam="val86"></span>方缴纳；</div>
+          <div class="lh-18">（二）另此房上市交易时所产生的税费按以下方式承担<input type="text" class="text-limit dropdown-item" list="1,2,3,4" style="width:30px" readonly="readonly" extendParam="val88" inputMethod="taxAgree" />：</div>
+          <p name="taxAgree">1、甲方承担甲、乙双方按国家规定的所有税费；</p>
+          <p name="taxAgree">2、乙方承担甲、乙双方按国家规定的所有税费；</p>
+          <p name="taxAgree">3、甲、乙双方各自承担各自国家规定的所有税费；</p>
+          <p name="taxAgree">4、甲、乙双方经协商后一致同意按照本项约定条件承担税费：<span tag="input-auto" class="text-limit input-before" extendParam="val90"></span></p>
+          <p>其中甲方购房时所享的政策性补贴在过户时需补交的由甲方承担；如甲方房产是通过继承或赠予等其他特殊方式获得，在过户过程中所产生的税费由甲方自行承担。</p>
+
+          <p class="navTitle bold" id="seven">第七条 、违约责任</p>
+          <div class="lh-18">（一）甲方承诺该房内未落任何人户口或在<span type="text" tag="input-auto" listen="number" class="text-limit input-before" extendParam="val92"></span>日前迁出所落户口，另甲方应在乙方支付首付款时拿出<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val93"></span>元(大写<span tag="input-auto" systemParam="true" extendParam="val93_add"></span>圆整)作为保证金放于<span tag="input-auto" class="text-limit input-before" extendParam="val94"></span>方，<span tag="input-auto" class="text-limit input-before" extendParam="val95"></span>方出具收条，特甲方在规定时间内迁出户口，<span tag="input-auto" class="text-limit input-before" extendParam="val96"></span>方退还该保证金给甲方；如甲方未在规定时间内迁出所落户户口，不再退还保证金给甲方，保证金归乙方所有，且每逾期一天，甲方应该按乙方已付房款的0.05%向乙方支付滞纳金，逾期超过15天，即视甲方违约，甲方应承担对乙方造成的一切经济及其他损失，且守约方可要求法院强制执行。</div>
+          <p>(二)逾期交房责任除不可抗力外,出卖人未按照第五条约定的期限和条件将该房屋交付买受人的，按照逾期时间,分别处理：</p>
+          <p>逾期在15日内,自第五条约定的交付期限届满之次日起至实际交付之日止,出卖人按日计算向买受人支付已交付房价款万分之五的违约金,并于该房屋实际交付之日起15日内向买受人支付违约金,合同继续履行；</p>
+          <p>逾期超过15日后,买受人有权退房。买受人退房的,出卖人应当自退房通知送达之日起15日内退还全部已付款,并按照买受人全部已付款的20%向买受人支付违约金。</p>
+          <p>(三)逾期付款责任:买受人未按照合同约定的时间付款的按照逾期时间,分别处理：</p>
+          <p>逾期在15日内,自约定的应付款期限届满之次日起至实际支付应付款之日止,买受人按日计算向出卖人支付逾期应付款万分之五的违约金,并于实际支付应付款之日起15日之内向出卖人支付违约金,合同继续履行；</p>
+          <p>逾期超过15日后,出卖人有权解除合同。出卖人解除合同的,买受人应当自解除合同通知送达之日起15日内按照累计的逾期应付款的 20%向出卖人支付违约金,并由出卖人退还买受人全部已付款。</p>
+          <p>(四)出卖人将该房屋出卖给第三人,导致买受人不能取得房屋所有权证的,买受人有权退房,出卖人应当自退房通知送达之日起15日内退还买受人全部已付款,按照央行现行存款利率付给利息,并按买受人累计已付房价款的一倍支付违约金。</p>
+          <p>(五)在办理此房买卖过程中，如因甲方该房产的产权出现任何问题导致该房不能成功过户给乙方，甲方应在出现问题后一日之内退还乙方已付全部房款，并承担违约责任。</p>
+          <p>(六)如单方违约，守约方有权解除合同，违约方应向守约方按照总房价款的20%支付违约金，并承担对方因已支付的佣金导致的损失。</p>
+          <p>(七)如双方约定解除合同，已支付的佣金导致的损失由双方共同承担。</p>
+
+          <p class="navTitle bold" id="eight">第八条、其它</p>
+          <p>本合同一式三份，甲、乙、丙三方各执一份，自签订之日起生效。本合同未尽事宜，经双方协商一致后，可另签订补充协议进行变更或补充，对本合同的解除应当采用书面形式，本合同附件及补充协议与本合同具有同等法律效力。本合同项下发生争议，由双方协商解决，如协商不成，按下述第<input type="text" class="text-limit dropdown-item" list="1,2" style="width:30px" readonly="readonly" extendParam="val100" />种方式解决：</p>
+          <p>1、提交芜湖仲裁委员会仲裁；</p>
+          <p>2、依法向房屋所在地的人民法院提起诉讼。</p>
+
+          <p class="bold">补充协议</p>
+          <p>经过甲乙双方友好协商达成如下协议：</p>
+          <p>1、甲乙双方签署的网签合同只作为产权转移过程中申报银行贷款、交税、过户使用，不作为实际成交价，不具法律效力，实际成交价以买卖双方签署的甲乙丙三方买卖居间合同为准。</p>
+          <p style="margin-bottom: 20px;"><span tag="input-auto" class="text-limit input-before" extendParam="val91"></span></p>
+
+          <div class="sign-pos">
+            <p>甲方：</p><p>乙方：</p><p>丙方：</p>
+          </div>
+          <div class="sign-pos">
+            <p>代理人：</p><p>代理人：</p><p>代理人：</p>
+          </div>
+          <div class="sign-pos">
+            <p>日期：</p><p>日期：</p><p>日期：</p>
+          </div>
+        </div>
+
+        <div class="page1">
+          <div class="bold mt60 textcenter">房屋交割清单</div>
+          <div class="textcenter bold">房屋附属家具、电器、装修及其他设备设施状况及损赔</div>
+          <table border="1" class="table-style textcenter">
+            <tr>
+              <td>名称</td><td>品牌</td><td>数量</td><td>新旧</td><td>备注</td><td>名称</td><td>品牌</td><td>数量</td><td>新旧</td><td>备注</td>
+            </tr>
+            <tr>
+              <td>空调</td><td></td><td></td><td></td><td></td><td>餐桌</td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>空调</td><td></td><td></td><td></td><td></td><td>窗帘</td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>空调</td><td></td><td></td><td></td><td></td><td>厨房</td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>空调</td><td></td><td></td><td></td><td></td><td>卫生间</td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>冰箱</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>洗衣机</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>主卧床</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>次卧床</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>次卧床</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>次卧床</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>沙发</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>茶几</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+          </table>
+          <div class="textcenter bold">其他相关费用</div>
+          <table border="1" class="table-style textcenter">
+            <tr>
+              <td>项目</td><td>单位</td><td>单价</td><td>起计时间</td><td>起计底数</td><td>项目</td><td>单位</td><td>单价</td><td>起计时间</td><td>起计底数</td>
+            </tr>
+            <tr>
+              <td>水费</td><td></td><td></td><td></td><td></td><td>上网费</td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>电费</td><td></td><td></td><td></td><td></td><td>车位费</td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>电话费</td><td></td><td></td><td></td><td></td><td>租赁税费</td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>物业费</td><td></td><td></td><td></td><td></td><td>卫生费</td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>燃气费</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+          </table>
+          <table border="1" class="table-style table-three">
+            <tr>
+              <td rowspan="3" class="bold">交房确认</td>
+              <td colspan="2">对上述情况，乙方经验收，认为符合房屋交验条件，并且双方已对水、电、燃气等费用结算完结，同意接收。</td>
+            </tr>
+            <tr class="table-date">
+              <td colspan="2"><span>交房日期：</span><span>年</span><span>月</span><span>日</span></td>
+            </tr>
+            <tr>
+              <td>甲方（出卖人）签章：</td><td>乙方（买受人）签章：</td>
+            </tr>
+            <tr>
+              <td rowspan="3" class="bold">退房确认</td>
+              <td colspan="2">甲乙双方已对房屋和附属物品、设备设施及水电使用等情况进行了验收，并办理了退房手续。有关费用的承担和房屋及其附属物品、设备设施的返还
+                <div class="info-checkbox"><p type="check"></p>无纠纷</div>
+                <div class="info-checkbox"><p type="check"></p>附以下说明：</div>
+                <input type="text" style="display: block;width: 100%;" />
+              </td>
+            </tr>
+            <tr class="table-date">
+              <td colspan="2"><span>退房日期：</span><span>年</span><span>月</span><span>日</span></td>
+            </tr>
+            <tr>
+              <td>甲方（出租人）签章：</td><td>乙方（承租人）签章：</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+</body>
+<script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+<script type="text/javascript" src="/js/bundle_mm_whu20200107.js"></script>
+ <!--<script>
+  (function () {
+    var scriptList = document.getElementsByTagName("script")
+    console.log(scriptList)
+    if(!scriptList[0].src){
+      var host='https://sign2.jjw.com'
+      var host_other="http://sign2.jjw.com:28879"
+      var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_mm20190402.js","datepicker.css"]
+      for (let i = 0; i < addrList.length; i++) {
+        if(window.location.host==='localhost:8080'){
+          if(addrList[i].indexOf('bundle')>-1){
+            // addrList[i]=host_other+'/'+addrList[i]
+            addrList[i]='./WHU-MM.js'
+          }else{
+            addrList[i]=host_other+'/'+addrList[i]
+          }
+        }else{
+          addrList[i]='/'+addrList[i]
+        }
+        if(addrList[i].indexOf('.css')>-1){
+          var hm = document.createElement("link");
+          hm.rel="stylesheet"
+          hm.href = addrList[i];
+          /*var s = document.getElementsByTagName("link")[0];
+          s.parentNode.insertBefore(hm,s);*/
+          document.head.appendChild(hm);
+        }else{
+          var hm = document.createElement("script");
+          addrList[i].includes('WHU-MM')&&(hm.type = 'module');
+          hm.src = addrList[i];
+          var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+          s.parentNode.insertBefore(hm,s);
+        }
+      }
+    }
+  })();
+</script>-->
+</html>

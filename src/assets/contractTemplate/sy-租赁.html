@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <link rel="stylesheet" href="/datepicker.css"/>
+  <title>十堰租赁合同</title>
+  <style>
+    body{
+      font-family: SimHei;
+    }
+    p{
+      margin: 0px;
+      padding: 0px;
+      line-height: 1.8;
+    }
+    input{
+      border: 0;
+      outline: none;
+      border-bottom: 1px solid gray;
+      height: 16px;
+      padding-left: 10px;
+      box-sizing: border-box;
+      font-family: SimHei;
+      font-size: 16px;
+    }
+    input:disabled{
+      background-color: #fff;
+    }
+    input[type="checkbox"]{
+      border:0px;
+    }
+    /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+      -webkit-appearance: none !important;
+    }
+    input[type="number"]{-moz-appearance:textfield;}
+    ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .BODERRED{
+      border-color: red !important;
+    }
+    .modal{
+      position: relative;
+    }
+    .modal:before{
+      content: '';
+      z-index: 50;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+    .cw_content{
+      position: relative;
+      font-size: 16px;
+      width: 840px;
+      box-sizing: border-box;
+      padding:0 40px;
+      margin: 0 auto;
+    }
+    .fontBold{
+      font-weight: bold;
+    }
+    .cw_content .title{
+      font-size: 20px;
+      text-align: center;
+    }
+    .code{
+      padding-left: 500px;
+      box-sizing: border-box;
+      margin: 10px 0;
+    }
+    .cw_message{
+      /*padding: 5px 30px;*/
+    }
+    .cw_message>ul:nth-child(-n+5){
+      margin-bottom: 5px;
+    }
+    .cw_message>ul>li{
+      display: inline-block;
+      min-width: 45%;
+      line-height: 1.5;
+    }
+    .cw_agreement{
+      text-indent: 32px;
+    }
+    .nav{
+      position: absolute;
+      right: 0;
+      top: 0;
+      visibility: hidden;
+    }
+    .nav ul a{
+      text-decoration: none;
+      color: #000;
+    }
+
+    /* 胡劲草样式 */
+    .contanier {
+      width: 840px;
+      margin: 0 auto;
+      padding: 0px 40px;
+      box-sizing: border-box;
+    }
+    .paragraph[name='text-indent'] p{
+      text-indent: 32px;
+    }
+    .p-indent{
+      text-indent: 0 !important;
+    }
+    .contanier .color-red p{
+      color: red;
+    }
+    .red{
+      color:red;
+    }
+    .contanier .ulbox ul li,.htbox{
+      font-weight: bold;
+    }
+    .htbox{
+      margin-top: 20px;
+      clear: both;
+    }
+    .contanier .ulbox{
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .contanier .ulbox li.fl{
+      float: left;
+    }
+    .contanier .ulbox li{
+      float: left;
+      width: 50%;
+      margin-bottom: 10px;
+    }
+    .contanier .ulbox li input{
+      max-width: initial;
+      width: inherit;
+    }
+    table {
+      border-collapse:collapse;
+      width: 100%;
+    }
+    .table1 {
+      text-align: center;
+    }
+    .table2 {
+      margin-bottom: 20px;
+    }
+    .table2  input[type="text"]{
+      width: 80px;
+    }
+    .table2 tr:first-child th:nth-of-type(3){
+      width: 312px;
+    }
+    .table2 tr td:first-child {
+      text-align: center;
+    }
+    .textleft{
+      text-align: left;
+    }
+    .textcenter{
+      text-align: center;
+    }
+    .textright{
+      text-align: right;
+    }
+    .mt60{
+      margin-top: 60px;
+      margin-bottom: 10px;
+    }
+    .bold{
+      font-weight: bold;
+    }
+    .lingH18{
+      line-height:1.8;
+    }
+    .padL25{
+      padding-left:25px;
+    }
+    .info-checkbox{
+      display: inline;
+      cursor: pointer;
+      text-indent: 0px;
+      line-height: 1;
+    }
+    .info-checkbox>p[type="check"]{
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 1px solid gray;
+      position: relative;
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+      margin: 0;
+    }
+    .info-checkbox>p[type="check"][checked='true']:before{
+      content:'';
+      position: absolute;
+      left: 0;
+      display: inline-block;
+      width: 100%;
+      height: 10px;
+      background-size: contain;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVQ4T72TsUvDQBjF33cYUhfFP0GIVO7S1cXJxU3sIqiLuHSyOIg4Cro4OBW3jJ10EhcRdHcw2901f0BWh04OmvskpZVYqjYEvPl9v3v3vneEiocqzuP/AY1GY9k5F2VZ1kyS5LWUAynlihDigZnnmblprb2bGhCG4TqAWwCzzNwyxkR5fgNAEARzvu8fGWPOAXyMB6uU2iaiLoAZ51zbWns10gwAUsotIcQNM9/XarXNOI7fRwIp5QERdYiInHOn1tqz4gVfTwjDsAOgzcxP/X5/I03TN6XUBRGdDAcutdbH4+6KGQil1CMRrQF4BtADsJ8PMHNkjGlN6sy3EIdZvBDRUkHc1Vrv5Zw/AbmgXq8vep4XA1gAcK213gXgfmrsxDUqpVaJ6FBrvQMg+63uU/eglIMyH6yyg0+YpmgRBNEBzgAAAABJRU5ErkJggg==");
+    }
+    .info-checkbox>p[type="check"][checked='false']:after{
+      content:'';
+      position: absolute;
+      display: inline-block;
+      width: 100%;
+      height: 10px;
+      background-size: contain;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABdklEQVQ4T42TvUrEQBSFz1kt1BewU8QnSJ5gu0mrsGDjRAt/UVBBWRtdsdgVBBdcFBHFZK0U+8TKwkIsEt/Ffq9M9se4GzVTDZM5X865dy5tpd8EeIlDv4z8i7ajGwCmaSt3D8QJBPUo9LZzMIzmBsQiIKs0AsuZLxOFah6IrdxbI5YW1uNn7zIBmGU7ugLwUCC1OPD3s5xYyr0gsdYVmzs9QNuJrhIsA1KJAv8oDemKIa3tKGzWu99+ABInyj0DsSVo7cdBs5Y+6xcPOOjF6UCMAChMGmCW+FdAEqeT1+zTbvprMxChe8FS+pzkRgIQOY5D/yCrsFkA2kpfgVwyf6YUxpMIkNMo8Hf/c0BLuXckdFYRRaQRh/5mGvLtoFQasj7H7gnM/d1GuY5Cf/lnG0ulIftz9BHgTJ6HBEkgK6Y8RLE4bI9MPPwnTrW4/ZQFfhx6C7SUfiI5m2cOOpDvYRK5puW47wK8fgTeTo5J7EW3lPZITH0B+X227Y6+aJ4AAAAASUVORK5CYII=");
+    }
+    .page1 {
+      break-before: page;
+      page-break-before: always;
+    }
+    span[tag='input-auto']{
+      border-bottom: 1px solid gray;
+      padding: 2px 10px;
+      word-break: break-all;
+      word-wrap: break-word;
+    }
+    span[tag='input-auto'].input-before:before{
+      content:'请输入';
+      text-align: center;
+      color: #a1a1a1;
+    }
+    span[tag='input-auto'].input-before.input-select:before{
+      content:'请选择';
+      text-align: center;
+      color: #a1a1a1;
+    }
+    .alert-viwer{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      padding: 10px;
+      border-radius: 4px;
+      background: #fff;
+      z-index: 999;
+      box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    }
+    .alert-viwer>textarea{
+      background: #fff;
+      border: 1px solid #dcdfe6;
+    }
+    .alert-viwer>p{
+      text-align: right;
+      margin: 6px 0 0;
+      padding: 0;
+      line-height: normal;
+    }
+    .alert-viwer>p>span{
+      display: inline-block;
+      background: #409eff;
+      padding: 6px 12px;
+      color: #FFFFFF;
+      border-radius: 4px;
+    }
+    .alert-viwer>p>span:last-of-type{
+      background: #fff;
+      color: #606266;
+      border: 1px solid #dcdfe6;
+    }
+    .txt-size{
+      font-size: 14px;
+      font-weight: normal;
+    }
+    .seven-one {
+      margin-left: 20px;
+    }
+    .seven-one li {
+      line-height: 1.8;
+    }
+    .sign span{
+      display: inline-block;
+      width: 25%;
+      margin-top: 40px;
+      text-indent: 0px;
+    }
+    .signDate{
+      margin-right: 100px;
+      text-align: right;
+    }
+    .signDate i{
+      width: 50px;
+      display: inline-block;
+    }
+    .sign {
+      margin: 10px 0;
+    }
+    .sign > ul:first-child {
+      margin-bottom: 15px;
+    }
+    .sign ul li {
+      width: 32%;
+      display: inline-block;
+    }
+    @page {
+      size: 955px 1350px;
+    }
+  </style>
+</head>
+<body>
+<span id="submit" style="position: absolute;top: -1000px;z-index: 0;">click</span>
+<div class="cw_content container">
+  <div class="alert-viwer" style="display: none;">
+    <textarea id="inputArea" cols="30" rows="4"></textarea>
+    <p class="control-btn">
+      <span>保存</span>
+      <span>取消</span>
+    </p>
+  </div>
+  <div class="page_one">
+    <div class="title fontBold"><p>房屋租赁合同</p></div>
+    <div class="code fontBold"><span>合同编号：<input systemparam="code" tag="input" readonly="readonly" type="text" class="text-limit" style="width:150px"/></span></div>
+    <div class="cw_message">
+      <ul>
+        <li><span>甲方（出租方）：</span><span systemparam="ownerName" tag="input-auto"></span></li>
+        <li><span>法定代表人: </span><span tag="input-auto" class="input-before" extendParam="val2"></span></li>
+        <li><span>证件号码: </span><span systemparam="ownerID" tag="input-auto"></span></li>
+        <li><span>地  址: </span><span systemParam="propertyAddr" tag="input-auto"></span></li>
+        <li><span>电  话: </span><span tag="input-auto" class="input-before" systemParam="ownerTel"></span></li>
+      </ul>
+      <ul>
+        <li><span>乙方（承租方）：</span><span systemparam="guestName" tag="input-auto"></span></li>
+        <li><span>法定代表人: </span><span tag="input-auto" class="input-before" extendParam="val7"></span></li>
+        <li><span>证件号码: </span><span systemparam="guestID" tag="input-auto"></span></li>
+        <li><span>地  址: </span><span tag="input-auto" class="input-before" extendParam="val9"></span></li>
+        <li><span>电  话: </span><span tag="input-auto" class="input-before" systemParam="guestTel"></span></li>
+      </ul>
+      <ul>
+        <li style="position: relative;"><span>丙方（居间方）：</span><img class="SignatureLocation" style="position:absolute;left:103px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /><span systemParam="companyNames" company="true" extendParam="val11" class="text-limit input-before" tag="input-auto"></span></li>
+        <li><span>地  址：</span><span extendParam="val12" class="input-before" tag="input-auto"></span></li>
+      </ul>
+    </div>
+    <div>
+      <p>根据有关法律、法规的规定，甲、乙双方经充分协商，在丙方的居间服务下，就下列房屋租赁事宜达成如下协议：</p>
+      <p id="one" class="navTitle"><span class="fontBold">第一条（租赁房屋坐落、面积及附属设施）</span> 租赁房屋（以下简称“该房屋”）坐落于十堰市<span systemparam="propertyAddr" tag="input-auto"></span>,房屋建筑（计租）面积共计<span extendParam="val13" tag="input-auto" class="input-before" listen="number"></span>平方米，该房屋附属设备设施详见本合同附件：房屋交割清单。</p>
+      <p id="two" class="navTitle"><span class="fontBold">第二条（租赁用途）</span> 该房屋仅作<span extendParam="val14" tag="input-auto" class="input-before"></span>使用，乙方不得擅自挪作它用。</p>
+      <p id="three" class="navTitle"><span class="fontBold">第三条（租赁期限）</span> 自<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val15"/>至<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val16"/>止，共<span extendParam="val17" class="input-before" tag="input-auto" listen="number"></span>个月。</p>
+      <p class="navTitle"><span class="fontBold">第四条（租金及支付方式）</span> 该房屋月租金为人民币<span extendParam="val18" class="input-before" tag="input-auto" listen="number"></span>元整（此价格不含相关税费）。租金从免租期后按<span extendParam="val19" tag="input-auto" class="input-before"></span>结算（每叁个自然月为一季），首次租金乙方于<span extendParam="val20" tag="input-auto" class="input-before"></span>支付给甲方，以后各期租金支付时间为<span extendParam="val21" tag="input-auto" class="input-before"></span>。乙方若逾期支付，每逾期一日按月租金的千分之三向甲方支付违约金。</p>
+      <p class="navTitle"><span class="fontBold">第五条（保证金）</span> 乙方于本合同生效之日向甲方支付该房屋保证金人民币<span extendParam="val22" class="input-before" tag="input-auto" listen="number"></span>元整。合同期满，若乙方无违约行为，甲方应在合同到期当日将保证金无息退还给乙方。</p>
+      <p class="navTitle"><span class="fontBold">第六条（甲方责任）</span> </p>
+      <p>1、甲方保证出租房屋产权明晰且不存在影响乙方安全、健康的情况，并保证出租该房屋的行为符合相关法律、法规、行政规章的规定。</p>
+      <p>2、甲方应于本合同生效之日起<span extendParam="val23" class="input-before" tag="input-auto" listen="number"></span>日内，将该房屋交付给乙方。甲方逾期交付该房屋的，每逾期一日按月租金的千分之三向乙方支付违约金。甲方逾期<span extendParam="val24" class="input-before" tag="input-auto" listen="number"></span>日不能交房的，乙方有权解除合同并要求甲方赔偿相应损失。</p>
+      <p>3、在乙方承租期间，非乙方原因造成的该房屋及其附属设备设施损坏（含自然损耗），甲方负有修缮责任。甲方修缮房屋的，乙方应予以协助，甲乙双方另行约定的除外。</p>
+      <p class="navTitle"><span class="fontBold">第七条（乙方责任）</span> </p>
+      <p>1、乙方有下列情形之一的，甲方有权单方解除合同并要求乙方在<span extendParam="val25" class="input-before" tag="input-auto" listen="number"></span>天内退还该房屋，同时没收保证金。保证金不足以弥补甲方损失的，甲方有权要求乙方赔偿：</p>
+      <ul class="seven-one">
+        <li>①未经甲方同意，擅自将承租房屋转租、转借他人或擅自调换使用的；</li>
+        <li>②未经甲方同意，擅自拆改该房屋结构、损坏该房屋或改变该房屋使用用途；</li>
+        <li>③拖欠租金累计达<span extendParam="val26" class="input-before" tag="input-auto" listen="number"></span>日，或欠缴各项费用大于等于一个月租金；</li>
+        <li>④利用该房屋从事非法活动或存放危险物品。</li>
+      </ul>
+      <p>2、该房屋租赁期间，乙方应支付以下费用：</p>
+      <div><div class="info-checkbox" name="facility" more="true"><p type="check"></p>物业管理费、</div><div class="info-checkbox" name="facility" more="true"><p type="check"></p>水电费、</div><div class="info-checkbox" name="facility" more="true"><p type="check"></p>煤气费、</div><div class="info-checkbox" name="facility" more="true"><p type="check"></p>宽带网络费、</div><div class="info-checkbox" name="facility" more="true"><p type="check"></p>暖气费、</div><div class="info-checkbox" name="facility" more="true"><p type="check"></p>电话费、</div><div class="info-checkbox" name="facility" more="true"><p type="check"></p>有线电视费</div>等经营所产生的一切费用。</div>
+      <p class="navTitle"><span class="fontBold">第八条（合同变更及解除）</span> </p>
+      <p>1、租赁期间，双方均不得无故解除合同，任何一方提出解除合同，需提前<span extendParam="val27" class="input-before" tag="input-auto" listen="number"></span>日书面通知对方，经双方协商一致后终止合同。租赁期间甲方擅自解除合同的，应赔偿乙方<span extendParam="val28" tag="input-auto" class="input-before"></span>；乙方擅自解除合同的，无权要求甲方返还保证金。乙方退租时，留置不搬的家具杂物任由甲方处置。</p>
+      <p>2、租赁期满后，若乙方要求续租，须提前<span extendParam="val29" class="input-before" tag="input-auto" listen="number"></span>日书面向甲方提出，甲方应在收到通知后十日内向乙方正式书面答复，甲方若无答复，视为不同意续租，乙方应退还房屋；如甲方同意继续租赁，则应续签租赁合同。在同等条件下，乙方有优先承租权。</p>
+      <p>3、因不可抗力原因（包括租赁物业被依法拆迁）导致该房屋毁损或灭失而不能继续租赁的，则任何一方可解除本合同，且互不承担违约责任。甲方按实际租期收取租金，保证金予以退还。</p>
+      <p class="navTitle"><span class="fontBold">第九条</span> 本合同未尽事项，由甲、乙双方另行议定，并签订补充协议。补充协议与本合同具同等法律效力。本合同执行中如发生纠纷，双方应协商解决，协商不成，任何一方均可向人民法院起诉。</p>
+      <p class="navTitle"><span class="fontBold">第十条</span> 居间服务费为<span extendParam="val30" class="input-before" tag="input-auto" listen="number"></span>元整，由<input type="text" class="text-limit dropdown-item" list="甲,乙" style="width:30px" readonly="readonly" extendparam="val32">承担并在签订本合同书同时一次性支付给丙方。</p>
+      <p class="navTitle"><span class="fontBold">第十一条</span> 本合同经甲、乙双方和丙方签字后生效。本合同一式三份，甲、乙、丙三方各执一份，具同等法律效力。</p>
+      <p class="navTitle"><span class="fontBold">第十二条</span> 本合同附件是本合同不可分割的一部分，与本合同有同等的法律效力。</p>
+      <p class="navTitle"><span class="fontBold">第十三条</span> 本合同签订后，甲乙双方当事人应按照国家相关规定进行备案。</p>
+      <p class="navTitle"><span class="fontBold">第十四条</span> 附加条款：<span extendParam="val33" tag="input-auto" class="input-before"></span></p>
+      <div class="sign">
+        <ul>
+          <li>
+            <p>甲方（签章）：</p>
+            <p>委托代理人：</p>
+          </li>
+          <li>
+            <p>乙方（签章）：</p>
+            <p>委托代理人：</p>
+          </li>
+          <li>
+            <p style="position:relative;">居间方（签章）：<img class="SignatureLocation" style="position:absolute;left:70px;top:-20px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII=" /></p>
+            <p>经 纪 人：</p>
+          </li>
+        </ul>
+        <p class="signDate">本合同签署日期：<i></i>年<i></i>月<i></i>日</p>
+      </div>
+    </div>
+  </div>
+  <div class="page1">
+    <p>附件一：相关费用明细</p>
+    <p>附件二：房屋交割清单</p>
+    <p>提示：甲方、乙方向丙方交付居间服务费时，请向丙方索取加盖有丙方正式印鉴的收据。</p>
+    <div>
+      <p class="p-title">附件一：相关费用明细</p>
+      <table border="1" class="table1">
+        <tr>
+          <th>项  目</th>
+          <th>单  价</th>
+          <th>起计时间</th>
+          <th>起计底数</th>
+          <th>项  目</th>
+          <th>单  价</th>
+          <th>起计时间</th>
+          <th>起计底数</th>
+        </tr>
+        <tr>
+          <td>水  费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>物业费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>电  费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>燃气费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>电话费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>上网费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>收视费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>车位费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>供暖费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>租赁税费</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+      <p class="p-title">附件二：房屋交割清单</p>
+      <table border="1" class="table2">
+        <tr>
+          <th>屋内设施</th>
+          <th>数量</th>
+          <th>品牌/质地</th>
+          <th>物品状况</th>
+          <th>备注</th>
+        </tr>
+        <tr>
+          <td>冰箱</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>微波炉</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>燃气灶</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>抽油烟机</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>洗衣机</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>热水器</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>坐便</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>防盗门</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>电话机</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>电视机</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>空调</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>床</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>床垫</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>书桌</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>衣柜</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>沙发</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>茶几</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>餐桌</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>椅子</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>整体橱柜</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+      <table border="1" class="table2 page1">
+        <tr>
+          <th>屋内设施</th>
+          <th>数量</th>
+          <th>品牌/质地</th>
+          <th>物品状况</th>
+          <th>备注</th>
+        </tr>
+        <tr>
+          <td>卧室地板</td>
+          <td colspan="2">
+            <div class="info-checkbox" name="zhizhao9"><p type="check" nocheck="true"></p><span>地砖</span></div>
+            <div class="info-checkbox" name="zhizhao9"><p type="check" nocheck="true"></p><span>木地板</span></div>
+            <div class="info-checkbox" name="zhizhao9"><p type="check" nocheck="true"></p><span>水泥地</span></div>
+            <div class="info-checkbox" name="zhizhao9"><p type="check" nocheck="true"></p><span>其他</span></div>
+            <span extendParam="val114" type="text" tag="input-auto" class="input-before" noline="true"></span>
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>客厅地板</td>
+          <td colspan="2">
+            <div class="info-checkbox" name="zhizhao10"><p type="check" nocheck="true"></p><span>地砖</span></div>
+            <div class="info-checkbox" name="zhizhao10"><p type="check" nocheck="true"></p><span>木地板</span></div>
+            <div class="info-checkbox" name="zhizhao10"><p type="check" nocheck="true"></p><span>水泥地</span></div>
+            <div class="info-checkbox" name="zhizhao10"><p type="check" nocheck="true"></p><span>其他</span></div>
+            <span extendParam="val119" type="text" tag="input-auto" class="input-before" noline="true"></span>
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>厨卫</td>
+          <td colspan="2">
+            <div class="info-checkbox" name="zhizhao11"><p type="check" nocheck="true"></p><span>木墙裙</span></div>
+            <div class="info-checkbox" name="zhizhao11"><p type="check" nocheck="true"></p><span>墙纸</span></div>
+            <div class="info-checkbox" name="zhizhao11"><p type="check" nocheck="true"></p><span>立邦漆</span></div>
+            <div class="info-checkbox" name="zhizhao11"><p type="check" nocheck="true"></p><span>彩喷</span></div>
+            <div class="info-checkbox" name="zhizhao11"><p type="check" nocheck="true"></p><span>其他</span></div>
+            <span extendParam="val125" type="text" tag="input-auto" class="input-before" noline="true"></span>
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>墙面</td>
+          <td colspan="2">
+            <div class="info-checkbox" name="zhizhao12"><p type="check" nocheck="true"></p><span>瓷砖</span></div>
+            <div class="info-checkbox" name="zhizhao12"><p type="check" nocheck="true"></p><span>未贴砖</span></div>
+            <div class="info-checkbox" name="zhizhao12"><p type="check" nocheck="true"></p><span>马赛克</span></div>
+            <div class="info-checkbox" name="zhizhao12"><p type="check" nocheck="true"></p><span>其他</span></div>
+            <span extendParam="val130" type="text" tag="input-auto" class="input-before" noline="true"></span>
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>窗户</td>
+          <td colspan="2">
+            <div class="info-checkbox" name="zhizhao13"><p type="check" nocheck="true"></p><span>木窗</span></div>
+            <div class="info-checkbox" name="zhizhao13"><p type="check" nocheck="true"></p><span>铝合金</span></div>
+            <div class="info-checkbox" name="zhizhao13"><p type="check" nocheck="true"></p><span>塑钢</span></div>
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>阳台</td>
+          <td colspan="2">
+            <div class="info-checkbox" name="zhizhao14"><p type="check" nocheck="true"></p><span>未封</span></div>
+            <div class="info-checkbox" name="zhizhao14"><p type="check" nocheck="true"></p><span>铝合金</span></div>
+            <div class="info-checkbox" name="zhizhao14"><p type="check" nocheck="true"></p><span>塑钢</span></div>
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>门</td>
+          <td colspan="2">
+            <div class="info-checkbox" name="zhizhao15"><p type="check" nocheck="true"></p><span>防盗门</span></div>
+            <div class="info-checkbox" name="zhizhao15"><p type="check" nocheck="true"></p><span>品牌</span></div>
+            <span extendParam="val139" type="text" tag="input-auto" class="input-before" noline="true"></span>
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>遥控器</td>
+          <td colspan="2">
+            <div class="info-checkbox" name="remote" more="true"><p type="check" nocheck="true"></p><span>电视</span></div>
+            <span extendParam="val141" type="text" tag="input-auto" class="input-before" noline="true"></span>个
+            <div class="info-checkbox" name="remote" more="true"><p type="check" nocheck="true"></p><span>空调</span></div>
+            <span extendParam="val143" type="text" tag="input-auto" class="input-before" noline="true"></span>个
+            <div class="info-checkbox" name="remote" more="true"><p type="check" nocheck="true"></p><span>机顶盒</span></div>
+            <span extendParam="val145" type="text" tag="input-auto" class="input-before" noline="true"></span>个
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>门禁卡</td>
+          <td colspan="2">
+            <div class="info-checkbox" name="zhizhao16" ><p type="check" nocheck="true"></p><span>有</span></div>
+            <div class="info-checkbox" name="zhizhao16" ><p type="check" nocheck="true"></p><span>无</span></div>   已交付
+            <span extendParam="val148" type="text" tag="input-auto" class="input-before" noline="true"></span>张
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>钥匙</td>
+          <td colspan="2">
+            防盗门<span extendParam="val149" type="text" tag="input-auto" class="input-before" noline="true"></span>把  房屋<span extendParam="val150" type="text" tag="input-auto" class="input-before" noline="true"></span>把  其他<span extendParam="val151" type="text" tag="input-auto" class="input-before" noline="true"></span>把
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>备注</td>
+          <td colspan="4"></td>
+        </tr>
+      </table>
+      <table border="1" style="position:relative">
+        <tr>
+          <td rowspan="3" style="text-align: center;width: 30px">交房确认</td>
+          <td colspan="2">对上述情况，乙方经验收，认为符合房屋交验条件，并且双方已对水、电、燃气等费用结算完结，同意接收。</td>
+        </tr>
+        <tr>
+          <td colspan="2">交房日期：<input extendParam="val152" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>年<input extendParam="val153" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>月<input extendParam="val154" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>日</td>
+        </tr>
+        <tr>
+          <td>甲方（出租人）签章： <input type="text" class="no-border" noline="true" readonly="readonly"></td>
+          <td>乙方（承租人）签章：<input type="text" class="no-border" noline="true" readonly="readonly"></td>
+        </tr>
+        <tr>
+          <td rowspan="3" style="text-align: center">退房确认</td>
+          <td colspan="2">甲乙双方已对房屋和附属物品、设备设施及水电使用等情况进行了验收，并办理了退房手续。有关费用的承担的房屋及其附属物品、设备设施的返还
+            <div class="info-checkbox" name="zhizhao17"><p type="check" nocheck="true"></p><span>无纠纷</span></div>/
+            <div class="info-checkbox" name="zhizhao17"><p type="check" nocheck="true"></p><span>附以下说明：</span></div>
+            <span extendParam="val157" type="text" tag="input-auto" class="input-before" noline="true"></span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">退房日期：<input extendParam="val159" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>年<input extendParam="val160" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>月<input extendParam="val161" noline="true" readonly="readonly" type="text" class="text-limit" tag="input"/>日</td>
+        </tr>
+        <tr>
+          <td>甲方（出租人）签章：<input type="text" class="no-border" noline="true" readonly="readonly"> </td>
+          <td>乙方（承租人）签章：<input type="text" class="no-border" noline="true" readonly="readonly"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+<script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+<script type="text/javascript" src="/js/bundle_zl_sy20200518.js"></script>
+<!-- <script>
+  (function () {
+    var scriptList = document.getElementsByTagName("script")
+    console.log(scriptList)
+    if(!scriptList[0].src){
+      var host='https://sign2.jjw.com'
+      var host_other="http://sign2.jjw.com:28879"
+      var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_mm20190402.js","datepicker.css"]
+      for (let i = 0; i < addrList.length; i++) {
+        if(window.location.host==='localhost:8080'){
+          if(addrList[i].indexOf('bundle')>-1){
+            // addrList[i]=host_other+'/'+addrList[i]
+            addrList[i]='./sy-ZL.js'
+          }else{
+            addrList[i]=host_other+'/'+addrList[i]
+          }
+        }else{
+          addrList[i]='/'+addrList[i]
+        }
+        if(addrList[i].indexOf('.css')>-1){
+          var hm = document.createElement("link");
+          hm.rel="stylesheet"
+          hm.href = addrList[i];
+          /*var s = document.getElementsByTagName("link")[0];
+          s.parentNode.insertBefore(hm,s);*/
+          document.head.appendChild(hm);
+        }else{
+          var hm = document.createElement("script");
+          addrList[i].includes('sy-ZL')&&(hm.type = 'module');
+          hm.src = addrList[i];
+          var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+          s.parentNode.insertBefore(hm,s);
+        }
+      }
+    }
+  })();
+</script> -->
+</html>

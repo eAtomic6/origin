@@ -16,6 +16,7 @@ const store = new Vuex.Store({
     dataList:null,//列表渲染对象
   },
   mutations: {
+    //设置面包屑索引
     setPath (state,payload) {
       localStorage.setItem('router',JSON.stringify(payload))
       state.path=payload

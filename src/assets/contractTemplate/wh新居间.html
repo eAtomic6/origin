@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <link rel="stylesheet" href="/datepicker.css"/>
+  <title>新武汉居间合同</title>
+  <style>
+    body {
+      font-family: SimHei;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    p, ul, h1, h2, h3, h4 {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .BODERRED {
+      border-color: red !important;
+    }
+
+    .fontsmall {
+      font-size: 12px;
+    }
+
+    input {
+      border: 0;
+      border-bottom: 1px solid grey;
+      outline: none;
+      font-family: SimHei;
+    }
+
+    input[type="checkbox"] {
+      border: 0px;
+    }
+
+    /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    .bold {
+      font-weight: 700;
+    }
+
+    .no-border {
+      border: none;
+    }
+
+    .container {
+      width: 840px;
+      padding: 0 40px;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      font-size: 20px;
+      letter-spacing: 1px;
+    }
+
+    p.title {
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .agreements {
+      margin-top: 10px;
+      text-indent: 30px;
+    }
+
+    span[tag='input-auto'] {
+      border-bottom: 1px solid gray;
+      padding: 2px 10px;
+      word-break: break-all;
+      word-wrap: break-word;
+    }
+
+    span[tag='input-auto'].input-before:before {
+      content: '请输入';
+      text-align: center;
+      color: #a1a1a1;
+    }
+
+    span[tag='input-auto'].input-before.input-select:before {
+      content: '请选择';
+      text-align: center;
+      color: #a1a1a1;
+    }
+
+    span[tag='input-readonly'].input-before:before {
+      content: '';
+      text-align: center;
+      color: #a1a1a1;
+    }
+
+    .alert-viwer {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 10px;
+      border-radius: 4px;
+      background: #fff;
+      z-index: 999;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+    }
+
+    .alert-viwer > textarea {
+      background: #fff;
+      border: 1px solid #dcdfe6;
+    }
+
+    .alert-viwer > p {
+      text-align: right;
+      margin: 6px 0 0;
+      padding: 0;
+      line-height: normal;
+    }
+
+    .alert-viwer > p > span {
+      display: inline-block;
+      background: #409eff;
+      padding: 6px 12px;
+      color: #FFFFFF;
+      border-radius: 4px;
+    }
+
+    .alert-viwer > p > span:last-of-type {
+      background: #fff;
+      color: #606266;
+      border: 1px solid #dcdfe6;
+    }
+
+    .sign-pos {
+      margin: 20px 0;
+    }
+
+    .sign-pos > p {
+      display: inline-block;
+      width: 250px;
+    }
+
+    .ulbox {
+      overflow: hidden;
+      margin-top: 50px;
+    }
+
+    .ulbox li {
+      float: left;
+      width: 50%;
+      margin-bottom: 10px;
+    }
+
+    .ulbox li span {
+      display: inline-block;
+      border-bottom: 1px solid gray;
+    }
+
+    .signPosition {
+      margin-top: 30px;
+      box-sizing: border-box;
+      padding-left: 300px;
+    }
+
+    .signPosition p span {
+      display: inline-block;
+      border-bottom: 1px solid gray;
+    }
+
+    @page {
+      size: 952px 1347.2px;
+    }
+  </style>
+</head>
+<body>
+<span id="submit" style="position: absolute;top: -1000px;z-index: 0;">click</span>
+<div class="container">
+  <div class="alert-viwer" style="display: none;">
+    <textarea id="inputArea" cols="30" rows="4"></textarea>
+    <p class="control-btn">
+      <span>保存</span>
+      <span>取消</span>
+    </p>
+  </div>
+  <h2 class="center">居间服务合同</h2>
+  <p class="title">合同编号：<span systemParam="code" tag="input-auto"></span></p>
+  <ul style="text-indent: 30px;margin-top: 30px;">
+    <li><span>甲方（出售方）：</span><span systemParam="ownerName" tag="input-auto"></span></li>
+    <li><span>房产共有权人：</span><span systemParam="ownerNames" tag="input-auto"></span></li>
+    <li><span>乙方（购买方）：</span><span systemParam="guestName" tag="input-auto"></span></li>
+    <li><span>房产共有权人：</span><span systemParam="guestNames" tag="input-auto"></span></li>
+    <li style="position:relative;">
+      <img class="SignatureLocation" style="position:absolute;left:130px;top:-50px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII="/>
+      <span>丙方（经纪方）：</span><span tag="input-auto" company="true" systemParam="true" extendParam="val1"></span>
+    </li>
+  </ul>
+  <div style="text-indent: 30px;">
+    鉴于甲乙双方已在丙方的居间服务下就坐落于<span systemParam="propertyAddr" tag="input-auto"></span>的房屋，签订了《武汉市存量房屋买卖合同》（以下简称《买卖合同》），三方在平等、自愿、公平、协商一致的基础上，订立本居间服务合同，以兹共同遵守。
+  </div>
+  <div class="agreements">
+    <h4>第一条 居间服务及标准</h4>
+    <p>1、甲乙双方同意，共同委托丙方作为交易居间方，丙方提供的居间服务包括：（1）提供房屋信息和签约机会；（2）实地看房；（3）协助甲乙双方草拟交易所需的文本；（4）促成甲乙双方签署合法有效的《买卖合同》。</p>
+    <p>2、甲乙双方签订《买卖合同》视为丙方居间服务完成，甲乙双方应向丙方支付本合同约定的佣金。</p>
+    <p>3、佣金及支付</p>
+    <p>基于丙方提供的居间服务，且丙方已促成甲乙双方签订《买卖合同》，甲方（出售方）应在本合同签订当日向丙方支付居间代理费人民币（小写）<span tag="input-auto" systemParam="ownerCommission" extendParam="val2"></span>元，人民币(大写)<span tag="input-auto" systemParam="ownerCommissionUpper"></span>圆；乙方（购买方）应在本合同签订当日向丙方支付居间代理费人民币（小写）<span tag="input-auto" systemParam="custCommission" extendParam="val3"></span>元，人民币(大写)<span tag="input-auto" systemParam="custCommissionUpper"></span>圆。</p>
+  </div>
+  <div class="agreements">
+    <h4>第二条 各方的权利和义务</h4>
+    <p>1、甲乙双方应积极配合丙方的居间服务，按照丙方的要求提交房屋买卖所需的一切证书、证件及其他资料，并依照本合同的约定，及时足额向丙方支付佣金；甲乙双方保证其提交的资料及签名真实、合法、有效。</p>
+    <p>2、丙方应遵守相关法律规定，合法提供居间服务；丙方不得在交易中心提供虚假信息或故意隐瞒真实情况；在乙方或甲方的要求下，丙方可以就房屋的交易政策和流程提供咨询服务。</p>
+    <p>3、各方不得擅自单方解除或变更本合同，本合同另有约定的除外。</p>
+  </div>
+  <div class="agreements">
+    <h4>第三条 违约责任</h4>
+    <p>1、甲乙双方利用丙方所提供的信息、条件、机会等，私自或者另行通过其他居间方签订《买卖合同》，应当承担违约责任；丙方有权要求甲乙双方支付本合同约定的全部佣金。</p>
+    <p>2、甲乙双方任何一方延迟向丙方支付本合同约定的佣金，该延迟方除应向丙方支付佣金外，还应就其未支付的部分，按照每日1%的标准支付违约金。</p>
+    <p>
+      3、丙方违反本合同第二条约定的，则应承担相应的违约责任；乙方或甲方违反本合同第二条约定，导致丙方不能继续履行义务的，丙方不承担责任，且丙方有权按照本合同约定的佣金标准收取服务费，如支付费用方为守约方，守约方可向违约方追偿该笔费用。</p>
+    <p>
+      4、在服务过程中，丙方因工作疏漏，遗失甲方或乙方相关资料及文件，丙方承担补办手续费，若遗失该资料给甲方或乙方造成损失的，丙方给予一定的经济补偿；乙方或甲方中任何一方拖延或拒绝配合补办交易中各项手续费，造成另一方损失，由拖延或拒绝配合一方承担赔偿责任。</p>
+    <p>5、甲方或乙方向丙方支付居间服务费的，若未将居间服务费支付至丙方指定账户内，则视为未支付，丙方有权向甲方或乙方进行追偿。</p>
+  </div>
+  <div class="agreements">
+    <h4>第四条 争议解决</h4>
+    <p>本协议履行过程中发生争议，三方应协商解决，协商不成的，任何一方均可按照有关法律规定向房屋所在地人民法院提起诉讼。</p>
+  </div>
+  <div class="agreements">
+    <h4>第五条 其他</h4>
+    <p>
+      1、经甲乙双方签字确认的交易方留存信息表所载通讯地址和联系方式为各方确认的，如有变动应及时通知相关各方，否则，乙方按上述地址以快递的形式发出，从发出之日起5日期满，即视为送达对方，送达后2日内无回复的视为对函件内容无异议。</p>
+    <p>2、基于经纪行业的合作特性，本次居间服务由以下门店共同合作完成，具体如下：</p>
+    <p><span tag="input-auto" class="text-limit input-before" extendParam="val4"></span></p>
+    <p>（根据吉家门店合作框架协议分配业绩）。</p>
+    <p>3、各方同意，未经本人签字或未经丙方盖章（合同专用章）确认的任何书面承诺、口头承诺、条款的变更等行为均不产生法律约束力。</p>
+    <p>4、本合同一式叁份，三方各执壹份，自各方签字（盖章）之日起生效。</p>
+  </div>
+
+  <div class="ulbox">
+    <ul>
+      <li>甲方（出售方）签章：<span style="width:120px;"></span></li>
+      <li>乙方（购买方）签章：<span style="width:120px;"></span></li>
+    </ul>
+    <ul>
+      <li>委托代理人签章：<span style="width:152px;"></span></li>
+      <li>委托代理人签章：<span style="width:152px;"></span></li>
+    </ul>
+  </div>
+  <div class="signPosition">
+    <p style="position:relative;"><img class="SignatureLocation" style="position:absolute;left:110px;top:-40px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkE5OUJEMTVFNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkE5OUJEMTVGNTY4QTExRTlBRTQ1RjhDOTM4NEY3NjMwIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTk5QkQxNUM1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTk5QkQxNUQ1NjhBMTFFOUFFNDVGOEM5Mzg0Rjc2MzAiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7bS3qnAAAAF0lEQVR42mL8//8/AzpgYsACKBQECDAANlADByyfnVcAAAAASUVORK5CYII="/>丙方（经纪方）签章：</p>
+    <p>经办人签字：</p>
+    <p>签约日期：<span style="width:80px;"></span>年<span style="width:40px;"></span>月<span style="width:40px;"></span>日</p>
+  </div>
+</div>
+</body>
+  <script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+<script type="text/javascript" src="/js/bundle_jj_wh20191128.js"></script>
+<!--<script>
+	(function () {
+		var scriptList = document.getElementsByTagName("script")
+		console.log(scriptList)
+		if(!scriptList[0].src){
+			var host='https://sign2.jjw.com'
+			var host_other="http://sign2.jjw.com:28879"
+			var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_jj_wh20191126.js","datepicker.css"]
+			for (let i = 0; i < addrList.length; i++) {
+				if(window.location.host==='localhost:8080'){
+				if(addrList[i].indexOf('bundle')>-1){
+					// addrList[i]=host_other+'/'+addrList[i]
+					addrList[i]='./new-wh-jj.js'
+				}else{
+					addrList[i]=host_other+'/'+addrList[i]
+				}
+				}else{
+					addrList[i]='/'+addrList[i]
+				}
+				if(addrList[i].indexOf('.css')>-1){
+					var hm = document.createElement("link");
+					hm.rel="stylesheet"
+					hm.href = addrList[i];
+					/*var s = document.getElementsByTagName("link")[0];
+					s.parentNode.insertBefore(hm,s);*/
+					document.head.appendChild(hm);
+				}else{
+					var hm = document.createElement("script");
+					addrList[i].includes('new-wh-jj')&&(hm.type = 'module');
+					hm.src = addrList[i];
+					var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+					s.parentNode.insertBefore(hm,s);
+				}
+			}
+		}
+	})();
+</script>-->
+</html>

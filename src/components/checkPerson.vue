@@ -13,7 +13,15 @@
         <span>{{page==='detail'?'设置':(type===1||type===3)?'设置':'转交'}}审核人</span>
         <div class="box-content">
           <div class="box-content-input">
-            <el-select :clearable="true" filterable remote :remote-method="searchDep" size="small" v-model="choseItem.depId" placeholder="部门" @change="getOption('dep')" @visible-change="initDep" @clear="clearDep">
+            <el-select :clearable="true" filterable remote :remote-method="searchDep" size="small" v-model="depsFlag" v-if="getUser.version===3" placeholder="部门" @change="getOption('dep')" @visible-change="initDep" @clear="clearDep">
+              <el-option
+                v-for="(item,index) in deps"
+                :key="index"
+                :label="!item.positionName?`${item.name}`:item.positionId===0?item.name:`${item.name}+${item.positionName}`"
+                :value="item.flag">
+              </el-option>
+            </el-select>
+            <el-select :clearable="true" v-else filterable remote :remote-method="searchDep" size="small" v-model="choseItem.depId" placeholder="部门" @change="getOption('dep')" @visible-change="initDep" @clear="clearDep">
               <el-option
                 v-for="item in deps"
                 :key="item.id"
@@ -21,7 +29,7 @@
                 :value="item.id">
               </el-option>
             </el-select>
-            <el-select :clearable="true" filterable remote :remote-method="searchEmp" class="w140" size="small" v-model="choseItem.empId" placeholder="人员" @visible-change="initEmp"  @change="getOption('emp')">
+            <el-select :clearable="true" filterable class="w140" size="small" v-model="choseItem.empId" placeholder="人员"  @change="getOption('emp')">
               <el-option
                 v-for="item in emps"
                 :key="item.empId"
@@ -42,6 +50,7 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   let _depList=[]
   export default {
     name: "check-person",
@@ -50,7 +59,7 @@
         type:Boolean,
         // default:false
       },
-      type:{//1.设置当前审核人（设置），2.设置当前审核人（转交），3.设置下一个审核人
+      type:{//1和2设置当前审核人（设置|转交），3设置下一个审核人
         type:Number,
         default:1
       },
@@ -58,7 +67,7 @@
         type:[String,Number],
         default:''
       },
-      flowType:{
+      flowType:{//流程类型，付款传0；收款传1
         type:Number,
       },
       showLabel:{//是否显示label文本
@@ -76,9 +85,11 @@
         emps:[],
         choseItem:{
           depId:'',
-          empId:''
+          empId:'',
+          grade:'',//职级
         },
         inputEmp:false,//是否手动搜索
+        depsFlag:'',//部门数组唯一标识
       }
     },
     created(){
@@ -137,7 +148,7 @@
         this.inputEmp=false
         let param={
           keyword:!val?'':val, //部门名称关键字
-          type:this.type===3?1:0, //当前节点/下一节点
+          type:this.type===3?1:0, //设置下一节点（或审核）为1，设置当前节点（或创建后提审）为0
           bizCode:this.bizCode, //业务编码
           flowType:this.flowType  //流程类型
         }
@@ -160,6 +171,9 @@
           bizCode:this.bizCode,
           flowType:this.flowType
         }
+        if(this.getUser.version===3){
+          param.positionId=this.choseItem.grade//新加职级
+        }
         if(val&&val.length>0){
           this.inputEmp=true
           // param.depId=''
@@ -168,6 +182,11 @@
           res=res.data
           if(res.status===200){
             this.emps=[].concat(res.data)
+            /*if(res.data.length===0){
+              this.$message({
+                message:'该部门下没有人员'
+              })
+            }*/
           }
         })
       },
@@ -193,23 +212,40 @@
           // debugger
           this.choseItem.empId=''
           this.emps = []
-          if(this.choseItem.depId!==''){
-            this.searchEmp()
+          if(this.depsFlag!==''&&this.getUser.version===3){
+            this.deps.forEach(item=>{
+              // debugger
+              if(item.flag===this.depsFlag){
+                this.choseItem.depId=item.id
+                this.choseItem.grade=item.positionId
+              }
+            })
           }
+          this.choseItem.depId&&this.searchEmp()
         }else {
           if(this.inputEmp){
-            this.emps.find(item=>{
+            //去掉员工带出部门的交互
+            /*this.emps.find(item=>{
               if(item.empId===this.choseItem.empId){
                 // this.deps=[].concat({name:item.depName,id:item.depId})
                 this.choseItem.depId=item.depId
+                if(this.getUser.version===3){
+                  this.choseItem.grade=item.positionId
+                  this.depsFlag=`${item.depId}${item.positionId}`
+                }
                 this.searchEmp()
                 this.inputEmp=false
               }
-            })
+            })*/
           }
         }
       }
     },
+    computed:{
+      ...mapGetters([
+        'getUser',
+      ])
+    }
   }
 </script>
 

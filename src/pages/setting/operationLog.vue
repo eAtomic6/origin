@@ -5,17 +5,27 @@
         @propResetFormFn="resetFormFn">
             <el-form  class="header" ref="propForm" size="small">
                 <div class="content">
+                    <el-form-item label="体系" v-if="version===3">
+                        <el-select size="small" v-model="systemtag">
+                            <el-option v-for="item in systemTagSelect" :key="item.key" :label="item.value" :value="item.key"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="交易类型">
+                        <el-select v-model="bustype" placeholder="请选择">
+                            <el-option v-for="item in dictionary['711']" :key="item.value" :label="item.value" :value="item.key"></el-option>
+                        </el-select>
+                    </el-form-item>
                      <el-form-item label="关键字">
                         <el-input v-model="keyword" placeholder="操作内容" size="small"></el-input>
                     </el-form-item>
-                    <el-form-item label="部门">
-                         <select-tree :data="DepList" :init="departmentName"    @checkCell="depHandleClick" @clear="clearDep" @search="searchDep"></select-tree>
+                    <el-form-item label="部门" class="dep">
+                         <select-tree :data="DepList" :init="departmentName" @checkCell="depHandleClick" @clear="clearDep" @search="searchDep"></select-tree>
                         <!-- <el-select style="width:160px" :clearable="true" ref="tree" size="small" remote :loading="Loading" :remote-method="remoteMethod" @visible-change="initDepList" @clear="clearDep" v-model="departmentName" placeholder="请选择">
                             <el-option class="drop-tree" value="">
                             <el-tree :data="DepList" :props="defaultProps" @node-click="depHandleClick"></el-tree>
                             </el-option>
                         </el-select> -->
-                        <el-select v-model="depUser" :clearable="true" @change="handleEmpNodeClick" v-loadmore="moreEmploye" filterable placeholder="请选择">
+                        <el-select v-model="depUser" style="margin-left:10px" :clearable="true" @change="handleEmpNodeClick" v-loadmore="moreEmploye" filterable placeholder="请选择">
                             <el-option
                                 v-for="item in EmployeList"
                                 :key="item.empId"
@@ -35,7 +45,7 @@
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="模块">
-                        <el-select v-model="selectType" clearable placeholder="请选择">
+                        <el-select v-model="selectType" filterable clearable placeholder="请选择">
                             <el-option
                                 v-for="(item) in type"
                                 :key="item.value"
@@ -50,6 +60,7 @@
         </ScreeningTop>
         <div class="table-list">
             <el-table :data="tableData" ref="tableCom" style="width: 100%" border :max-height="tableNumberCom">
+                <el-table-column label="体系" width="130" prop="systemtagName" v-if="version===3"></el-table-column>
                 <el-table-column width='180' label="操作日期">
                     <template slot-scope="scope">
                         {{scope.row.createTime | formatTime}}
@@ -57,7 +68,7 @@
                 </el-table-column>
                 <el-table-column width='180' label="操作人">
                     <template slot-scope="scope">
-                        <span>{{ scope.row.createByDepName }}{{ scope.row.createByName }}</span>
+                        <span>{{ scope.row.createByDepName }}-{{ scope.row.createByName }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="功能模块" width="130" prop="objectType.label"></el-table-column>
@@ -83,9 +94,10 @@
 <script>
     import ScreeningTop from '@/components/ScreeningTop';
     import { MIXINS } from "@/assets/js/mixins";
+    import {FILTER} from "@/assets/js/filter";
     var param={}
     export default {
-        mixins: [MIXINS],
+        mixins: [MIXINS,FILTER],
         data() {
             return {
                 Loading:false,
@@ -99,6 +111,11 @@
                 pageNum: 1,
                 selectType:'',
                 total:0,
+                dictionary: {
+                '711':'',
+                },
+                systemtag: '',
+                bustype:0,
                 users:[],
                 type:[],
                 depUser:'',
@@ -110,11 +127,15 @@
                  }
             }
         },
+         created(){
+            this.getDictionary()
+            this.getSystemTagSelect()
+            this.systemtag = this.userInfo.deptSystemtag
+        },
         mounted() {
             this.remoteMethod()
             let res=this.getDataList
             if(res&&(res.route===this.$route.path)){
-
                 this.total = res.data.total
                 this.tableData = res.data.list
                 let session = JSON.parse(sessionStorage.getItem('sessionQuery')).query
@@ -127,6 +148,7 @@
                 this.searchTime = session.startTime?[session.startTime,session.startTime]:[]
                 this.keyword=session.keyword,
                 this.empName=session.empName
+                if(this.version === 3) this.systemtag= session.systemtag
                 if(this.depUser){
                     this.dep=Object.assign({},this.dep,{id:this.department,empId:this.depUser})
                     this.EmployeList.unshift({
@@ -167,41 +189,44 @@
                     this.clearSelect()
             },
             handleSizeChange (val) {
-            this.pageSize = val
-            this.getLogList()
+
             },
             handleCurrentChange (val) {
-            this.pageNum = val
-            this.queryFn(1)
+                this.pageNum = val
+                this.getLogList()
             },
-            getLogList(typeshow,param) {
-                    if(typeshow!=1&&param==2){
-                        this.pageNum=1
+            getLogList(type="init") {
+                let param = {
+                    pageSize: this.pageSize,
+                    pageNum: this.pageNum,
+                    deptId:this.department,
+                    empId:this.depUser,
+                    departmentName:this.departmentName,
+                    objectType:this.selectType,
+                    startTime:this.searchTime!== null?this.searchTime[0]:'',
+                    endTime:this.searchTime!==null?this.searchTime[1]:'',
+                    keyword:this.keyword,
+                    plateType:this.bustype
+                }
+                if(this.version === 3) param.systemtag = this.systemtag
+
+                if(type === 'search') {
+                    sessionStorage.setItem('sessionQuery',JSON.stringify({
+                        path:'/operationLog',
+                        url:'/operation/getList',
+                        query:Object.assign({},param,{empName:this.dep.empName}),
+                        methods:"get"
+                    }))
+                }
+                this.$ajax.get('/api/operation/getList',param).then(res => {
+                    res = res.data
+                    if(res.status === 200) {
+                        this.total = res.data.total
+                        this.tableData = res.data.list
                     }
-                     param = {
-                        pageSize: this.pageSize,
-                        pageNum: this.pageNum,
-                        deptId:this.department,
-                        empId:this.depUser,
-                        departmentName:this.departmentName,
-                        objectType:this.selectType,
-                        startTime:this.searchTime!== null?this.searchTime[0]:'',
-                        endTime:this.searchTime!==null?this.searchTime[1]:'',
-                        keyword:this.keyword
-                    }
-                    
-                    this.$ajax.get('/api/operation/getList',param).then(res => {
-                        res = res.data
-                        if(res.status === 200) {
-                            this.total = res.data.total
-                            this.tableData = res.data.list
-                        }
-                    }).catch(error => {
-                        console.log(error);
-                    })
-                // }else{
-                //      this.noPower(this.power['sign-set-log-query'].name)
-                // }
+                }).catch(error => {
+                    console.log(error);
+                })
             },
             // 重置
             resetFormFn() {
@@ -212,35 +237,28 @@
                 this.depUser='',
                 this.department=''
                 this.users=''
+                this.systemtag = this.userInfo.deptSystemtag
+                this.bustype=0
                 this.departmentName=''
                 this.clearSelect()
                 this.EmployeList = []
             },
             // 查询
-            queryFn(typeshow){
-                param = {
-                        pageSize: this.pageSize,
-                        pageNum: this.pageNum,
-                        deptId:this.department,
-                        empId:this.depUser,
-                        departmentName:this.departmentName,
-                        objectType:this.selectType,
-                        startTime:this.searchTime!== null?this.searchTime[0]:'',
-                        endTime:this.searchTime!==null?this.searchTime[1]:'',
-                        keyword:this.keyword
-                    }
-                 sessionStorage.setItem('sessionQuery',JSON.stringify({
-                        path:'/operationLog',
-                        url:'/operation/getList',
-                        query:Object.assign({},param,{empName:this.dep.empName}),
-                        methods:"get"
-                    }))
-                this.getLogList(typeshow,2)
-                
+            queryFn(){
+                this.pageNum = 1
+                this.getLogList('search')
             },
         },
         components:{
             ScreeningTop
+        },
+        computed: {
+            version() {
+                return this.getUser.version
+            },
+            userInfo() {
+                return this.getUser.user
+            }
         }
     }
 </script>
@@ -250,7 +268,6 @@
     background-color: #fff;
     border-radius:2px;
     box-sizing: border-box;
-    box-shadow:0px 1px 6px 0px rgba(7,47,116,0.1);
     .form-title {
         margin-bottom: 10px;
         display: flex;
@@ -294,6 +311,9 @@
 }
 .el-select-dropdown__item.selected {
     font-weight: normal;
+}
+/deep/ .dep .el-form-item__content{
+    display: flex
 }
 .mr-8{
     margin-right: 8px;

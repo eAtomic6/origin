@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+   <link rel="stylesheet" href="/datepicker.css"/>
+  <title>新武汉买卖合同</title>
+  <style>
+    body {
+      font-family: SimHei;
+    }
+
+    p {
+      margin: 0px;
+      padding: 0px;
+      line-height: 2;
+    }
+
+    input {
+      border: 0;
+      outline: none;
+      border-bottom: 1px solid gray;
+      height: 16px;
+      padding-left: 10px;
+      box-sizing: border-box;
+      font-family: SimHei;
+    }
+
+    input:disabled {
+      background-color: #fff;
+    }
+
+    input[type="checkbox"] {
+      border: 0px;
+    }
+
+    /*去掉谷歌，火狐下的type="number"中的右边箭头*/
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .BODERRED {
+      border-color: red !important;
+    }
+
+    .modal {
+      position: relative;
+    }
+
+    .modal:before {
+      content: '';
+      z-index: 50;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+
+    .cw_content {
+      position: relative;
+      font-size: 16px;
+      width: 840px;
+      box-sizing: border-box;
+      padding: 0 40px;
+      margin: 0 auto;
+    }
+
+    .cw_content .title {
+      font-size: 20px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .cw_message {
+      padding: 15px 30px;
+    }
+
+    .cw_message > ul {
+      margin-bottom: 10px;
+    }
+
+    .cw_message > ul > li {
+      display: inline-block;
+      min-width: 260px;
+      line-height: 2;
+    }
+
+    .cw_agreement {
+      text-indent: 32px;
+    }
+
+    .textcenter {
+      text-align: center;
+    }
+
+    .mt60 {
+      margin-top: 60px;
+      margin-bottom: 10px;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
+    .lh-18 {
+      line-height: 2;
+    }
+
+    .info-checkbox {
+      display: inline;
+      cursor: pointer;
+      text-indent: 0px;
+      line-height: 1;
+    }
+
+    .info-checkbox > p[type="check"] {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 1px solid gray;
+      position: relative;
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+      margin: 0;
+    }
+
+    .info-checkbox > p[type="check"][checked='true']:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      display: inline-block;
+      width: 100%;
+      height: 10px;
+      background-size: contain;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVQ4T72TsUvDQBjF33cYUhfFP0GIVO7S1cXJxU3sIqiLuHSyOIg4Cro4OBW3jJ10EhcRdHcw2901f0BWh04OmvskpZVYqjYEvPl9v3v3vneEiocqzuP/AY1GY9k5F2VZ1kyS5LWUAynlihDigZnnmblprb2bGhCG4TqAWwCzzNwyxkR5fgNAEARzvu8fGWPOAXyMB6uU2iaiLoAZ51zbWns10gwAUsotIcQNM9/XarXNOI7fRwIp5QERdYiInHOn1tqz4gVfTwjDsAOgzcxP/X5/I03TN6XUBRGdDAcutdbH4+6KGQil1CMRrQF4BtADsJ8PMHNkjGlN6sy3EIdZvBDRUkHc1Vrv5Zw/AbmgXq8vep4XA1gAcK213gXgfmrsxDUqpVaJ6FBrvQMg+63uU/eglIMyH6yyg0+YpmgRBNEBzgAAAABJRU5ErkJggg==");
+    }
+
+    .info-checkbox > p[type="check"][checked='false']:after {
+      content: '';
+      position: absolute;
+      display: inline-block;
+      width: 100%;
+      height: 10px;
+      background-size: contain;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABdklEQVQ4T42TvUrEQBSFz1kt1BewU8QnSJ5gu0mrsGDjRAt/UVBBWRtdsdgVBBdcFBHFZK0U+8TKwkIsEt/Ffq9M9se4GzVTDZM5X865dy5tpd8EeIlDv4z8i7ajGwCmaSt3D8QJBPUo9LZzMIzmBsQiIKs0AsuZLxOFah6IrdxbI5YW1uNn7zIBmGU7ugLwUCC1OPD3s5xYyr0gsdYVmzs9QNuJrhIsA1KJAv8oDemKIa3tKGzWu99+ABInyj0DsSVo7cdBs5Y+6xcPOOjF6UCMAChMGmCW+FdAEqeT1+zTbvprMxChe8FS+pzkRgIQOY5D/yCrsFkA2kpfgVwyf6YUxpMIkNMo8Hf/c0BLuXckdFYRRaQRh/5mGvLtoFQasj7H7gnM/d1GuY5Cf/lnG0ulIftz9BHgTJ6HBEkgK6Y8RLE4bI9MPPwnTrW4/ZQFfhx6C7SUfiI5m2cOOpDvYRK5puW47wK8fgTeTo5J7EW3lPZITH0B+X227Y6+aJ4AAAAASUVORK5CYII=");
+    }
+
+    span[tag='input-auto'] {
+      border-bottom: 1px solid gray;
+      padding: 2px 10px;
+      word-break: break-all;
+      word-wrap: break-word;
+    }
+
+    span[tag='input-auto'].input-before:before {
+      content: '请输入';
+      text-align: center;
+      color: #a1a1a1;
+    }
+
+    span[tag='input-auto'].input-before.input-select:before {
+      content: '请选择';
+      text-align: center;
+      color: #a1a1a1;
+    }
+
+    .underLine {
+      width: 120px;
+      padding: 10px 2px;
+      display: inline-block;
+      border-bottom: 1px solid gray;
+    }
+
+    .lineBlod {
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    .width_40 {
+      width: 40px;
+    }
+
+    .tablestyle1 {
+      width: 600px;
+      border-collapse: collapse;
+    }
+
+    .tablestyle1 tr td {
+      height: 30px;
+      width: 50%;
+      padding-left: 10px;
+    }
+
+    .tablestyle2 {
+      width: 700px;
+      border-collapse: collapse;
+    }
+
+    .tablestyle2 tr td {
+      height: 30px;
+      width: 20%;
+      text-align: center;
+    }
+
+    .alert-viwer {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 10px;
+      border-radius: 4px;
+      background: #fff;
+      z-index: 999;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+    }
+
+    .alert-viwer > textarea {
+      background: #fff;
+      border: 1px solid #dcdfe6;
+    }
+
+    .alert-viwer > p {
+      text-align: right;
+      margin: 6px 0 0;
+      padding: 0;
+      line-height: normal;
+    }
+
+    .alert-viwer > p > span {
+      display: inline-block;
+      background: #409eff;
+      padding: 6px 12px;
+      color: #FFFFFF;
+      border-radius: 4px;
+    }
+
+    .alert-viwer > p > span:last-of-type {
+      background: #fff;
+      color: #606266;
+      border: 1px solid #dcdfe6;
+    }
+
+    .sign-pos {
+      margin: 20px 0;
+    }
+
+    .sign-pos > p {
+      display: inline-block;
+      width: 230px;
+    }
+
+    .ulbox {
+      overflow: hidden;
+      margin-top: 50px;
+    }
+
+    .ulbox li {
+      float: left;
+      width: 50%;
+      margin-bottom: 10px;
+    }
+
+    .ulbox li span {
+      display: inline-block;
+      border-bottom: 1px solid gray;
+    }
+
+    .code {
+      padding-left: 500px;
+      box-sizing: border-box;
+      margin: 10px 0;
+    }
+
+    .fontBold{
+      font-weight: bold;
+    }
+
+    .coverStyle{
+      text-align: center;
+      font-size: 70px;
+      font-weight: bold;
+      margin-top: 400px;
+    }
+
+    .coverStyle p{
+      line-height: 1;
+    }
+
+    .page1 {
+      break-before: page;
+      page-break-before: always;
+    }
+     @page {
+          size: 952px 1347.2px;
+        }
+    .navTitle{
+      margin: 10px 0 0;
+    }
+  </style>
+</head>
+<body>
+<span id="submit" style="position: absolute;top: -1000px;z-index: 0;">click</span>
+<div class="cw_content container">
+  <div class="alert-viwer" style="display: none;">
+    <textarea id="inputArea" cols="30" rows="4"></textarea>
+    <p class="control-btn">
+      <span>保存</span>
+      <span>取消</span>
+    </p>
+  </div>
+  <!-- 封面 -->
+  <div class="cover-fm" style="display: none;">
+    <div class="code fontBold">编号：<span systemParam="code" tag="input-auto"></span></div>
+    <div class="coverStyle">
+      <p>房屋买卖业务签约</p>
+      <p>文件合订本</p>
+    </div>
+  </div>
+  <!-- 签约提示 -->
+  <div class="page1">
+    <div class="title bold">
+      <p>吉家地产签约提示</p>
+    </div>
+    <p>1. 本合订本每个文件您均需要签署一式三份，交易双方及吉家地产各执一份；双方所执合同的内容（包括手工填写部分）应完全一致。</p>
+    <p>2. 请您确认，在签署合同前，<span class="lineBlod">您已仔细阅读过合同条款并予以理解和接受</span>，同时我公司经办人员已向您告知与交易房屋及合同签署有关的信息。</p>
+    <p>3. 双方当事人应当按照自愿、公平及诚实信用的原则订立合同，任何一方不得将自己的意志强加给另一方。为体现双方自愿的原则，交易双方可以在合同中自行约定或补充约定。另外，在您签署的合同中，除需手工填写的地方以外，<span
+      class="lineBlod">其余部分均不得随意进行手写补充和修改</span>，否则将会影响合同或条款的有效性；如您确实需要对合同中的条款进行补充或修改的，请您及其他签署方在补充或修改处签字或盖章后，方为生效。</p>
+    <p>4. 在您向吉家地产支付佣金及服务费时，<span class="lineBlod">请向我司经办人员索取由吉家公司加盖印章的专用收据</span>，如该经办人员不能提供上述专用收据的，<span
+      class="lineBlod">请您务必谨慎付款</span>，必要时，请您与签约的店长进行确认。</p>
+    <p>5. 在填写相关合同文本时，应当仔细阅读合同条款，特别是其中具有选择性、补充性、填充型性、修改性的内容，如遇“【】”或“□”等需要选择的内容，<span class="lineBlod">请务必做出明确的勾选</span>，以划“√”方式选择您选择的事项，对实际情况未发生，或双方当事人不作约定，或该条不适用时，应当划“×”，以示删除。
+    </p>
+    <p>6. 为保障您的资金安全，请您向我司支付佣金及服务费时，优先选择如下方式：</p>
+    <p><span class="lineBlod">●POS机刷卡</span>——您可以使用本人或亲朋的银行储蓄卡刷卡（本地卡、异地卡均可），刷卡后请持卡人在POS机小票上亲笔签字</p>
+    <p><span class="lineBlod">●银行转账</span>——通过银行柜台以现金（或转账）的形式将佣金及服务费直接汇入我公司如下对公账户</p>
+    <p><span class="lineBlod">●网银汇款</span>——通过网上银行汇款的方式将佣金及服务费直接汇入我公司如下对公账户</p>
+    <p>我司禁止经办人员向您收取除合同约定的佣金、贷款服务费、权证代办费以外的任何费用。如经办人员向您收取其他费用，请拨打客服热线（4001592592）核实。</p>
+    <p>7. 吉家公司对公账户为：</p>
+    <table border="1" class="tablestyle1">
+      <tr>
+        <td colspan="2">收款方名称：武汉吉家正念房地产经纪服务有限公司</td>
+      </tr>
+      <tr>
+        <td>收款方开户行：招商银行武汉徐东支行</td>
+        <td>收款账户：127913250310701</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+  <!-- 交易方留存信息表 -->
+  <div class="page1" style="margin-top: 40px;">
+    <div class="title">
+      <p>交易方留存信息表</p>
+    </div>
+    <p>房屋出卖人</p>
+    <table border="1" class="tablestyle2">
+      <tr>
+        <td>姓名</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>英文名</td>
+        <td></td>
+        <td>国籍</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td>性别</td>
+        <td></td>
+        <td>出生日期</td>
+        <td colspan="2">
+          <span class="underLine" style="width:80px;"></span>年<span class="underLine" style="width:40px;"></span>月<span class="underLine" style="width:40px;"></span>日
+        </td>
+      </tr>
+      <tr>
+        <td>证件名称</td>
+        <td></td>
+        <td>证件号码</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td>联系电话</td>
+        <td></td>
+        <td>电子邮箱</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td>通讯地址</td>
+        <td colspan="4"></td>
+      </tr>
+    </table>
+    <p style="margin-top: 40px;">
+      房屋出卖方（签章）：<span class="underLine"></span><span class="underLine" style="width:80px;"></span>年<span class="underLine" style="width:40px;"></span>月<span class="underLine" style="width:40px;"></span>日
+    </p>
+  </div>
+  <div style="margin-top:20px;">
+    <p>房屋买受人</p>
+    <table border="1" class="tablestyle2">
+      <tr>
+        <td>姓名</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>英文名</td>
+        <td></td>
+        <td>国籍</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td>性别</td>
+        <td></td>
+        <td>出生日期</td>
+        <td colspan="2">
+          <span class="underLine" style="width:80px;"></span>年<span class="underLine" style="width:40px;"></span>月<span class="underLine" style="width:40px;"></span>日
+        </td>
+      </tr>
+      <tr>
+        <td>证件名称</td>
+        <td></td>
+        <td>证件号码</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td>联系电话</td>
+        <td></td>
+        <td>电子邮箱</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td>通讯地址</td>
+        <td colspan="4"></td>
+      </tr>
+    </table>
+    <!-- <p>共同买受人一</p>
+    <table border="1" class="tablestyle2">
+      <tr>
+        <td>姓名</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>英文名</td>
+        <td></td>
+        <td>国籍</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td>性别</td>
+        <td></td>
+        <td>出生日期</td>
+        <td colspan="2">
+          <span class="underLine" style="width:80px;"></span>年<span class="underLine" style="width:40px;"></span>月<span class="underLine" style="width:40px;"></span>日
+        </td>
+      </tr>
+      <tr>
+        <td>证件名称</td>
+        <td></td>
+        <td>证件号码</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td>联系电话</td>
+        <td></td>
+        <td>电子邮箱</td>
+        <td colspan="2"></td>
+      </tr>
+      <tr>
+        <td>通讯地址</td>
+        <td colspan="4"></td>
+      </tr>
+    </table> -->
+    <p style="margin-top: 40px;">
+      房屋购买方（签章）：<span class="underLine"></span><span class="underLine" style="width:80px;"></span>年<span class="underLine" style="width:40px;"></span>月<span class="underLine" style="width:40px;"></span>日
+    </p>
+  </div>
+
+  <!-- 签约提示结束 -->
+  <div class="page1">
+    <div class="title bold">
+      <p>武汉市存量房屋买卖合同</p>
+    </div>
+    <div class="code"><span>合同编号：<span systemParam="code" tag="input-auto"></span></div>
+    <div class="cw_message">
+      <ul>
+        <li><span>甲方：</span><span systemParam="ownerName" tag="input-auto"></span></li>
+      </ul>
+      <ul>
+        <li><span>房产共有权人：</span><span systemParam="ownerNames" tag="input-auto"></span></li>
+      </ul>
+      <ul>
+        <li><span>乙方：</span><span systemParam="guestName" tag="input-auto"></span></li>
+      </ul>
+      <ul>
+        <li><span>房产共有权人：</span><span systemParam="guestNames" tag="input-auto"></span></li>
+      </ul>
+    </div>
+    <div class="cw_agreement">
+      <p>根据《中华人民共和国合同法》、《中华人民共和国城市房地产管理法》及其他相关法律、法规的规定，甲方和乙方在平等、自愿、公平、协商一致的基础上就存量房买卖事宜达成以下协议：</p>
+
+      <p id="one" class="navTitle bold">第一条 房屋基本情况 </p>
+      <div class="lh-18">
+        1、甲乙双方交易房屋坐落在<span systemParam="propertyAddr" tag="input-auto"></span>，建筑面积<span tag="input-auto" systemParam="square"></span>平方米（具体面积以产权证为准），该房屋产权性质为<div class="info-checkbox" name="houseType"><p type="check"></p>商品房</div><div class="info-checkbox" name="houseType"><p type="check"></p>已购公有住房</div><div class="info-checkbox" name="houseType"><p type="check"></p>经济适用房</div><div class="info-checkbox" name="houseType"><p type="check"></p>其他</div>：<span tag="input-auto" class="text-limit input-before" extendParam="val1"></span>。
+      </div>
+
+      <p id="two" class="navTitle bold">第二条 房屋权属情况</p>
+      <div class="lh-18">
+        1、该房屋所有权人为：<span tag="input-auto" class="text-limit input-before" extendParam="val2"></span>，房屋产权证号：<span tag="input-auto" class="text-limit input-before" extendParam="val3"></span></div><div class="lh-18">2、土地使用状况：房屋占用的国有土地使用权以<div class="info-checkbox" name="useRight"><p type="check"></p>出让</div><div class="info-checkbox" name="useRight"><p type="check"></p>划拨方式获得</div>。
+      </div>
+      <div class="lh-18">
+        3、该房屋抵押情况：<div class="info-checkbox" name="guaranty"><p type="check"></p>该房屋未设定抵押</div>，<div class="info-checkbox" name="guaranty"><p type="check"></p>该房屋已设定抵押</div>，抵押权人为：<span tag="input-auto" class="text-limit input-before" extendParam="val4"></span>
+      </div>
+      <div class="lh-18">
+        4、该房屋租约情况：<div class="info-checkbox" name="lease"><p type="check"></p>不带租约</div>，<div class="info-checkbox" name="lease"><p type="check"></p>带租约</div>，若该房带租约，甲方承诺承租人已经放弃优先购买权，且甲乙双方同意按照下列方式解决租约问题，但法律另有规定的除外：
+      </div>
+      <div class="lh-18">
+        <div class="info-checkbox" name="leaseSon"><p type="check"></p>乙方同意承继租约中甲方的权利义务，但甲方须协助将乙方变更为出租人，并通知承租人。</div>
+      </div>
+      <div class="lh-18">
+        <div class="info-checkbox" name="leaseSon"><p type="check"></p>乙方不愿承继租约中甲方的权利义务，甲方需在交房之前与承租人解除租约，并腾空房屋（合同约定一并转让的设施设备除外），且自行承担解除租约的责任。</div>
+      </div>
+
+      <p id="three" class="navTitle bold">第三条 甲方售房资格和乙方购房资格情况</p>
+      <div class="lh-18">1、若因政策原因导致甲方不具备售房资格，原合同无法正常履行，双方协商一致解除合同，甲方退还乙方已支付的所有款项，双方均不承担责任。</div>
+      <div class="lh-18">2、乙方承诺，对于武汉市现行有效的购房政策及本人应具备的购房资格已明确知晓；若因政策原因导致乙方不具备购房资格，原合同无法正常履行的，双方协商一致，按下列方式解决（仅选其一）：</div>
+      <div class="lh-18">
+        <div class="info-checkbox" name="negotiate"><p type="check"></p>甲方同意乙方将房屋过户至乙方指定人名下，由乙方指定人员继续履行合同约定的权利义务，自乙方知晓不具备购房资格起3个工作日内甲方配合乙方签署《买受人变更协议》；</div>
+      </div>
+      <div class="lh-18">
+        <div class="info-checkbox" name="negotiate"><p type="check"></p>甲乙双方协商一致解除合同，甲方退还乙方已支付的所有款项，双方均不承担责任。</div>
+      </div>
+      <div class="lh-18">3、甲乙双方应对其售房购房所需的相关资料和文件的真实性、合法性、有效性负责。</div>
+
+      <p id="four" class="navTitle bold">第四条 甲乙双方通过以下方式达成交易</p>
+      <div class="lh-18">
+        甲乙双方通过房地产经纪机构居间介绍成交，房地产经纪机构名称：<span tag="input-auto" class="text-limit input-before" extendParam="val5"></span>，统一社会信用机构代码：<span tag="input-auto" class="text-limit input-before" extendParam="val6"></span>。
+      </div>
+
+      <p class="navTitle bold" id="five">第五条 成交价格和付款方式</p>
+      <p>1、甲乙双方协商同意，交易房屋价款及装饰装修、配套设施设备等作价总计为人民币（小写）<span tag="input-auto" systemParam="dealPrice"></span>元，人民币(大写)<span tag="input-auto" systemParam="dealPriceUpper"></span>圆整。</p>
+      <p>2、具体付款方式：</p>
+      <p>（1）定金</p>
+      <p>乙方应当在签订本合同当日支付定金人民币（小写）<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val7"></span>元，人民币(大写)<span tag="input-auto" systemParam="true" extendParam="val7_add"></span>圆整；甲乙双方协商一致采取转账的方式，将定金由乙方支付给甲方。
+      </p>
+      <p>（2）房款</p>
+      <p>甲乙双方自行交接钱款，过户递件完成后当日内，乙方将首付款（不包含定金）人民币（小写）<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val8"></span>元，人民币(大写)<span tag="input-auto" systemParam="true" extendParam="val8_add"></span>圆整支付给甲方；过户取件完成后当日内，乙方将尾款人民币（小写）<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val9"></span>元，人民币(大写)<span tag="input-auto" systemParam="true" extendParam="val9_add"></span>圆整直接支付给甲方。
+      </p>
+      <p class="navTitle bold" id="six">第六条 甲方对房屋产权及具体状况的承诺</p>
+      <p>
+        1、甲方保证该房屋没有产权纠纷；该房屋无司法查封或其他限制转让的情形，甲方承诺其配偶和该房屋的共有权人均知晓并同意本次房屋交易，认可本合同及其他相关文件的约定，且无他人对房屋享有优先认购权；乙方承诺其配偶和该房屋的共同买受人均知晓并同意本次房屋交易，且认可本合同及其他相关文件的约定。如因一方违反前述承诺，导致该房屋不能办理产权登记或发生债权债务纠纷的，由违约方按照房屋成交总价款的20%赔偿守约方的损失。
+        <span class="bold">本条款为独立条款，即使本合同及其他文件因一方违反前述承诺，依法被变更、撤销、解除、终止或认定无效的，本条约定依然有效，守约方仍可依据本条款追究违反承诺方的法律责任。</span>
+      </p>
+      <div class="lh-18">2、甲方该房屋主体结构和公共区域
+        <div class="info-checkbox" name="leakage"><p type="check"></p>不存在</div>
+        <div class="info-checkbox" name="leakage"><p type="check"></p>存在漏水、渗水现象</div>，如存在漏水、渗水现象，位置为：
+        <div class="info-checkbox" more="true" name="leakagePlace"><p type="check"></p>房屋顶部；</div>
+        <div class="info-checkbox" more="true" name="leakagePlace"><p type="check"></p>室内墙面；</div>
+        <div class="info-checkbox" more="true" name="leakagePlace"><p type="check"></p>室内管道；</div>
+        <div class="info-checkbox" more="true" name="leakagePlace"><p type="check"></p>室内地面；</div>
+        <div class="info-checkbox" more="true" name="leakagePlace"><p type="check"></p>阳台；</div>
+        <div class="info-checkbox" more="true" name="leakagePlace"><p type="check"></p>飘窗；</div>
+        <div class="info-checkbox" more="true" name="leakagePlace"><p type="check"></p>公共管道；</div>
+        <div class="info-checkbox" more="true" name="leakagePlace"><p type="check"></p>室外墙面；</div>
+        <div class="info-checkbox" more="true" name="leakagePlace"><p type="check"></p>顶楼</div>
+        。若该房屋存在漏水情况，甲方保证在交房之前修缮好房屋且须交于乙方验收，如甲方未予修复，乙方在房屋交付后自行维修的，甲方应当承担全部维修费用；如甲方拒绝支付维修费用的，乙方可从物业交割保证金中扣除对应金额作为维修费用；因维修房屋影响乙方使用的，甲方另应当赔付乙方因此所受的实际损失。但乙方接收房屋后，因乙方原因造成的漏水除外。
+      </div>
+      <div class="lh-18">3、甲方确认该房屋
+        <div class="info-checkbox" name="death"><p type="check"></p>曾经发生</div>
+        <div class="info-checkbox" name="death"><p type="check"></p>未发生</div>
+        ，他杀等非正常死亡事件，若甲方故意隐瞒真实情况，须承担赔偿责任，因甲方之欺诈行为，使得乙方和居间方在违背真实意思的基础上订立本合同，乙方有权依法要求撤销房屋买卖合同及相关协议，甲方另应当承担如下责任：
+      </div>
+      <p>1）甲方应当在乙方提出请求后10个工作日内返还乙方全部房款；未如期返还的，甲方应当按日计算向乙方支付房屋成交总价0.5‰的违约金。</p>
+      <p>
+        2）甲方应当赔偿乙方及居间方因此所受的损失，包括但不限于：就已收取的房款按照银行同期贷款利息损失、赔偿乙方为购房支出的税费、贷款费用等实际支出、乙方已向居间方缴纳的全部费用、房屋价格上涨的差价损失、乙方实际支出的装修、物业、使用费用等。</p>
+      <p>
+        4、甲方保证已如实陈述该房屋权属状况、附属设施设备、装饰装修情况和相关关系，房屋附属设施清单所列的该房屋附属设施设备及其装饰装修随同该房屋一并转让给乙方。乙方对甲方出售的该房屋具体状况已充分了解，自愿购买该房屋，甲方保证自本合同签订之日起至该房屋验收交接完成，对各项房屋附属设施设备及其装饰装修保持良好的状况。</p>
+
+      <p class="navTitle bold" id="seven">第七条 房屋交易具体事宜的约定</p>
+      <div class="lh-18">
+        <span class="bold">1、还款解押：</span>该房屋目前<div class="info-checkbox" name="installment"><p type="check"></p>是</div><div class="info-checkbox" name="installment"><p type="check"></p>否</div>按揭状态，甲方应在<input type="text" class="text-limit calendar-item" style="width:130px" readonly="readonly" extendParam="val10"/>之前到其贷款银行办理完成结按（即提前还贷）手续，承担相关费用，并负责取回注销抵押登记后的房屋所有权证（具体取回时间以银行通知为准）。
+      </div>
+      <div class="lh-18">
+        <span class="bold">2、权属转移登记：</span>甲乙双方同意，在符合过户条件后，甲乙双方须在<span tag="input-auto" class="text-limit input-before" extendParam="val11"></span>后7个工作日内亲临房屋所在地房管局办理过户递件手续，过户递件完成后7个工作日内须再次亲临房屋所在地房管局办理过户取件手续。
+      </div>
+      <div class="lh-18">
+        <span class="bold">3、户口迁出：</span>甲方应在房屋权属转移登记完成后<span tag="input-auto" class="text-limit input-before" extendParam="val12"></span>日内，向房屋所在地的户籍管理机关办理原有户口迁出手续（如有）。若因甲方原因未在约定期限内办理完成与本房屋相关的户口迁出手续，每逾期一日，甲方按照成交价的0.5‰向乙方支付违约金。
+      </div>
+
+      <p class="navTitle bold" id="eight">第八条 房屋的交付</p>
+      <div class="lh-18">
+        1、收齐房款（物业交割保证金除外）<div class="info-checkbox" name="delivery"><p type="check"></p>3日内</div><div class="info-checkbox" name="delivery"><p type="check"></p>在</div><span tag="input-auto" class="text-limit input-before" extendParam="val13"></span>，甲方将该房屋交付给乙方。
+      </div>
+      <p>2、该房屋交付时，应当履行下列三项手续：</p>
+      <p>
+        （1）甲方与乙方共同对该房屋附属设施设备、装饰装修、相关物品清单等具体情况进行验收。记录水、电、气表的读数，并交接房屋附属设施清单中所列物品，若物品损坏或者缺失，甲方应恢复原状并赔偿损失（损失以乙方恢复原状费用或购买相应品质的设施设备的价格计算）。
+      </p>
+      <p>（2）甲方将该房屋房门钥匙、水卡、电卡、气卡、门卡等移交给乙方。</p>
+      <p>
+        （3）在房屋交付日以前发生的物业管理费、水、电、燃气、有线电视、电信、宽带等费用由甲方承担，交付日以后（含当日）发生的费用由乙方承担。甲方应在房屋过户手续办理完毕之日起3个工作日内，将该房屋转让情况告知物业管理的相关单位和部门，并积极办理物业交割手续，且甲乙双方须在《物业交割单》上签字；如任何一方拒绝在《物业交割单》上签字，又不能出具书面理由的，视为物业交割完成。
+      </p>
+      <p>
+        物业交割：甲乙双方应在本合同约定的时间内办理物业交割手续，居间方陪同，甲乙双方协商一致同意，乙方从购房款中留存人民币（小写）<span tag="input-auto" listen="number" max="12" class="text-limit input-before" extendParam="val14"></span>元，人民币(大写)<span tag="input-auto" systemParam="true" extendParam="val14_add"></span>圆整作为物业交割保证金；该物业交割保证金甲乙双方协商一致按照下列方式执行：甲乙双方办理物业交割之日，由乙方自行支付给甲方，且因此而产生的损失及风险由甲乙双方自行承担。
+      </p>
+
+      <p class="navTitle bold" id="nine">第九条 税费相关约定</p>
+      <p>1、房屋交易所涉及的税费项目由甲方承担的：</p>
+      <div class="lh-18">
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>维修基金</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>土地出让金</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>增值税及附加</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>个人所得税</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>契税</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>转移登记费</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>印花税</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>书证费</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>土地增值税</div>
+      </div>
+      <p>2、房屋交易所涉及的税费项目由乙方承担的：</p>
+      <div class="lh-18">
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>维修基金</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>土地出让金</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>增值税及附加</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>个人所得税</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>契税</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>转移登记费</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>印花税</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>书证费</div>
+        <div class="info-checkbox" more="true" name="ownerCost"><p type="check"></p>土地增值税</div>
+      </div>
+      <div class="lh-18">3、甲方承诺交易房屋非继承或赠与所得，否则在办理交易房屋所有权转移过程中，由此产生的个人住房所得税由
+        <div class="info-checkbox" name="incomeTax"><p type="check"></p>甲</div>
+        <div class="info-checkbox" name="incomeTax"><p type="check"></p>乙</div>
+        承担。过户递件前甲乙双方应齐备以上税费，以上税费的承担由甲乙双方协商自愿同意，故今后遇到政府税费政策调整而导致费用的增加或减少时，均按以上约定由乙方承担的税费项目仍然由乙方全部承担，由甲方承担的税费项目仍然由甲方承担，若本合同履行过程中因政策原因须缴纳新的税费，由政策规定的缴纳方承担；政策中未明确缴纳方的，由
+        <div class="info-checkbox" name="otherCost"><p type="check"></p>甲</div>
+        <div class="info-checkbox" name="otherCost"><p type="check"></p>乙</div>
+        承担。
+      </div>
+      <p>4、本合同履行期间，甲乙双方应按约定缴纳各项税费。因一方不履行缴税义务导致合同不能继续履行的，视为该方根本性违约，守约方有权解除合同，违约方应按成交价的20%支付违约金。</p>
+
+      <p class="navTitle bold" id="ten">第十条 违约责任</p>
+      <p>1、逾期付款违约责任：乙方未按照约定时间付款的，按逾期时间，分别按下列约定承担违约责任</p>
+      <p>（1）自约定的应付款期限届满之次日起至实际支付之日止，每逾期1日，乙方按照成交价的0.5‰向甲方支付违约金，并于实际支付之日起3日内向甲方支付违约金，合同继续履行；</p>
+      <p>（2）逾期超过15日的，甲方有权解除合同，合同被解除的，乙方应当自合同解除之日起3日内按照成交价的10%向甲方支付违约金，并由甲方退还乙方全部已付款。</p>
+      <p>2、逾期交房违约责任：甲方未按照约定条件将该房屋交付乙方的，按逾期时间，分别按下列约定承担违约责任：</p>
+      <p>（1）自约定的交付期限届满之次日起至实际交付之日止，每逾期1日，甲方按照成交价的0.5‰向乙方支付违约金，并于该房屋实际交付之日起3日内向乙方支付违约金，合同继续履行；</p>
+      <p>（2）逾期超过15日的，乙方有权解除合同。合同被解除的，甲方应当自合同解除之日起3日内按照成交价的10%向乙方支付违约金，并退还乙方全部房款。</p>
+      <p>
+        3、逾期办理房屋其他交易事宜的违约责任：甲乙双方任何一方逾期履行本合同约定义务的，每逾期1日，违约方应按日计算向守约方支付该房屋成交价0.5‰的违约金，逾期超过15日的，守约方有权以书面通知的方式解除合同，本合同解除的，违约方须向守约方支付该房屋成交价10%的违约金。</p>
+      <p>
+        4、甲方出现下列第（1）中情形中任一情形之一的或乙方出现下列第（2）种情形中任一情形之一的，则构成根本违约，且守约方有权以书面通知的方式解除房屋买卖合同，本合同解除的，违约方须向守约方支付该房屋成交价20%的违约金。</p>
+      <p>（1）甲方提供的该房屋所有权证，原购房合同等相关产权证明手续不真实、不完整、无效，房屋被查封或限制转让，将房屋出售给第三人等导致乙方无法取得房屋所有权的。</p>
+      <p>（2）乙方提供的证件等购房所需的资料不真实、不完整或无效，拒绝购买该房屋导致无法办理房屋所有权转移登记手续的。</p>
+      <p>5、守约方因维护自身权益（或者是追究违约方相关法律责任）产生的一切费用由违约方承担，该等费用包括但不限于诉讼费、保全费、律师费等。</p>
+      <p>6、在本合同履行期间，如出台新的购房政策且该购房政策导致本合同无法履行的，各方互不承担违约责任，后续事宜及已交付的款项和已发生的费用由各方友好协商解决。</p>
+
+      <p class="navTitle bold" id="eleven">第十一条 不可抗力</p>
+      <p>
+        在合同履行过程中，如发生了合同当事人无法预见、无法避免、无法控制、无法克服的意外事件（如战争、车祸）或自然灾害（如地震、火灾、水灾等），以致合同当事人不能依约履行职责或不能如期履行职责，发生意外事件或遭受自然灾害的一方可以部分或全部免除履行职责或推迟履行职责，但因不可抗力不能按照约定履行合同的一方当事人应当及时告知另一方当事人，并自不可抗力事件结束之日起30日内向另一方当事人提供证明。房屋风险责任自该房屋转移占有之日起转移给乙方。</p>
+
+      <p class="navTitle bold" id="twelve">第十二条 争议解决方式</p>
+      <p>本合同履行过程中发生争议，双方应协商解决。协商不成时，任何一方均可向房屋所在地人民法院提起诉讼。</p>
+
+      <p class="navTitle bold" id="thirteen">第十三条 其他</p>
+      <p>1、 本合同自双方签字（盖章）之日起生效。双方可以根据具体情况对本合同中未约定、约定不明或不适用的内容签订书面补充协议进行变更或补充。对本合同的解除，应当采用书面形式。本合同附件及补充协议与本合同具有同等法律效力。</p>
+      <p>2、 本合同一式叁份，具有同等法律效力，其中甲方壹份，乙方壹份，居间方壹份。</p>
+
+      <div class="ulbox">
+        <ul>
+          <li>甲方（出售方）签章：<span style="width:120px;"></span></li>
+          <li>乙方（购买方）签章：<span style="width:120px;"></span></li>
+        </ul>
+        <ul>
+          <li>[委托代理人]签章：<span style="width:137px;"></span></li>
+          <li>[委托代理人]签章：<span style="width:137px;"></span></li>
+        </ul>
+        <ul>
+          <li>签约日期：<span style="width:80px;"></span>年<span style="width:40px;"></span>月<span style="width:40px;"></span>日
+          </li>
+          <li>签约日期：<span style="width:80px;"></span>年<span style="width:40px;"></span>月<span style="width:40px;"></span>日
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- 附件 -->
+  <div class="page1">
+    <p class="bold">合同附件：房屋附属设施清单</p>
+    <p>1. 装修情况</p>
+    <div class="lh-18">
+      地面：
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>木地板</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>地砖</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>水泥地</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>其他</span></div>
+      <span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏：</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      墙面：
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>木墙裙</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>墙纸</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>乳胶漆</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>涂料</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>其他</span></div>
+      <span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏：</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      窗：
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>铝合金</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>塑钢</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>铁窗</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      门：
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>防盗门</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <p>2.固定设施</p>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>抽油烟机</span></div>
+      品牌：<span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>燃气灶</span></div>
+      品牌：<span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>燃气热水器</span></div>
+      品牌：<span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>电热水器</span></div>
+      品牌：<span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>坐便器</span></div>
+      品牌：<span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <p>3.电器家具</p>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>电视</span></div>
+      数量：<span class="underLine width_40"></span>
+      品牌型号：<span class="underLine"></span>
+      遥控器数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>冰箱</span></div>
+      数量：<span class="underLine width_40"></span>
+      品牌型号：<span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>洗衣机</span></div>
+      数量：<span class="underLine width_40"></span>
+      品牌型号：<span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>空调</span></div>
+      数量：<span class="underLine width_40"></span>
+      品牌型号：<span class="underLine"></span>
+      遥控器数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>微波炉</span></div>
+      数量：<span class="underLine width_40"></span>
+      品牌型号：<span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>饮水机</span></div>
+      数量：<span class="underLine width_40"></span>
+      品牌型号：<span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>机顶盒</span></div>
+      数量：<span class="underLine width_40"></span>
+      品牌型号：<span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>DVD</span></div>
+      数量：<span class="underLine width_40"></span>
+      品牌型号：<span class="underLine"></span>
+      遥控器数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>音响</span></div>
+      数量：<span class="underLine width_40"></span>
+      品牌型号：<span class="underLine"></span>
+      遥控器数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>电话</span></div>
+      数量：<span class="underLine width_40"></span>
+      品牌型号：<span class="underLine"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>床</span></div>
+      数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>床垫</span></div>
+      数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>衣柜</span></div>
+      数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>鞋柜</span></div>
+      数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>书桌</span></div>
+      数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>餐桌</span></div>
+      数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>沙发</span></div>
+      数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>茶几</span></div>
+      数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>梳妆台</span></div>
+      数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>椅子</span></div>
+      数量：<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>无损坏</span></div>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>有损坏</span></div>
+      <span class="underLine"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>其他</span></div>
+      <span class="underLine" style="width: 700px;"></span>
+      <span class="underLine" style="width: 745px;"></span>
+      <span class="underLine" style="width: 745px;"></span>
+      <span class="underLine" style="width: 745px;"></span>
+    </div>
+    <p>4、其他</p>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>钥匙</span></div>
+      （共<span class="underLine width_40"></span>套，每套<span class="underLine width_40"></span>把）
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>小区出入卡（业主卡）</span></div>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>电费卡</span></div>
+      电表读数<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>气费卡</span></div>
+      燃气表读数<span class="underLine width_40"></span>
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>水费卡</span></div>
+      水表读数<span class="underLine width_40"></span>
+    </div>
+    <div class="lh-18">
+      <div class="info-checkbox" readonly="readonly"><p type="check" nocheck="true"></p><span>其他</span></div>
+      <span class="underLine" style="width: 600px;"></span>
+    </div>
+    <div class="ulbox">
+      <ul>
+        <li>甲方（出售方）签章：<span style="width:120px;"></span></li>
+        <li>乙方（购买方）签章：<span style="width:120px;"></span></li>
+      </ul>
+      <ul>
+        <li>[委托代理人]签章：<span style="width:137px;"></span></li>
+        <li>[委托代理人]签章：<span style="width:137px;"></span></li>
+      </ul>
+    </div>
+  </div>
+  <!-- 收据 -->
+  <div class="page1">
+    <p class="bold">附：定金收付收据，由房屋出售人在实际收到定金时签署。</p>
+    <div class="title bold">
+      <p>收据</p>
+    </div>
+    <p class="cw_agreement">房屋出售人<span class="underLine" style="width: 80px;"></span>至今收到房屋买受人<span class="underLine"
+                                                                                                    style="width: 80px;"></span>交来的定金共计人民币（小写）<span
+      class="underLine"></span>元（大写）<span class="underLine"></span>圆整（如无请填写0）。</p>
+    <p class="cw_agreement">其中：于<span class="underLine" style="width:80px;"></span>年<span class="underLine"
+                                                                                          style="width:40px;"></span>月<span
+      class="underLine" style="width:40px;"></span>日收到人民币（小写）<span class="underLine"></span>元（如无请填写0）；</p>
+    <p style="text-indent: 80px;">于<span class="underLine" style="width:80px;"></span>年<span class="underLine"
+                                                                                             style="width:40px;"></span>月<span
+      class="underLine" style="width:40px;"></span>日收到人民币（小写）<span class="underLine"></span>元；</p>
+    <p style="text-indent: 80px;">于<span class="underLine" style="width:80px;"></span>年<span class="underLine"
+                                                                                             style="width:40px;"></span>月<span
+      class="underLine" style="width:40px;"></span>日收到人民币（小写）<span class="underLine"></span>元。</p>
+    <p style="margin-top: 30px;margin-bottom: 40px;">本收据一式叁份，供各方备存。如房屋出售人未曾收取本定金的，请勿签署本收据。</p>
+    <p style="text-align: right;">房屋出售人（签章）：<span class="underLine" style="width: 128px;"></span></p>
+    <p style="text-align: right;">收款日期：<span class="underLine" style="width:80px;"></span>年<span class="underLine"
+                                                                                                 style="width:40px;"></span>月<span
+      class="underLine" style="width:40px;"></span>日</p>
+  </div>
+</div>
+</body>
+ <script type="text/javascript" src="/browser-polyfill.min.js"></script>
+<script type="text/javascript" src="/browser.min.js"></script>
+<script type="text/javascript" src="/datepicker.js"></script>
+<script type="text/javascript" src="/dropdown.js"></script>
+<script type="text/javascript" src="/js/bundle_mm_all_wh20191205.js"></script>
+<!-- <script>
+  (function () {
+    var scriptList = document.getElementsByTagName("script")
+    console.log(scriptList)
+    if(!scriptList[0].src){
+      var host='https://sign2.jjw.com'
+      var host_other="http://sign2.jjw.com:28879"
+      var addrList = ["browser-polyfill.min.js","browser.min.js","datepicker.js","dropdown.js","js/bundle_mm20190402.js","datepicker.css"]
+      for (let i = 0; i < addrList.length; i++) {
+        if(window.location.host==='localhost:8080'){
+          if(addrList[i].indexOf('bundle')>-1){
+            // addrList[i]=host_other+'/'+addrList[i]
+            addrList[i]='./new-wh-mm-all.js'
+          }else{
+            addrList[i]=host_other+'/'+addrList[i]
+          }
+        }else{
+          addrList[i]='/'+addrList[i]
+        }
+        if(addrList[i].indexOf('.css')>-1){
+          var hm = document.createElement("link");
+          hm.rel="stylesheet"
+          hm.href = addrList[i];
+          /*var s = document.getElementsByTagName("link")[0];
+          s.parentNode.insertBefore(hm,s);*/
+          document.head.appendChild(hm);
+        }else{
+          var hm = document.createElement("script");
+          addrList[i].includes('new-wh-mm-all')&&(hm.type = 'module');
+          hm.src = addrList[i];
+          var s = document.getElementsByTagName("script")[document.getElementsByTagName("script").length-1];
+          s.parentNode.insertBefore(hm,s);
+        }
+      }
+    }
+  })();
+</script> -->
+</html>

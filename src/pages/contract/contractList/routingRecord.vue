@@ -73,18 +73,18 @@
     <div class="routing-list">
       <p><span class="title"><i class="iconfont icon-tubiao-11"></i>数据列表</span></p>
       <el-table :data="tableData" border @row-dblclick='toDetail' ref="tableCom" :max-height="tableNumberCom">
-        <el-table-column align="center" label="签约方式">
+        <el-table-column label="签约方式">
           <template slot-scope="scope">
             <span>{{scope.row.recordType|recordFormatter}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="分账门店" prop="outStoreName">
+        <el-table-column label="分账门店" prop="outStoreName">
         </el-table-column>
-        <el-table-column align="center" label="分账门店账户" prop="outBankCard">
+        <el-table-column label="分账门店账户" prop="outBankCard">
         </el-table-column>
-        <el-table-column align="center" label="收款门店" prop="inStoreName">
+        <el-table-column label="收款门店" prop="inStoreName">
         </el-table-column>
-        <el-table-column align="center" label="收款门店账户">
+        <el-table-column label="收款门店账户">
           <template slot-scope="scope">
             <!-- <p v-for="item in scope.row.inBank" :key="item.bankCard">{{item.bankCard}}</p> -->
             <el-tooltip placement="top">
@@ -101,15 +101,15 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="分账周期">
+        <el-table-column label="分账周期">
           <template slot-scope="scope">
             <span>{{scope.row.startTime|timeFormat_}}</span> ~
             <span>{{scope.row.endTime|timeFormat_}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="分账金额(元)" prop="accountAmount">
+        <el-table-column label="分账金额(元)" prop="accountAmount">
         </el-table-column>
-        <el-table-column align="center" label="操作">
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" size="medium" v-if="power['sign-ht-fz-pay'].state&&scope.row.flag!=1" @click="toReceipt(scope.row,scope.$index)">确认打款</el-button>
             <span v-else>-</span>
@@ -326,7 +326,7 @@ export default {
         }
       }).catch(error=>{
         this.$message({
-          message:error.message,
+          message:error,
           type:"error"
         })
       })
@@ -607,6 +607,7 @@ export default {
         search_.startTime=this.signDate[0]
         search_.endTime=this.signDate[1]
         let param = {
+          plateType:0,
           queryForm:search_,
           pageNum:this.currentPage,
           pageSize:this.pageSize,
@@ -704,7 +705,7 @@ export default {
   background-color: #fff;
   padding: 0 10px;
   border-radius: 2px;
-  box-shadow: 0px 1px 6px 0px rgba(7, 47, 116, 0.1);
+  // box-shadow: 0px 1px 6px 0px rgba(7, 47, 116, 0.1);
   >p{
     padding: 10px 0 10px 0;
     .title{
@@ -721,7 +722,7 @@ export default {
   background-color: #fff;
   border-radius: 2px;
   box-sizing: border-box;
-  box-shadow: 0px 1px 6px 0px rgba(7, 47, 116, 0.1);
+  // box-shadow: 0px 1px 6px 0px rgba(7,
   .paper-set-tit {
     padding-bottom: 10px;
   }
